@@ -22,21 +22,27 @@ function AppRouter(props) {
 
   useEffect(() => {
     dispatch(loaderActions.toggleLoader(true));
+    var currentBrowserUrl = window.location.href;
 
-    var token = localStorage.getItem(ACCESS_TOKEN);
+    console.log(currentBrowserUrl);
 
-    isTokenValid(token).then((isValid) => {
-      if (isValid) {
-        if (window.location.href.includes("/admin")) {
-          navigateTo(ADMIN_PAGE_ROUTE);
-        } else {
-          navigateTo(DASHBOARD_PAGE_ROUTE);
+    if (currentBrowserUrl.includes("access_token")) {
+      var myUrl = new URL(window.location.href.replace(/#/g, "?"));
+      var access_token = myUrl.searchParams.get("access_token");
+      console.log(access_token);
+      isTokenValid(access_token).then((isValid) => {
+        console.log("isValid", isValid);
+      });
+    } else {
+      var token = localStorage.getItem(ACCESS_TOKEN);
+
+      isTokenValid(token).then((isValid) => {
+        if (!isValid && !currentBrowserUrl.includes("/login")) {
+          localStorage.removeItem(CLIENT_ID);
+          navigateTo(LOGIN_PAGE_ROUTE);
         }
-      } else if (!window.location.href.includes("/login")) {
-        localStorage.removeItem(CLIENT_ID);
-        navigateTo(LOGIN_PAGE_ROUTE);
-      }
-    });
+      });
+    }
     dispatch(loaderActions.toggleLoader(false));
   }, []);
 
@@ -61,7 +67,7 @@ function AppRouter(props) {
       <Route path={LOGIN_PAGE_ROUTE} element={<LoginPage />} />
       <Route path={DASHBOARD_PAGE_ROUTE} element={<DashboardPage />} />
       <Route path={ADMIN_PAGE_ROUTE} element={<AdminPage />} />
-      <Route path="/modal" element={<InputModal />} />
+      <Route path="/*" element={<DashboardPage />} />
     </Routes>
   );
 }

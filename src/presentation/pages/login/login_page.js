@@ -12,6 +12,8 @@ import { loaderActions } from "presentation/redux/stores/store";
 function LoginPage() {
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
+  const loginUrl =
+    "https://nimblegoogle.auth.ap-south-1.amazoncognito.com/oauth2/authorize?client_id=3ghaqq07li62js1mdcdsqc190s&response_type=token&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost:3000";
 
   const handleLoginSuccess = (response) => {
     console.log(response);
@@ -40,6 +42,10 @@ function LoginPage() {
     },
   });
 
+  const samlLogin = () => {
+    window.location.href = loginUrl;
+  };
+
   return (
     <div className="loginPage">
       <img
@@ -59,7 +65,8 @@ function LoginPage() {
             className="custom-loginPage-button clickable"
             onClick={() => {
               dispatch(loaderActions.toggleLoader(true));
-              googleLogin();
+              // googleLogin();
+              samlLogin();
             }}
           >
             <img
@@ -81,7 +88,12 @@ function LoginPage() {
             />
           </div> */}
         </div>
-        <a href="mailto:siddharth.mittal@nimbleedgehq.ai" className="clickableLink">Can't login? Contact us</a>
+        <a
+          href="mailto:siddharth.mittal@nimbleedgehq.ai"
+          className="clickableLink"
+        >
+          Can't login? Contact us
+        </a>
       </div>
     </div>
   );
