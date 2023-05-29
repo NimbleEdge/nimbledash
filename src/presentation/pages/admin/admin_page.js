@@ -47,9 +47,9 @@ function AdminPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
         headers: {
-          clientid: localStorage.getItem(CLIENT_ID),
-          tokenid: localStorage.getItem(USER_EMAIL),
-          SsoToken: localStorage.getItem(ACCESS_TOKEN),
+          authMethod: "Cognito",
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientID: localStorage.getItem(CLIENT_ID),
         },
       })
       .then((res) => {
@@ -97,9 +97,9 @@ function AdminPage() {
               },
               {
                 headers: {
-                  clientid: localStorage.getItem(CLIENT_ID),
-                  tokenid: localStorage.getItem(USER_EMAIL),
-                  SsoToken: localStorage.getItem(ACCESS_TOKEN),
+                  authMethod: "Cognito",
+                  Token: localStorage.getItem(ACCESS_TOKEN),
+                  ClientID: localStorage.getItem(CLIENT_ID),
                 },
               }
             )
@@ -127,9 +127,9 @@ function AdminPage() {
             },
             {
               headers: {
-                clientid: localStorage.getItem(CLIENT_ID),
-                tokenid: localStorage.getItem(USER_EMAIL),
-                SsoToken: localStorage.getItem(ACCESS_TOKEN),
+                authMethod: "Cognito",
+                Token: localStorage.getItem(ACCESS_TOKEN),
+                ClientID: localStorage.getItem(CLIENT_ID),
               },
             }
           )
@@ -154,9 +154,9 @@ function AdminPage() {
         `${APP_BASE_URL}/mds/api/v1/admin/models/${modelName}/versions/${modelVersion}`,
         {
           headers: {
-            clientid: localStorage.getItem(CLIENT_ID),
-            tokenid: localStorage.getItem(USER_EMAIL),
-            SsoToken: localStorage.getItem(ACCESS_TOKEN),
+            authMethod: "Cognito",
+            Token: localStorage.getItem(ACCESS_TOKEN),
+            ClientID: localStorage.getItem(CLIENT_ID),
           },
         }
       )

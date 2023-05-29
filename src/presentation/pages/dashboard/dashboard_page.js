@@ -62,15 +62,15 @@ function DashboardPage() {
 
   const validateCliendID = async () => {
     await axios
-      .post(
-        `${APP_BASE_URL}/mds/api/v1/admin/sso`,
-        { email: localStorage.getItem(USER_EMAIL) },
-        {
-          headers: { clientid: clientID },
-        }
-      )
+      .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
+        headers: {
+          authMethod: "Cognito",
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientID: clientID,
+        },
+      })
       .then((res) => {
-        if (res.data["permission"] == "read_write") {
+        if (res.status == 200) {
           localStorage.setItem(CLIENT_ID, clientID);
           fetchModelList();
           setModalVisiblity(false);
@@ -95,9 +95,9 @@ function DashboardPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
         headers: {
-          clientid: clientID,
-          tokenid: localStorage.getItem(USER_EMAIL),
-          SsoToken: localStorage.getItem(ACCESS_TOKEN),
+          authMethod: "Cognito",
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientID: clientID,
         },
       })
       .then((res) => {
@@ -135,8 +135,9 @@ function DashboardPage() {
     await axios
       .get(uri, {
         headers: {
-          tokenid: localStorage.getItem(USER_EMAIL),
-          SsoToken: localStorage.getItem(ACCESS_TOKEN),
+          authMethod: "Cognito",
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientID: clientID,
         },
       })
       .then((res) => {
