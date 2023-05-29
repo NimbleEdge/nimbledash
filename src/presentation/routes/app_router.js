@@ -15,6 +15,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
+import { toast } from "react-toastify";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -24,14 +25,22 @@ function AppRouter(props) {
     dispatch(loaderActions.toggleLoader(true));
     var currentBrowserUrl = window.location.href;
 
-    console.log(currentBrowserUrl);
-
     if (currentBrowserUrl.includes("access_token")) {
+      console.log(currentBrowserUrl);
       var myUrl = new URL(window.location.href.replace(/#/g, "?"));
       var access_token = myUrl.searchParams.get("access_token");
+      var id_token = myUrl.searchParams.get("id_token");
       console.log(access_token);
+      console.log(id_token);
       isTokenValid(access_token).then((isValid) => {
-        console.log("isValid", isValid);
+        if(!isValid){
+          navigateTo(LOGIN_PAGE_ROUTE);
+          toast.error("Login failed. Please try again!");
+        }
+        else{
+          navigateTo(DASHBOARD_PAGE_ROUTE);
+          toast.success("Login successful!");
+        }
       });
     } else {
       var token = localStorage.getItem(ACCESS_TOKEN);
