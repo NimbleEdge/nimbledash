@@ -148,7 +148,6 @@ function DashboardPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setMetrics(res.data);
       })
       .catch((e) => {
