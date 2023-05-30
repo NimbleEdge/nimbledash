@@ -81,7 +81,7 @@ function DashboardPage() {
       .catch((e) => {
         console.log(e);
 
-        var errorDescription = e.response.data?.error?.description;
+        var errorDescription = e.response?.data?.error?.description;
         if (errorDescription != null) toast.error(errorDescription);
         else toast.error("Something Went Wrong.");
 
@@ -116,7 +116,7 @@ function DashboardPage() {
       })
       .catch((e) => {
         console.log(e);
-        var errorDescription = e.response.data?.error?.description;
+        var errorDescription = e.response?.data?.error?.description;
         if (errorDescription != null) toast.error(errorDescription);
         else toast.error("Something Went Wrong.");
       });
@@ -145,7 +145,7 @@ function DashboardPage() {
         setMetrics(res.data);
       })
       .catch((e) => {
-        var errorDescription = e.response.data?.error?.description;
+        var errorDescription = e.response?.data?.error?.description;
         if (errorDescription != null) toast.error(errorDescription);
         else toast.error("Something Went Wrong.");
       });

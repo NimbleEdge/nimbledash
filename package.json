@@ -11,6 +11,7 @@
     "axios": "^1.4.0",
     "base-64": "^1.0.0",
     "buffer": "^6.0.3",
+    "env-cmd": "^10.1.0",
     "js-base64": "^3.7.5",
     "local-cors-proxy": "^1.1.0",
     "react": "^18.2.0",
@@ -29,8 +30,13 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start:prod": "env-cmd -f prod.env npm run start",
+    "build:prod": "env-cmd -f prod.env npm run build",
+    "start:dev": "env-cmd -f dev.env npm start",
+    "build:dev": "env-cmd -f dev.env npm build",
+    "start:beta": "env-cmd -f stag.env npm run start",
+    "build:beta": "env-cmd -f stag.env npm run build",
+    "postinstall": "husky install"
   },
   "eslintConfig": {
     "extends": [

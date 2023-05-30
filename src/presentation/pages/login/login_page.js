@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from "react";
 import "./login_page.css";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
@@ -12,10 +11,7 @@ import { loaderActions } from "presentation/redux/stores/store";
 function LoginPage() {
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
-  const testing_uri = "http%3A%2F%2Flocalhost:3000";
-  const prod_uri = "https%3A%2F%2Fdashboard.nimbleedge.com";
-  const loginUrl =
-    `https://nimblegoogle.auth.ap-south-1.amazoncognito.com/oauth2/authorize?client_id=3ghaqq07li62js1mdcdsqc190s&response_type=token&scope=email+openid+phone&redirect_uri=${prod_uri}`;
+  const loginUrl = process.env.REACT_APP_LOGIN_URL;
 
   const handleLoginSuccess = (response) => {
     console.log(response);
