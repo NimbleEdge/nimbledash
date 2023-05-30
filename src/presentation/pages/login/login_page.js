@@ -13,33 +13,6 @@ function LoginPage() {
   const dispatch = useDispatch();
   const loginUrl = process.env.REACT_APP_LOGIN_URL;
 
-  const handleLoginSuccess = (response) => {
-    console.log(response);
-    navigateTo(DASHBOARD_PAGE_ROUTE);
-  };
-
-  const handleLoginFailure = () => {};
-
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      const userInfo = await axios
-        .get("https://www.googleapis.com/oauth2/v3/userinfo", {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-        })
-        .then((res) => res.data);
-
-      localStorage.setItem(ACCESS_TOKEN, tokenResponse.access_token);
-      localStorage.setItem(USER_EMAIL, userInfo.email);
-
-      navigateTo(DASHBOARD_PAGE_ROUTE);
-      dispatch(loaderActions.toggleLoader(false));
-    },
-    onError: (errorResponse) => {
-      console.log(errorResponse);
-      dispatch(loaderActions.toggleLoader(false));
-    },
-  });
-
   const samlLogin = () => {
     window.location.href = loginUrl;
   };
@@ -63,7 +36,6 @@ function LoginPage() {
             className="custom-loginPage-button clickable"
             onClick={() => {
               dispatch(loaderActions.toggleLoader(true));
-              // googleLogin();
               samlLogin();
             }}
           >
@@ -74,17 +46,6 @@ function LoginPage() {
             ></img>
             <p className="buttonText">Login using Google</p>
           </div>
-          {/* <div className="loginPage-button">
-            <GoogleLogin
-              theme="filled_blue"
-              text="continue_with"
-              auto_select={true}
-              useOneTap={true}
-              state_cookie_domain="single_host_origin"
-              onSuccess={handleLoginSuccess}
-              onError={handleLoginFailure}
-            />
-          </div> */}
         </div>
         <a
           href="mailto:siddharth.mittal@nimbleedgehq.ai"

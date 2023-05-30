@@ -9,14 +9,19 @@ import LoginPage from "presentation/pages/login/login_page";
 import DashboardPage from "presentation/pages/dashboard/dashboard_page";
 import InputModal from "presentation/components/inputModal/inputModal";
 import AdminPage from "presentation/pages/admin/admin_page";
-import { ACCESS_TOKEN, APP_BASE_URL, CLIENT_ID, COGNITO_USERNAME, USER_EMAIL } from "core/constants";
+import {
+  ACCESS_TOKEN,
+  APP_BASE_URL,
+  CLIENT_ID,
+  COGNITO_USERNAME,
+  USER_EMAIL,
+} from "core/constants";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
-
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -38,8 +43,11 @@ function AppRouter(props) {
           toast.success("Login successful!");
           var decodedIdToken = jwt_decode(id_token);
           localStorage.setItem(ACCESS_TOKEN, access_token);
-          localStorage.setItem(USER_EMAIL, decodedIdToken['email']);
-          localStorage.setItem(COGNITO_USERNAME, decodedIdToken['cognito:username']);
+          localStorage.setItem(USER_EMAIL, decodedIdToken["email"]);
+          localStorage.setItem(
+            COGNITO_USERNAME,
+            decodedIdToken["cognito:username"]
+          );
           navigateTo(DASHBOARD_PAGE_ROUTE);
         }
       });
