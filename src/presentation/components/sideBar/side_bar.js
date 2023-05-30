@@ -56,9 +56,7 @@ function SideBar() {
         <div
           className="sidebar-item"
           onClick={() => {
-            localStorage.removeItem(ACCESS_TOKEN);
-            localStorage.removeItem(USER_EMAIL);
-            localStorage.removeItem(CLIENT_ID);
+            localStorage.clear();
             window.location.reload();
           }}
         >

@@ -11,6 +11,7 @@ import {
   ACCESS_TOKEN,
   APP_BASE_URL,
   CLIENT_ID,
+  COGNITO_USERNAME,
   USER_EMAIL,
 } from "core/constants";
 import axios from "axios";
@@ -47,9 +48,11 @@ function AdminPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
         headers: {
-          authMethod: "Cognito",
+          AuthMethod: "Cognito",
           Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientID: localStorage.getItem(CLIENT_ID),
+          ClientId: localStorage.getItem(CLIENT_ID),
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       })
       .then((res) => {
@@ -97,9 +100,11 @@ function AdminPage() {
               },
               {
                 headers: {
-                  authMethod: "Cognito",
+                  AuthMethod: "Cognito",
                   Token: localStorage.getItem(ACCESS_TOKEN),
-                  ClientID: localStorage.getItem(CLIENT_ID),
+                  ClientId: localStorage.getItem(CLIENT_ID),
+                  TokenId: localStorage.getItem(USER_EMAIL),
+                  CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
                 },
               }
             )
@@ -127,9 +132,11 @@ function AdminPage() {
             },
             {
               headers: {
-                authMethod: "Cognito",
+                AuthMethod: "Cognito",
                 Token: localStorage.getItem(ACCESS_TOKEN),
-                ClientID: localStorage.getItem(CLIENT_ID),
+                ClientId: localStorage.getItem(CLIENT_ID),
+                TokenId: localStorage.getItem(USER_EMAIL),
+                CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
               },
             }
           )
@@ -154,9 +161,11 @@ function AdminPage() {
         `${APP_BASE_URL}/mds/api/v1/admin/models/${modelName}/versions/${modelVersion}`,
         {
           headers: {
-            authMethod: "Cognito",
+            AuthMethod: "Cognito",
             Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientID: localStorage.getItem(CLIENT_ID),
+            ClientId: localStorage.getItem(CLIENT_ID),
+            TokenId: localStorage.getItem(USER_EMAIL),
+            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
           },
         }
       )

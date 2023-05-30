@@ -20,6 +20,7 @@ import {
   USER_EMAIL,
   CLIENT_ID,
   APP_BASE_URL,
+  COGNITO_USERNAME
 } from "core/constants";
 import { useDispatch } from "react-redux";
 import {
@@ -64,9 +65,11 @@ function DashboardPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
         headers: {
-          authMethod: "Cognito",
+          AuthMethod: "Cognito",
           Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientID: clientID,
+          ClientId: clientID,
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       })
       .then((res) => {
@@ -95,9 +98,11 @@ function DashboardPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
         headers: {
-          authMethod: "Cognito",
+          AuthMethod: "Cognito",
           Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientID: clientID,
+          ClientId: clientID,
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       })
       .then((res) => {
@@ -135,9 +140,11 @@ function DashboardPage() {
     await axios
       .get(uri, {
         headers: {
-          authMethod: "Cognito",
+          AuthMethod: "Cognito",
           Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientID: clientID,
+          ClientId: clientID,
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       })
       .then((res) => {

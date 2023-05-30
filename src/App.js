@@ -17,7 +17,7 @@ function App() {
     } else if (process.env.REACT_APP_ENV_NAME == "DEVELOPMENT") {
       console.log("DEV ENV STARTED!!!");
     }
-  },[]);
+  }, []);
   return (
     <GoogleOAuthProvider clientId="405865671851-44bn30c6pc9ltep4ikkquabb1o9ajah3.apps.googleusercontent.com">
       <div className="App">

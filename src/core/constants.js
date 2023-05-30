@@ -11,6 +11,7 @@ export const GET_ANALYTICS = "geteAnalytics";
 export const ACCESS_TOKEN = "at";
 export const USER_EMAIL = "user_email";
 export const CLIENT_ID = "client_id";
+export const COGNITO_USERNAME = "cognito_username";
 
 // COLORS
 export const ACCENT_COLOR = "#6565FF"
