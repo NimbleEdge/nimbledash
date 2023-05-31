@@ -178,7 +178,7 @@ function AdminPage() {
         saveFile(
           modelBinary,
           "application/octet-stream",
-          modelName + "_" + modelVersion + ".onnx"
+          modelName + "_" + modelVersion + ".ort"
         );
 
         saveFile(
