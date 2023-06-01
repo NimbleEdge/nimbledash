@@ -30,7 +30,7 @@ function AnalyticsLineChart(props) {
       modelKeys.forEach((key) => {
         var trendList = trends[key];
         if (trendList.length - 1 - index >= 0) {
-          tempMap[key] = trendList[trendList.length - 1 - index];
+          tempMap[key] = trendList[trendList.length - 1 - index]/1000;
         } else {
           tempMap[key] = 0;
         }
