@@ -20,6 +20,7 @@ import {
   USER_EMAIL,
   CLIENT_ID,
   APP_BASE_URL,
+  GRAPH_COLORS,
 } from "core/constants";
 import { useDispatch } from "react-redux";
 import {
@@ -45,6 +46,19 @@ function DashboardPage() {
 
   const closeModalCallback = () => {
     setModalVisiblity(false);
+  };
+
+  const calculateRadarLegend = (trends) => {
+    var trendsKeys = Object.keys(trends);
+    var temp = [];
+    trendsKeys.forEach((key, index) => {
+      console.log("trends", trends[key]);
+      temp.push({
+        subject: key,
+        A: trends[key],
+      });
+    });
+    return temp;
   };
 
   useEffect(() => {
@@ -253,7 +267,7 @@ function DashboardPage() {
               cardIconAddress="/assets/icons/avg_latency.jpg"
               cardInfoTitle="Average Latency"
               cardInfoSubtitle="Per Day"
-              cardText={(metrics["averageLatency"]/1000).toFixed(2)}
+              cardText={(metrics["averageLatency"] / 1000).toFixed(2)}
               cardSubText="milliseconds"
             ></DashboardCard>
           </div>
@@ -305,6 +319,27 @@ function DashboardPage() {
                   <p className="bodyText">Active Users</p>
                   <p className="subHeading2">Across all the live models</p>
                 </div>
+              </div>
+              <div className="pie-chart-legend chart-legend">
+                {calculateRadarLegend(metrics["activeUsersTrends"]).map(
+                  (item, index) => (
+                    <div className="sub-chart-legend">
+                      <div className="legend-row">
+                        <div
+                          className="legend-color"
+                          style={{
+                            backgroundColor:
+                              GRAPH_COLORS[index % GRAPH_COLORS.length],
+                          }}
+                        ></div>
+                        <p className="legend-title subHeading2">
+                          {item.subject}
+                        </p>
+                      </div>
+                      <p className="legend-value">{item.A}</p>
+                    </div>
+                  )
+                )}
               </div>
               <AnalyticsRadarChart
                 trends={metrics["activeUsersTrends"]}

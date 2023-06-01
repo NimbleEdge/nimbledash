@@ -15,6 +15,8 @@ export const CLIENT_ID = "client_id";
 // COLORS
 export const ACCENT_COLOR = "#6565FF"
 export const STROKE_COLORS_LIST = ["#F3AD84","#DD8E8E","#B57994","#826A8D","#515A78","#2F4858","#5F8F43","#FFBEC1"];
+export const GRAPH_COLORS = ["#0D2535", "#5388D8", "#F4BE37", "#FF9F40"];
+
 
 //APP GLOBAL CONFIG
 export const APP_BASE_URL = NIMBLEEDGE_STAGING_BASE_URL;

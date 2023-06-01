@@ -25,12 +25,27 @@ function AnalyticsRadarChart(props) {
     });
 
     trendsKeys.forEach((key, index) => {
+      console.log("trends", trends[key]);
       temp.push({
         subject: key,
         A: trends[key],
         fullMark: maxUsers,
       });
     });
+
+    if (Object.keys(trends).length < 3) {
+      temp.push({
+        subject: "",
+        A: 0,
+        fullMark: maxUsers,
+      });
+
+      temp.push({
+        subject: "...",
+        A: 0,
+        fullMark: maxUsers,
+      });
+    }
 
     setData(temp);
   }, [trends]);
