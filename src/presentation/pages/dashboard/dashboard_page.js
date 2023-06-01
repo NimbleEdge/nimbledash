@@ -21,6 +21,7 @@ import {
   CLIENT_ID,
   APP_BASE_URL,
   GRAPH_COLORS,
+  COGNITO_USERNAME
 } from "core/constants";
 import { useDispatch } from "react-redux";
 import {
@@ -78,9 +79,11 @@ function DashboardPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
         headers: {
-          authMethod: "Cognito",
+          AuthMethod: "Cognito",
           Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientID: clientID,
+          ClientId: clientID,
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       })
       .then((res) => {
@@ -95,7 +98,7 @@ function DashboardPage() {
       .catch((e) => {
         console.log(e);
 
-        var errorDescription = e.response.data?.error?.description;
+        var errorDescription = e.response?.data?.error?.description;
         if (errorDescription != null) toast.error(errorDescription);
         else toast.error("Something Went Wrong.");
 
@@ -109,9 +112,11 @@ function DashboardPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
         headers: {
-          authMethod: "Cognito",
+          AuthMethod: "Cognito",
           Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientID: clientID,
+          ClientId: clientID,
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       })
       .then((res) => {
@@ -130,7 +135,7 @@ function DashboardPage() {
       })
       .catch((e) => {
         console.log(e);
-        var errorDescription = e.response.data?.error?.description;
+        var errorDescription = e.response?.data?.error?.description;
         if (errorDescription != null) toast.error(errorDescription);
         else toast.error("Something Went Wrong.");
       });
@@ -149,17 +154,18 @@ function DashboardPage() {
     await axios
       .get(uri, {
         headers: {
-          authMethod: "Cognito",
+          AuthMethod: "Cognito",
           Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientID: clientID,
+          ClientId: clientID,
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       })
       .then((res) => {
-        console.log(res.data);
         setMetrics(res.data);
       })
       .catch((e) => {
-        var errorDescription = e.response.data?.error?.description;
+        var errorDescription = e.response?.data?.error?.description;
         if (errorDescription != null) toast.error(errorDescription);
         else toast.error("Something Went Wrong.");
       });

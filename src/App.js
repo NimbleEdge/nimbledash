@@ -1,7 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 import AppRouter from "presentation/routes/app_router";
-import React from "react";
+import React, { useEffect } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { loaderActions } from "presentation/redux/stores/store";
 import { InfinitySpin } from "react-loader-spinner";
@@ -11,6 +11,13 @@ import { ToastContainer } from "react-toastify";
 import SideBar from "presentation/components/sideBar/side_bar";
 
 function App() {
+  useEffect(() => {
+    if (process.env.REACT_APP_ENV_NAME == "STAGING") {
+      console.log("STAGE ENV STARTED!!!");
+    } else if (process.env.REACT_APP_ENV_NAME == "DEVELOPMENT") {
+      console.log("DEV ENV STARTED!!!");
+    }
+  }, []);
   return (
     <GoogleOAuthProvider clientId="405865671851-44bn30c6pc9ltep4ikkquabb1o9ajah3.apps.googleusercontent.com">
       <div className="App">

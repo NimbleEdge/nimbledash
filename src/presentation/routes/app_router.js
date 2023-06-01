@@ -9,12 +9,19 @@ import LoginPage from "presentation/pages/login/login_page";
 import DashboardPage from "presentation/pages/dashboard/dashboard_page";
 import InputModal from "presentation/components/inputModal/inputModal";
 import AdminPage from "presentation/pages/admin/admin_page";
-import { ACCESS_TOKEN, APP_BASE_URL, CLIENT_ID } from "core/constants";
+import {
+  ACCESS_TOKEN,
+  APP_BASE_URL,
+  CLIENT_ID,
+  COGNITO_USERNAME,
+  USER_EMAIL,
+} from "core/constants";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { toast } from "react-toastify";
+import jwt_decode from "jwt-decode";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -23,17 +30,25 @@ function AppRouter(props) {
   useEffect(() => {
     dispatch(loaderActions.toggleLoader(true));
     var currentBrowserUrl = window.location.href;
+    console.log(currentBrowserUrl);
 
     if (currentBrowserUrl.includes("access_token")) {
       var myUrl = new URL(window.location.href.replace(/#/g, "?"));
       var access_token = myUrl.searchParams.get("access_token");
+      var id_token = myUrl.searchParams.get("id_token");
       isTokenValid(access_token).then((isValid) => {
         if (!isValid) {
           navigateTo(LOGIN_PAGE_ROUTE);
           toast.error("Login failed. Please try again!");
         } else {
           toast.success("Login successful!");
+          var decodedIdToken = jwt_decode(id_token);
           localStorage.setItem(ACCESS_TOKEN, access_token);
+          localStorage.setItem(USER_EMAIL, decodedIdToken["email"]);
+          localStorage.setItem(
+            COGNITO_USERNAME,
+            decodedIdToken["cognito:username"]
+          );
           navigateTo(DASHBOARD_PAGE_ROUTE);
         }
       });
@@ -45,7 +60,7 @@ function AppRouter(props) {
           navigateTo(DASHBOARD_PAGE_ROUTE);
         }
         if (!isValid && !currentBrowserUrl.includes("/login")) {
-          localStorage.removeItem(CLIENT_ID);
+          localStorage.clear();
           navigateTo(LOGIN_PAGE_ROUTE);
         }
       });
@@ -64,7 +79,6 @@ function AppRouter(props) {
         },
       })
       .then((res) => {
-        console.log(res);
         if (res.status == 200) {
           return true;
         } else {

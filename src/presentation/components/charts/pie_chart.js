@@ -48,7 +48,6 @@ export default function AnalyticsPieChart(props) {
       temp.push({ name: key, value: trends[key] });
     });
 
-    console.log(temp);
     setData(temp);
   }, [trends]);
 

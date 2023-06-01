@@ -11,6 +11,7 @@ export const GET_ANALYTICS = "geteAnalytics";
 export const ACCESS_TOKEN = "at";
 export const USER_EMAIL = "user_email";
 export const CLIENT_ID = "client_id";
+export const COGNITO_USERNAME = "cognito_username";
 
 // COLORS
 export const ACCENT_COLOR = "#6565FF"
@@ -19,4 +20,4 @@ export const GRAPH_COLORS = ["#0D2535", "#5388D8", "#F4BE37", "#FF9F40"];
 
 
 //APP GLOBAL CONFIG
-export const APP_BASE_URL = NIMBLEEDGE_STAGING_BASE_URL;
+export const APP_BASE_URL = process.env.REACT_APP_API_BASE_URL;
