@@ -21,8 +21,6 @@ function AnalyticsLineChart(props) {
     var modelKeys = Object.keys(trends);
     var maxLen = -1;
 
-    console.log(trends);
-
     modelKeys.forEach((key) => {
       if (trends[key].length > maxLen) maxLen = trends[key].length;
     });
@@ -32,7 +30,7 @@ function AnalyticsLineChart(props) {
       modelKeys.forEach((key) => {
         var trendList = trends[key];
         if (trendList.length - 1 - index >= 0) {
-          tempMap[key] = trendList[trendList.length - 1 - index];
+          tempMap[key] = trendList[trendList.length - 1 - index]/1000;
         } else {
           tempMap[key] = 0;
         }

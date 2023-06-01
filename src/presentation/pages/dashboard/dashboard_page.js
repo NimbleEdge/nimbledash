@@ -253,7 +253,7 @@ function DashboardPage() {
               cardIconAddress="/assets/icons/avg_latency.jpg"
               cardInfoTitle="Average Latency"
               cardInfoSubtitle="Per Day"
-              cardText={metrics["averageLatency"].toFixed(2)}
+              cardText={(metrics["averageLatency"]/1000).toFixed(2)}
               cardSubText="milliseconds"
             ></DashboardCard>
           </div>
