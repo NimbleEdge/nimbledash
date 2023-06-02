@@ -5,6 +5,8 @@ function InputModal(props) {
   var initValue = props.initValue;
   var getInputCallback = props.getInputCallback;
   var closeModalCallback = props.closeModalCallback;
+  var title = props.title;
+  var subTitle = props.subTitle;
   var [modalErrorMessage, setModalErrorMessage] = useState("");
 
   const handleSubmit = (event) => {
@@ -27,17 +29,15 @@ function InputModal(props) {
           className="input-modal-close"
           src="assets/icons/close.svg"
           onClick={() => {
-            if (initValue == "") {
+            if (initValue == "" && title.includes("clientID")) {
               setModalErrorMessage("Please enter a Client ID to proceed");
             } else {
               closeModalCallback();
             }
           }}
         ></img>
-        <p className="heading3">Enter clientID</p>
-        <p className="subHeading margin-top-8">
-          Entered clientId will be verified from our backend services
-        </p>
+        <p className="heading3">{title}</p>
+        <p className="subHeading margin-top-8">{subTitle}</p>
         <form className="inputModal-textfield-flex" onSubmit={handleSubmit}>
           <input
             type="text"

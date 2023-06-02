@@ -177,6 +177,8 @@ function DashboardPage() {
     <div className="dashboardPage">
       {isModalVisible && (
         <InputModal
+        title = {"Enter clientID"}
+        subTitle = {"Entered clientId will be verified from our backend services"}
           initValue={clientID}
           getInputCallback={handleClientIDChange}
           closeModalCallback={closeModalCallback}

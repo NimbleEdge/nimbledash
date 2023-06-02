@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import "./rbac_page.css";
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
+import InputModal from "presentation/components/inputModal/inputModal";
 
 function RBACPage() {
+  var [isModalVisible, setModalVisiblity] = useState(false);
+
+  const handleClientIDChange = (input) => {};
+
+  const closeModalCallback = () => {
+    setModalVisiblity(false);
+  };
+
   return (
     <div className="rbacPage">
+      {isModalVisible && (
+        <InputModal
+        title = {"Enter email"}
+        subTitle = {"Email must be from the same organisation"}
+          initValue={""}
+          getInputCallback={() => {}}
+          closeModalCallback={closeModalCallback}
+        ></InputModal>
+      )}
+
       <div className="admin-page-left-pane">
         <div className="page-title">
           <p className="heading3">Superuser Panel</p>
@@ -88,7 +107,9 @@ function RBACPage() {
               </div>
             ))}
 
-            <div className="rbac-table-row add-rbac-user">
+            <div className="rbac-table-row add-rbac-user" onClick={()=>{
+                setModalVisiblity(true);
+            }}>
               <p className="subHeading4 rbac-email">+ Add new user</p>
             </div>
           </div>
