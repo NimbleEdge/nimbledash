@@ -3,6 +3,7 @@ import {
   ADMIN_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
+  RBAC_PAGE_ROUTE,
 } from "./route-paths";
 import React, { useEffect } from "react";
 import LoginPage from "presentation/pages/login/login_page";
@@ -22,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
+import RBACPage from "presentation/pages/rbac/rbac_page";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -96,6 +98,7 @@ function AppRouter(props) {
       <Route path={LOGIN_PAGE_ROUTE} element={<LoginPage />} />
       <Route path={DASHBOARD_PAGE_ROUTE} element={<DashboardPage />} />
       <Route path={ADMIN_PAGE_ROUTE} element={<AdminPage />} />
+      <Route path={RBAC_PAGE_ROUTE} element={<RBACPage />} />
       <Route path="/*" element={<DashboardPage />} />
     </Routes>
   );

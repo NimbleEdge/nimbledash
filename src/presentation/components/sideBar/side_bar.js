@@ -2,6 +2,7 @@ import { ACCESS_TOKEN, CLIENT_ID, USER_EMAIL } from "core/constants";
 import {
   ADMIN_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
+  RBAC_PAGE_ROUTE,
 } from "presentation/routes/route-paths";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -12,10 +13,13 @@ function SideBar() {
   const [currentTab, setCurrentTab] = useState(0);
 
   useEffect(() => {
-    if (window.location.href.includes("/admin")) {
+    if (window.location.href.includes(ADMIN_PAGE_ROUTE)) {
       setCurrentTab(1);
+    } 
+    else if(window.location.href.includes(RBAC_PAGE_ROUTE)){
+      setCurrentTab(2);
     }
-    else{
+    else {
       setCurrentTab(0);
     }
   });
@@ -36,10 +40,21 @@ function SideBar() {
         >
           <img
             className="sidebar-icon"
-            src={currentTab==0?"/assets/icons/dashboard_selected.svg":"/assets/icons/dashboard.svg"}
+            src={
+              currentTab == 0
+                ? "/assets/icons/dashboard_selected.svg"
+                : "/assets/icons/dashboard.svg"
+            }
           ></img>
-          <p className={(currentTab==0?"selected-desc ":"") + "sidebar-item-desc"}>Dashboard</p>
+          <p
+            className={
+              (currentTab == 0 ? "selected-desc " : "") + "sidebar-item-desc"
+            }
+          >
+            Dashboard
+          </p>
         </div>
+
         <div
           className={
             (currentTab == 1 ? "sidebar-item-selected " : "") +
@@ -50,9 +65,50 @@ function SideBar() {
             navigateTo(ADMIN_PAGE_ROUTE);
           }}
         >
-          <img className="sidebar-icon" src={currentTab==1?"/assets/icons/admin_selected.svg": "/assets/icons/admin.svg"}></img>
-          <p className={(currentTab==1?"selected-desc ":"") + "sidebar-item-desc"}>Upload model</p>
+          <img
+            className="sidebar-icon"
+            src={
+              currentTab == 1
+                ? "/assets/icons/admin_selected.svg"
+                : "/assets/icons/admin.svg"
+            }
+          ></img>
+          <p
+            className={
+              (currentTab == 1 ? "selected-desc " : "") + "sidebar-item-desc"
+            }
+          >
+            Upload model
+          </p>
         </div>
+
+        <div
+          className={
+            (currentTab == 2 ? "sidebar-item-selected " : "") +
+            "sidebar-item clickable"
+          }
+          onClick={() => {
+            setCurrentTab(2);
+            navigateTo(RBAC_PAGE_ROUTE);
+          }}
+        >
+          <img
+            className="sidebar-icon"
+            src={
+              currentTab == 2
+                ? "/assets/icons/rbac_selected.svg"
+                : "/assets/icons/rbac.svg"
+            }
+          ></img>
+          <p
+            className={
+              (currentTab == 2 ? "selected-desc " : "") + "sidebar-item-desc"
+            }
+          >
+            Access control
+          </p>
+        </div>
+
         <div
           className="sidebar-item"
           onClick={() => {

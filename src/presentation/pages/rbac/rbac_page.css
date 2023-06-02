@@ -1,0 +1,60 @@
+.rbacPage {
+  display: flex;
+}
+
+.rbac-table-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 0px 24px;
+  margin-bottom: 24px;
+}
+
+.rbac-table-controls-header {
+  display: flex;
+  gap: 60px;
+}
+
+.rbac-control-width-container{
+    /* background-color: red; */
+    width: 150px;
+    text-align: center;
+    margin: auto 0;
+}
+
+.rbac-table-row-primary {
+    border-width: 1px 0px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .rbac-table-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+.rbac-email {
+  margin: auto 0;
+}
+
+.rbac-controls{
+    display: flex;
+    gap: 60px;
+    margin: auto 0;
+}
+
+.toggle-button.react-toggle--checked .react-toggle-track {
+    background-color: #6565FF;
+}
+
+.add-rbac-user{
+    cursor: pointer;
+}
+
+.add-rbac-user:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+}
