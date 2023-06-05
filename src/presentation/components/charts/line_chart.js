@@ -68,6 +68,7 @@ function AnalyticsLineChart(props) {
               stroke={STROKE_COLORS_LIST[index % STROKE_COLORS_LIST.length]}
               strokeWidth={3}
               activeDot={{ r: 4 }}
+              dot = {false}
             />
           ))}
       </LineChart>
