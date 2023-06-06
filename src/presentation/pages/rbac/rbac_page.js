@@ -4,7 +4,13 @@ import Toggle from "react-toggle";
 import "react-toggle/style.css";
 import InputModal from "presentation/components/inputModal/inputModal";
 import axios from "axios";
-import { APP_BASE_URL, CLIENT_ID } from "core/constants";
+import {
+  ACCESS_TOKEN,
+  APP_BASE_URL,
+  CLIENT_ID,
+  PermissionEnum,
+  USER_EMAIL,
+} from "core/constants";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
@@ -12,10 +18,12 @@ import { loaderActions } from "presentation/redux/stores/store";
 function RBACPage() {
   var [isModalVisible, setModalVisiblity] = useState(false);
   var [userList, setUserList] = useState([]);
-  var clientId = "";
+  //   var [clientId,setClientID] = useState("");
   const dispatch = useDispatch();
 
-  const onEnterEmail = (input) => {};
+  const onEnterEmail = (input) => {
+    addUser(input);
+  };
 
   const closeModalCallback = () => {
     setModalVisiblity(false);
@@ -24,9 +32,17 @@ function RBACPage() {
   const listUsers = async () => {
     dispatch(loaderActions.toggleLoader(true));
     await axios
-      .get(`${APP_BASE_URL}/mds/api/v1/private/clients/${clientId}/users`)
+      .get(`${APP_BASE_URL}/mds/api/v1/admin/users`, {
+        headers: {
+          AuthMethod: "Cognito",
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientId: localStorage.getItem(CLIENT_ID),
+          TokenId: localStorage.getItem(USER_EMAIL),
+        },
+      })
       .then((res) => {
         console.log(res);
+        setUserList(res.data.users);
       })
       .catch((e) => {
         console.log(e);
@@ -37,17 +53,28 @@ function RBACPage() {
     dispatch(loaderActions.toggleLoader(false));
   };
 
-  const addUser = async (inputEmail, permission) => {
+  const addUser = async (inputEmail) => {
     dispatch(loaderActions.toggleLoader(true));
     await axios
-      .post(`${APP_BASE_URL}/mds/api/v1/private/clients/${clientId}/user`, {
-        clientId: clientId,
-        email: inputEmail,
-        permission: permission,
-      })
+      .post(
+        `${APP_BASE_URL}/mds/api/v1/admin/user`,
+        {
+          email: inputEmail,
+          permission: PermissionEnum.READ,
+        },
+        {
+          headers: {
+            AuthMethod: "Cognito",
+            Token: localStorage.getItem(ACCESS_TOKEN),
+            ClientId: localStorage.getItem(CLIENT_ID),
+            TokenId: localStorage.getItem(USER_EMAIL),
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
-        listUsers();
+        setModalVisiblity(false);
+        window.location.reload();
       })
       .catch((e) => {
         dispatch(loaderActions.toggleLoader(false));
@@ -61,14 +88,24 @@ function RBACPage() {
   const updateUserPermission = async (inputEmail, permission) => {
     dispatch(loaderActions.toggleLoader(true));
     await axios
-      .put(`${APP_BASE_URL}/mds/api/v1/private/clients/${clientId}/user`, {
-        clientId: clientId,
-        email: inputEmail,
-        permission: permission,
-      })
+      .put(
+        `${APP_BASE_URL}/mds/api/v1/admin/user`,
+        {
+          email: inputEmail,
+          permission: permission,
+        },
+        {
+          headers: {
+            AuthMethod: "Cognito",
+            Token: localStorage.getItem(ACCESS_TOKEN),
+            ClientId: localStorage.getItem(CLIENT_ID),
+            TokenId: localStorage.getItem(USER_EMAIL),
+          },
+        }
+      )
       .then((res) => {
-        listUsers();
-        console.log(res);
+        dispatch(loaderActions.toggleLoader(false));
+        toast.success("Permission updated succesfully.");
       })
       .catch((e) => {
         dispatch(loaderActions.toggleLoader(false));
@@ -80,17 +117,23 @@ function RBACPage() {
   };
 
   const deleteUser = async (inputEmail) => {
+    console.log("clientID",inputEmail);
     dispatch(loaderActions.toggleLoader(true));
     await axios
-      .delete(`${APP_BASE_URL}/mds/api/v1/private/clients/${clientId}/user`, {
+      .delete(`${APP_BASE_URL}/mds/api/v1/admin/user`, {
+        headers: {
+          AuthMethod: "Cognito",
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientId: localStorage.getItem(CLIENT_ID),
+          TokenId: localStorage.getItem(USER_EMAIL),
+        },
         data: {
-          clientId: clientId,
           email: inputEmail,
         },
       })
       .then((res) => {
-        listUsers();
         console.log(res);
+        // window.location.reload();
       })
       .catch((e) => {
         dispatch(loaderActions.toggleLoader(false));
@@ -102,7 +145,6 @@ function RBACPage() {
   };
 
   useEffect(() => {
-    clientId = localStorage.getItem(CLIENT_ID);
     listUsers();
   }, []);
 
@@ -143,46 +185,13 @@ function RBACPage() {
           </div>
 
           <div className="rbac-table-body">
-            <div className="rbac-table-row-primary">
-              <a
-                href="mailto:naman.anand.official@gmail.com?subject=we bout to revoke yo access"
-                className="heading7 rbac-email"
-              >
-                naman.anand@nimbleedgehq.ai
-              </a>
-              <div className="rbac-controls">
-                <div className="rbac-control-width-container">
-                  <Toggle
-                    className="toggle-button"
-                    defaultChecked={true}
-                    icons={false}
-                    aria-label="No label tag"
-                    disabled={true}
-                    onChange={() => {}}
-                  />
-                </div>
-                <div className="rbac-control-width-container">
-                  <Toggle
-                    className="toggle-button"
-                    icons={false}
-                    defaultChecked={false}
-                    aria-label="No label tag"
-                    onChange={() => {}}
-                  />
-                </div>
-                <div className="rbac-control-width-container rbac-trash">
-                  <img src="/assets/icons/trash.svg"></img>
-                </div>
-              </div>
-            </div>
-
-            {[1, 1, 1, 1, 1].map(() => (
-              <div className="rbac-table-row">
+            {userList.map((user, index) => (
+              <div key={index} className="rbac-table-row">
                 <a
-                  href="mailto:naman.anand.official@gmail.com?subject=we bout to revoke yo access"
+                  href={`mailto:${user.email}`}
                   className="heading7 rbac-email"
                 >
-                  saket.harsh@nimbleedgehq.ai
+                  {user.email}
                 </a>
                 <div className="rbac-controls">
                   <div className="rbac-control-width-container">
@@ -199,12 +208,30 @@ function RBACPage() {
                     <Toggle
                       className="toggle-button"
                       icons={false}
-                      defaultChecked={false}
+                      defaultChecked={
+                        user.permission == PermissionEnum.READ_WRITE
+                      }
                       aria-label="No label tag"
-                      onChange={() => {}}
+                      onChange={(permission) => {
+                        var isChecked = permission.target.checked;
+                        if (isChecked) {
+                          updateUserPermission(
+                            user.email,
+                            PermissionEnum.READ_WRITE
+                          );
+                        } else {
+                          updateUserPermission(user.email, PermissionEnum.READ);
+                        }
+                        console.log(permission.target.checked);
+                      }}
                     />
                   </div>
-                  <div className="rbac-control-width-container rbac-trash">
+                  <div
+                    className="rbac-control-width-container rbac-trash"
+                    onClick={() => {
+                      deleteUser(user.email);
+                    }}
+                  >
                     <img src="/assets/icons/trash.svg"></img>
                   </div>
                 </div>
@@ -214,6 +241,7 @@ function RBACPage() {
             <div
               className="rbac-table-row add-rbac-user"
               onClick={() => {
+                console.log("click tohho rha hai");
                 setModalVisiblity(true);
               }}
             >
