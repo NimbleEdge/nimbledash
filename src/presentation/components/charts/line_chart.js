@@ -46,7 +46,7 @@ function AnalyticsLineChart(props) {
   return (
     <ResponsiveContainer debounce={300} width="100%" height="100%">
       <LineChart
-        width={500}
+        width={600}
         height={300}
         data={data}
         margin={{
@@ -58,9 +58,9 @@ function AnalyticsLineChart(props) {
       >
         {/* <CartesianGrid strokeDasharray="3 3" /> */}
         <XAxis dataKey="name" />
-        <YAxis unit=" millls" width={100} />
+        <YAxis fontSize={"14px"} unit=" millls" width={100} />
         <Tooltip />
-        <Legend />
+        <Legend/>
           {Object.keys(trends).map((key, index) => (
             <Line
               type="monotone"

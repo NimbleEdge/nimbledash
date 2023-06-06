@@ -22,7 +22,7 @@
   font-family: "Roboto";
 }
 
-/* html { font-size: 10px; } */
+html { font-size: 10px; }
 
 
 body {
@@ -47,7 +47,7 @@ a {
 }
 
 /* FONTS */
-
+/* used */
 .headline {
   font-size: var(--fs-xl);
   color: var(--clr-primary);
@@ -56,8 +56,9 @@ a {
   margin-bottom: 2.5rem;
 }
 
+/* USED */
 .bodyText {
-  font-size: var(--fs-body);
+  font-size: 1.6rem;
   color: var(--clr-primary);
   font-weight: 400;
   margin-bottom: 0;
@@ -92,68 +93,70 @@ a {
 }
 
 .heading2 {
-  font-size: 2rem;
+  font-size: 3.2rem;
   color: var(--clr-primary);
   margin-bottom: 0.1rem;
   font-weight: 500;
 }
 
+/* USED */
 .heading3 {
-  font-size: 1.75rem;
+  font-size: 2.8rem;
   color: var(--clr-primary);
   margin-bottom: 0.1rem;
   font-weight: 400;
 }
-
+/* used */
 .heading4 {
-  font-size: 1.25rem;
+  font-size: 1.8rem;
   color: var(--clr-primary);
   margin-bottom: 0.1rem;
   font-weight: 500;
 }
-
+/* used */
 .heading5 {
-  font-size: 1rem;
+  font-size: 1.6rem;
   color: white;
   margin-bottom: 0;
   font-weight: 500;
 }
-
+/* used */
 .heading6 {
-  font-size: 1.25rem;
+  font-size: 2rem;
   color: var(--clr-primary);
   margin-bottom: 0;
   font-weight: 700;
 }
 
 .heading7 {
-  font-size: 1rem;
+  font-size: 1.6rem;
   color: var(--clr-primary);
   margin-bottom: 0;
   font-weight: 500;
 }
-
+/* USED */
 .subHeading {
-  font-size: 1rem;
+  font-size: 1.6rem;
   color: var(--clr-fade-text);
   font-weight: 400;
 }
+/* USED */
 .subHeading2 {
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   color: var(--clr-fade-text);
   font-weight: 400;
   margin-bottom: 0;
 }
-
+/* used */
 .subHeading3 {
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: rgba(255, 255, 255, 0.8);
   font-weight: 400;
   margin-bottom: 0;
 }
 
 .subHeading4 {
-  font-size: 1rem;
+  font-size: 1.6rem;
   color: var(--clr-fade-text);
   font-weight: 500;
   margin-bottom: 0;
@@ -176,7 +179,7 @@ a {
 }
 
 .buttonText {
-  font-size: 1rem;
+  font-size: 1.6rem;
   color: white;
   font-weight: 500;
   margin: auto 0;
@@ -234,4 +237,16 @@ a {
 
 .clickable {
   cursor: pointer;
+}
+
+.recharts-legend-item { font-size: 1.25rem; }
+
+.dropdown-item{font-size: 1.4rem;}
+
+form{
+  font-size: 1.6rem;
+}
+
+.Toastify__toast{
+  font-size: 1.25rem;
 }

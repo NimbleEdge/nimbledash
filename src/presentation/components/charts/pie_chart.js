@@ -84,7 +84,7 @@ export default function AnalyticsPieChart(props) {
                 ></div>
                 <p className="legend-title subHeading2">{item.name}</p>
               </div>
-              <p className="legend-value">{item.value}</p>
+              <p className="legend-value subHeading2">{item.value}</p>
             </div>
           ))}
         </div>

@@ -54,7 +54,7 @@ function AnalyticsRadarChart(props) {
     <ResponsiveContainer width="100%" height="100%">
       <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
         <PolarGrid />
-        <PolarAngleAxis dataKey="subject" />
+        <PolarAngleAxis fontSize={"12.5px"} dataKey="subject" />
         <PolarRadiusAxis />
         <Radar
           name="Mike"
@@ -63,6 +63,7 @@ function AnalyticsRadarChart(props) {
           fill="#8884d8"
           fillOpacity={0.6}
         />
+
       </RadarChart>
     </ResponsiveContainer>
   );

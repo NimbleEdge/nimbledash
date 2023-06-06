@@ -344,7 +344,7 @@ function DashboardPage() {
                           {item.subject}
                         </p>
                       </div>
-                      <p className="legend-value">{item.A}</p>
+                      <p className="legend-value subHeading2">{item.A}</p>
                     </div>
                   )
                 )}

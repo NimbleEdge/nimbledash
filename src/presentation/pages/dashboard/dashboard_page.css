@@ -86,6 +86,7 @@
 }
 
 .sidebar-item-desc{
+  font-size: 1.4rem;
   display: none;
   font-weight: 500;
   color: #666;
@@ -206,6 +207,7 @@
 
 .legend-value {
   text-align: center;
+  color: black;
 }
 
 .row-flex {
@@ -226,7 +228,7 @@
 
 .chart-legend{
   position: absolute;
-  bottom: 20px;
+  bottom: 36px;
   left: 50%;
   transform: translate(-50%);
 }
