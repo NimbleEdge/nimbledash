@@ -21,3 +21,10 @@ export const GRAPH_COLORS = ["#0D2535", "#5388D8", "#F4BE37", "#FF9F40"];
 
 //APP GLOBAL CONFIG
 export const APP_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+//APP ENUMS
+const Permission = {
+    READ_WRITE : "read_write",
+    READ : "read_only",
+    ADMIN : "admin"
+}

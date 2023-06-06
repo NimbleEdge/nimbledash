@@ -14,47 +14,56 @@
   gap: 60px;
 }
 
-.rbac-control-width-container{
-    /* background-color: red; */
-    width: 150px;
-    text-align: center;
-    margin: auto 0;
+.rbac-control-width-container {
+  /* background-color: red; */
+  width: 150px;
+  text-align: center;
+  margin: auto 0;
 }
 
 .rbac-table-row-primary {
-    border-width: 1px 0px;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.1);
-    padding: 24px;
-    display: flex;
-    justify-content: space-between;
-  }
+  border-width: 1px 0px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+}
 
-  .rbac-table-row {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 24px;
-    display: flex;
-    justify-content: space-between;
-  }
+.rbac-table-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+}
 
 .rbac-email {
   margin: auto 0;
 }
 
-.rbac-controls{
-    display: flex;
-    gap: 60px;
-    margin: auto 0;
+.rbac-controls {
+  display: flex;
+  gap: 60px;
+  margin: auto 0;
 }
 
 .toggle-button.react-toggle--checked .react-toggle-track {
-    background-color: #6565FF;
+  background-color: #6565ff;
 }
 
-.add-rbac-user{
-    cursor: pointer;
+.add-rbac-user {
+  cursor: pointer;
 }
 
-.add-rbac-user:hover{
-    background-color: rgba(0, 0, 0, 0.1);
+.add-rbac-user:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.rbac-trash {
+  cursor: pointer;
+}
+
+.rbac-trash:hover {
+  filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg)
+    brightness(104%) contrast(97%);
 }

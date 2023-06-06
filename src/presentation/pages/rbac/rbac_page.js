@@ -1,26 +1,121 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./rbac_page.css";
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
 import InputModal from "presentation/components/inputModal/inputModal";
+import axios from "axios";
+import { APP_BASE_URL, CLIENT_ID } from "core/constants";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { loaderActions } from "presentation/redux/stores/store";
 
 function RBACPage() {
   var [isModalVisible, setModalVisiblity] = useState(false);
+  var [userList, setUserList] = useState([]);
+  var clientId = "";
+  const dispatch = useDispatch();
 
-  const handleClientIDChange = (input) => {};
+  const onEnterEmail = (input) => {};
 
   const closeModalCallback = () => {
     setModalVisiblity(false);
   };
 
+  const listUsers = async () => {
+    dispatch(loaderActions.toggleLoader(true));
+    await axios
+      .get(`${APP_BASE_URL}/mds/api/v1/private/clients/${clientId}/users`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.log(e);
+        var errorDescription = e.response.data?.error?.description;
+        if (errorDescription != null) toast.error(errorDescription);
+        else toast.error("Something Went Wrong.");
+      });
+    dispatch(loaderActions.toggleLoader(false));
+  };
+
+  const addUser = async (inputEmail, permission) => {
+    dispatch(loaderActions.toggleLoader(true));
+    await axios
+      .post(`${APP_BASE_URL}/mds/api/v1/private/clients/${clientId}/user`, {
+        clientId: clientId,
+        email: inputEmail,
+        permission: permission,
+      })
+      .then((res) => {
+        console.log(res);
+        listUsers();
+      })
+      .catch((e) => {
+        dispatch(loaderActions.toggleLoader(false));
+        console.log(e);
+        var errorDescription = e.response.data?.error?.description;
+        if (errorDescription != null) toast.error(errorDescription);
+        else toast.error("Something Went Wrong.");
+      });
+  };
+
+  const updateUserPermission = async (inputEmail, permission) => {
+    dispatch(loaderActions.toggleLoader(true));
+    await axios
+      .put(`${APP_BASE_URL}/mds/api/v1/private/clients/${clientId}/user`, {
+        clientId: clientId,
+        email: inputEmail,
+        permission: permission,
+      })
+      .then((res) => {
+        listUsers();
+        console.log(res);
+      })
+      .catch((e) => {
+        dispatch(loaderActions.toggleLoader(false));
+        console.log(e);
+        var errorDescription = e.response.data?.error?.description;
+        if (errorDescription != null) toast.error(errorDescription);
+        else toast.error("Something Went Wrong.");
+      });
+  };
+
+  const deleteUser = async (inputEmail) => {
+    dispatch(loaderActions.toggleLoader(true));
+    await axios
+      .delete(`${APP_BASE_URL}/mds/api/v1/private/clients/${clientId}/user`, {
+        data: {
+          clientId: clientId,
+          email: inputEmail,
+        },
+      })
+      .then((res) => {
+        listUsers();
+        console.log(res);
+      })
+      .catch((e) => {
+        dispatch(loaderActions.toggleLoader(false));
+        console.log(e);
+        var errorDescription = e.response.data?.error?.description;
+        if (errorDescription != null) toast.error(errorDescription);
+        else toast.error("Something Went Wrong.");
+      });
+  };
+
+  useEffect(() => {
+    clientId = localStorage.getItem(CLIENT_ID);
+    listUsers();
+  }, []);
+
   return (
     <div className="rbacPage">
       {isModalVisible && (
         <InputModal
-        title = {"Enter email"}
-        subTitle = {"Email must be from the same organisation"}
+          title={"Enter email"}
+          subTitle={"Email must be from the same organisation"}
           initValue={""}
-          getInputCallback={() => {}}
+          getInputCallback={(input) => {
+            onEnterEmail(input);
+          }}
           closeModalCallback={closeModalCallback}
         ></InputModal>
       )}
@@ -40,6 +135,9 @@ function RBACPage() {
               </p>
               <p className="heading4 pane-title rbac-control-width-container">
                 Write Access
+              </p>
+              <p className="heading4 pane-title rbac-control-width-container">
+                Delete User
               </p>
             </div>
           </div>
@@ -72,6 +170,9 @@ function RBACPage() {
                     onChange={() => {}}
                   />
                 </div>
+                <div className="rbac-control-width-container rbac-trash">
+                  <img src="/assets/icons/trash.svg"></img>
+                </div>
               </div>
             </div>
 
@@ -103,13 +204,19 @@ function RBACPage() {
                       onChange={() => {}}
                     />
                   </div>
+                  <div className="rbac-control-width-container rbac-trash">
+                    <img src="/assets/icons/trash.svg"></img>
+                  </div>
                 </div>
               </div>
             ))}
 
-            <div className="rbac-table-row add-rbac-user" onClick={()=>{
+            <div
+              className="rbac-table-row add-rbac-user"
+              onClick={() => {
                 setModalVisiblity(true);
-            }}>
+              }}
+            >
               <p className="subHeading4 rbac-email">+ Add new user</p>
             </div>
           </div>
