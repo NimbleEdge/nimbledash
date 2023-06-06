@@ -117,7 +117,7 @@ function RBACPage() {
   };
 
   const deleteUser = async (inputEmail) => {
-    console.log("clientID",inputEmail);
+    console.log("clientID", inputEmail);
     dispatch(loaderActions.toggleLoader(true));
     await axios
       .delete(`${APP_BASE_URL}/mds/api/v1/admin/user`, {
@@ -162,94 +162,99 @@ function RBACPage() {
         ></InputModal>
       )}
 
-      <div className="admin-page-left-pane">
-        <div className="page-title">
-          <p className="heading3">Superuser Panel</p>
-          <p className="subHeading">Role Based Access Control.</p>
-        </div>
-
-        <div className="rbac-table">
-          <div className="rbac-table-header">
-            <p className="heading4 pane-title">Email</p>
-            <div className="rbac-table-controls-header">
-              <p className="heading4 pane-title rbac-control-width-container">
-                Read Access
-              </p>
-              <p className="heading4 pane-title rbac-control-width-container">
-                Write Access
-              </p>
-              <p className="heading4 pane-title rbac-control-width-container">
-                Delete User
-              </p>
-            </div>
+      {!isModalVisible && (
+        <div className="admin-page-left-pane">
+          <div className="page-title">
+            <p className="heading3">Superuser Panel</p>
+            <p className="subHeading">Role Based Access Control.</p>
           </div>
 
-          <div className="rbac-table-body">
-            {userList.map((user, index) => (
-              <div key={index} className="rbac-table-row">
-                <a
-                  href={`mailto:${user.email}`}
-                  className="heading7 rbac-email"
-                >
-                  {user.email}
-                </a>
-                <div className="rbac-controls">
-                  <div className="rbac-control-width-container">
-                    <Toggle
-                      className="toggle-button"
-                      defaultChecked={true}
-                      icons={false}
-                      aria-label="No label tag"
-                      disabled={true}
-                      onChange={() => {}}
-                    />
-                  </div>
-                  <div className="rbac-control-width-container">
-                    <Toggle
-                      className="toggle-button"
-                      icons={false}
-                      defaultChecked={
-                        user.permission == PermissionEnum.READ_WRITE
-                      }
-                      aria-label="No label tag"
-                      onChange={(permission) => {
-                        var isChecked = permission.target.checked;
-                        if (isChecked) {
-                          updateUserPermission(
-                            user.email,
-                            PermissionEnum.READ_WRITE
-                          );
-                        } else {
-                          updateUserPermission(user.email, PermissionEnum.READ);
-                        }
-                        console.log(permission.target.checked);
-                      }}
-                    />
-                  </div>
-                  <div
-                    className="rbac-control-width-container rbac-trash"
-                    onClick={() => {
-                      deleteUser(user.email);
-                    }}
+          <div className="rbac-table">
+            <div className="rbac-table-header">
+              <p className="heading4 pane-title">Email</p>
+              <div className="rbac-table-controls-header">
+                <p className="heading4 pane-title rbac-control-width-container">
+                  Read Access
+                </p>
+                <p className="heading4 pane-title rbac-control-width-container">
+                  Write Access
+                </p>
+                <p className="heading4 pane-title rbac-control-width-container">
+                  Delete User
+                </p>
+              </div>
+            </div>
+
+            <div className="rbac-table-body">
+              {userList.map((user, index) => (
+                <div key={index} className="rbac-table-row">
+                  <a
+                    href={`mailto:${user.email}`}
+                    className="heading7 rbac-email"
                   >
-                    <img src="/assets/icons/trash.svg"></img>
+                    {user.email}
+                  </a>
+                  <div className="rbac-controls">
+                    <div className="rbac-control-width-container">
+                      <Toggle
+                        className="toggle-button"
+                        defaultChecked={true}
+                        icons={false}
+                        aria-label="No label tag"
+                        disabled={true}
+                        onChange={() => {}}
+                      />
+                    </div>
+                    <div className="rbac-control-width-container">
+                      <Toggle
+                        className="toggle-button"
+                        icons={false}
+                        defaultChecked={
+                          user.permission == PermissionEnum.READ_WRITE
+                        }
+                        aria-label="No label tag"
+                        onChange={(permission) => {
+                          var isChecked = permission.target.checked;
+                          if (isChecked) {
+                            updateUserPermission(
+                              user.email,
+                              PermissionEnum.READ_WRITE
+                            );
+                          } else {
+                            updateUserPermission(
+                              user.email,
+                              PermissionEnum.READ
+                            );
+                          }
+                          console.log(permission.target.checked);
+                        }}
+                      />
+                    </div>
+                    <div
+                      className="rbac-control-width-container rbac-trash"
+                      onClick={() => {
+                        deleteUser(user.email);
+                      }}
+                    >
+                      <img src="/assets/icons/trash.svg"></img>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
 
-            <div
-              className="rbac-table-row add-rbac-user"
-              onClick={() => {
-                console.log("click tohho rha hai");
-                setModalVisiblity(true);
-              }}
-            >
-              <p className="subHeading4 rbac-email">+ Add new user</p>
+              <div
+                className="rbac-table-row add-rbac-user"
+                onClick={() => {
+                  console.log("click tohho rha hai");
+                  setModalVisiblity(true);
+                }}
+              >
+                <p className="subHeading4 rbac-email">+ Add new user</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
