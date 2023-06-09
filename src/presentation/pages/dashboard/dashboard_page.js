@@ -64,7 +64,6 @@ function DashboardPage() {
     var trendsKeys = Object.keys(trends);
     var temp = [];
     trendsKeys.forEach((key, index) => {
-      console.log("trends", trends[key]);
       temp.push({
         subject: key,
         A: trends[key],
@@ -140,7 +139,6 @@ function DashboardPage() {
         },
       })
       .then((res) => {
-        console.log("models", res);
         tempJson["All Models"] = ["Latest"];
         res.data.models.forEach((modelNameVersionMap) => {
           var key = modelNameVersionMap.modelName;
@@ -232,7 +230,6 @@ function DashboardPage() {
                 customClass={"custom-dropdown"}
                 selectedItemIndex={selectedModelIndex}
                 onChangeCallback={(modelIndex) => {
-                  console.log("modelIndex", modelIndex);
                   if (modelIndex == 0) {
                     fetchMetrics(null, null);
                   } else {

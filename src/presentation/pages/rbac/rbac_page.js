@@ -43,7 +43,6 @@ function RBACPage() {
         },
       })
       .then((res) => {
-        console.log(res);
         setUserList(res.data.users);
       })
       .catch((e) => {

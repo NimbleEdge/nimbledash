@@ -33,7 +33,6 @@ function AppRouter(props) {
   useEffect(() => {
     dispatch(loaderActions.toggleLoader(true));
     var currentBrowserUrl = window.location.href;
-    console.log(currentBrowserUrl);
 
     if (currentBrowserUrl.includes("access_token")) {
       var myUrl = new URL(window.location.href.replace(/#/g, "?"));

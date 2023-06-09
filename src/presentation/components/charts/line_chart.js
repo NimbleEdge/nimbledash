@@ -35,8 +35,6 @@ function AnalyticsLineChart(props) {
       trends[modelName] = Array.from({length: maxLen-modelArray.length}, () => 0).concat(modelArray);
     });
 
-    console.log("transformed data",trends);
-
     //transform data
     for (var index = 0; index < maxLen; index++) {
       var tempMap = {};
@@ -47,7 +45,6 @@ function AnalyticsLineChart(props) {
       tempData.push(tempMap);
     }
 
-    console.log(tempData);
     setData(tempData);
   }, [trends]);
 
