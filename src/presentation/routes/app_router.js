@@ -3,8 +3,9 @@ import {
   ADMIN_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
+  RBAC_PAGE_ROUTE,
 } from "./route-paths";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import LoginPage from "presentation/pages/login/login_page";
 import DashboardPage from "presentation/pages/dashboard/dashboard_page";
 import InputModal from "presentation/components/inputModal/inputModal";
@@ -22,15 +23,16 @@ import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
+import RBACPage from "presentation/pages/rbac/rbac_page";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
+  const canRender = useState(false);
 
   useEffect(() => {
     dispatch(loaderActions.toggleLoader(true));
     var currentBrowserUrl = window.location.href;
-    console.log(currentBrowserUrl);
 
     if (currentBrowserUrl.includes("access_token")) {
       var myUrl = new URL(window.location.href.replace(/#/g, "?"));
@@ -51,6 +53,7 @@ function AppRouter(props) {
           );
           navigateTo(DASHBOARD_PAGE_ROUTE);
         }
+        dispatch(loaderActions.toggleLoader(false));
       });
     } else {
       var token = localStorage.getItem(ACCESS_TOKEN);
@@ -64,8 +67,8 @@ function AppRouter(props) {
           navigateTo(LOGIN_PAGE_ROUTE);
         }
       });
+      dispatch(loaderActions.toggleLoader(false));
     }
-    dispatch(loaderActions.toggleLoader(false));
   }, []);
 
   const isTokenValid = async (token) => {
@@ -96,7 +99,8 @@ function AppRouter(props) {
       <Route path={LOGIN_PAGE_ROUTE} element={<LoginPage />} />
       <Route path={DASHBOARD_PAGE_ROUTE} element={<DashboardPage />} />
       <Route path={ADMIN_PAGE_ROUTE} element={<AdminPage />} />
-      <Route path="/*" element={<DashboardPage />} />
+      <Route path={RBAC_PAGE_ROUTE} element={<RBACPage />} />
+      {localStorage.getItem(ACCESS_TOKEN)!=null && <Route path="/" element={<DashboardPage />} />}
     </Routes>
   );
 }

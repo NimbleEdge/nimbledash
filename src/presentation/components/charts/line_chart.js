@@ -17,29 +17,37 @@ function AnalyticsLineChart(props) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    // trends['test_model'] = Array.from({length: 30}, () => Math.floor(Math.random() * 40000));
+
     var tempData = [];
     var modelKeys = Object.keys(trends);
     var maxLen = -1;
 
+    //calculate max length
     modelKeys.forEach((key) => {
       if (trends[key].length > maxLen) maxLen = trends[key].length;
     });
 
+    //add 0 to the shorter arrays
+    modelKeys.forEach((modelName) => {
+      var modelArray = trends[modelName].map((num) => num / 1000);
+      modelArray.reverse();
+      trends[modelName] = Array.from(
+        { length: maxLen - modelArray.length },
+        () => 0
+      ).concat(modelArray);
+    });
+
+    //transform data
     for (var index = 0; index < maxLen; index++) {
       var tempMap = {};
-      modelKeys.forEach((key) => {
-        var trendList = trends[key];
-        if (trendList.length - 1 - index >= 0) {
-          tempMap[key] = trendList[trendList.length - 1 - index]/1000;
-        } else {
-          tempMap[key] = 0;
-        }
+      modelKeys.forEach((modelName) => {
+        tempMap[modelName] = trends[modelName][index];
       });
       tempMap["unit"] = "millis";
       tempData.push(tempMap);
     }
 
-    console.log(tempData);
     setData(tempData);
   }, [trends]);
 
@@ -61,15 +69,16 @@ function AnalyticsLineChart(props) {
         <YAxis unit=" millls" width={100} />
         <Tooltip />
         <Legend />
-          {Object.keys(trends).map((key, index) => (
-            <Line
-              type="monotone"
-              dataKey={key}
-              stroke={STROKE_COLORS_LIST[index % STROKE_COLORS_LIST.length]}
-              strokeWidth={3}
-              activeDot={{ r: 4 }}
-            />
-          ))}
+        {Object.keys(trends).map((key, index) => (
+          <Line
+            type="monotone"
+            dataKey={key}
+            stroke={STROKE_COLORS_LIST[index % STROKE_COLORS_LIST.length]}
+            strokeWidth={3}
+            activeDot={{ r: 4 }}
+            dot={false}
+          />
+        ))}
       </LineChart>
     </ResponsiveContainer>
   );

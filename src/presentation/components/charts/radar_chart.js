@@ -25,7 +25,6 @@ function AnalyticsRadarChart(props) {
     });
 
     trendsKeys.forEach((key, index) => {
-      console.log("trends", trends[key]);
       temp.push({
         subject: key,
         A: trends[key],
