@@ -2,6 +2,7 @@ import { ACCESS_TOKEN, CLIENT_ID, USER_EMAIL } from "core/constants";
 import {
   ADMIN_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
+  LOGIN_PAGE_ROUTE,
   RBAC_PAGE_ROUTE,
 } from "presentation/routes/route-paths";
 import React, { useEffect, useState } from "react";
@@ -113,7 +114,7 @@ function SideBar() {
           className="sidebar-item"
           onClick={() => {
             localStorage.clear();
-            window.location.reload();
+            navigateTo(LOGIN_PAGE_ROUTE);
           }}
         >
           <img className="sidebar-icon" src="/assets/icons/logout.svg"></img>
