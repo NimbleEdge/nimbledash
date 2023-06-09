@@ -17,23 +17,30 @@ function AnalyticsLineChart(props) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    // trends['test_model'] = Array.from({length: 30}, () => Math.floor(Math.random() * 40000));
+
     var tempData = [];
     var modelKeys = Object.keys(trends);
     var maxLen = -1;
 
+    //calculate max length
     modelKeys.forEach((key) => {
       if (trends[key].length > maxLen) maxLen = trends[key].length;
     });
 
+    //add 0 to the shorter arrays
+    modelKeys.forEach((modelName)=>{
+      var modelArray = trends[modelName];
+      trends[modelName] = Array.from({length: maxLen-modelArray.length}, () => 0).concat(modelArray);
+    });
+
+    console.log("transformed data",trends);
+
+    //transform data
     for (var index = 0; index < maxLen; index++) {
       var tempMap = {};
-      modelKeys.forEach((key) => {
-        var trendList = trends[key];
-        if (trendList.length - 1 - index >= 0) {
-          tempMap[key] = trendList[trendList.length - 1 - index]/1000;
-        } else {
-          tempMap[key] = 0;
-        }
+      modelKeys.forEach((modelName) => {
+        tempMap[modelName] = trends[modelName][index];
       });
       tempMap["unit"] = "millis";
       tempData.push(tempMap);

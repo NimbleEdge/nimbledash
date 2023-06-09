@@ -67,3 +67,13 @@
   filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg)
     brightness(104%) contrast(97%);
 }
+
+/* .rbac-trash[title]:hover:after {
+  color: red;
+  content: attr(title);
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translate(0,-50%);
+  font-size: 12px;
+} */

@@ -18,6 +18,7 @@ import AnalyticsPieChart from "../../components/charts/pie_chart";
 import AnalyticsRadarChart from "../../components/charts/radar_chart";
 import InputModal from "../../components/inputModal/inputModal";
 import { getRequest } from "data/remote_datasource";
+import { useNavigate } from "react-router-dom";
 import SideBar from "presentation/components/sideBar/side_bar";
 import axios from "axios";
 import {
@@ -35,6 +36,7 @@ import {
 } from "presentation/redux/stores/store";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LOGIN_PAGE_ROUTE } from "presentation/routes/route-paths";
 
 function DashboardPage() {
   var [metrics, setMetrics] = useState({});
@@ -42,6 +44,7 @@ function DashboardPage() {
   var [selectedModelIndex, setSelectedModelIndex] = useState(0);
   var [selectedVersionIndex, setSelectedVersionIndex] = useState(0);
   const dispatch = useDispatch();
+  const navigateTo = useNavigate();
 
   var [isModalVisible, setModalVisiblity] = useState(true);
   var [clientID, setClientID] = useState("");
@@ -73,8 +76,13 @@ function DashboardPage() {
   useEffect(() => {
     dispatch(loaderActions.toggleLoader(true));
     var cachedClientId = localStorage.getItem(CLIENT_ID);
+    var cachedAccessToken = localStorage.getItem(ACCESS_TOKEN);
 
-    if(clientIDList.length==0){
+    if (cachedAccessToken == "" || cachedAccessToken == null) {
+      navigateTo(LOGIN_PAGE_ROUTE);
+    }
+
+    if (clientIDList.length == 0) {
       fetchClientIDList();
     }
 
@@ -89,7 +97,6 @@ function DashboardPage() {
     } else if (clientID == "") {
       dispatch(loaderActions.toggleLoader(false));
     }
-
   }, [clientID]);
 
   const fetchClientIDList = async () => {
@@ -133,7 +140,7 @@ function DashboardPage() {
         },
       })
       .then((res) => {
-        console.log("models",res);
+        console.log("models", res);
         tempJson["All Models"] = ["Latest"];
         res.data.models.forEach((modelNameVersionMap) => {
           var key = modelNameVersionMap.modelName;
@@ -154,6 +161,9 @@ function DashboardPage() {
         else toast.error("Something Went Wrong.");
       });
   };
+
+  const shortenNumber = (num) =>
+    num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num;
 
   const fetchMetrics = async (modelName, versionName) => {
     var uri = "";
@@ -262,7 +272,7 @@ function DashboardPage() {
               cardIconAddress="/assets/icons/total_inferences.jpg"
               cardInfoTitle="Total Inferences"
               cardInfoSubtitle="Lifetime"
-              cardText={metrics["totalInferences"]}
+              cardText={shortenNumber(metrics["totalInferences"])}
               cardSubText="calls made"
             ></DashboardCard>
 
@@ -282,7 +292,7 @@ function DashboardPage() {
               cardIconAddress="/assets/icons/avg_inferences.jpg"
               cardInfoTitle="Average Inferences"
               cardInfoSubtitle="Per Day"
-              cardText={metrics["averageInferences"]}
+              cardText={shortenNumber(metrics["averageInferences"])}
               cardSubText="calls made"
             ></DashboardCard>
 
