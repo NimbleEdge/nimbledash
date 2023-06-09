@@ -12,6 +12,7 @@
 
 .input-modal {
   position: absolute;
+  height: 250px;
   background-color: white;
   text-align: center;
   padding: 48px 40px 40px 40px;
@@ -64,12 +65,24 @@
   cursor: pointer;
 }
 
-.input-modal-error{
+.input-modal-error {
   color: red;
   font-weight: 500;
   position: absolute;
   bottom: 16px;
   left: 50%;
-  transform: translate(-50%,0);
+  transform: translate(-50%, 0);
+}
 
+.client-id-dropdown {
+  /* height: 70px; */
+  /* overflow-y: scroll; */
+  color: black;
+  border-radius: 8px;
+  height: 52px;
+  width: 600px;
+  margin-top: 12px;
+  border: 0;
+  background-color: var(--clr-accent);
+  color: white;
 }

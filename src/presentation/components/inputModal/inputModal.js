@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./inputModal.css";
+import { ButtonGroup, Dropdown, DropdownButton, Toast } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 function InputModal(props) {
   var initValue = props.initValue;
@@ -8,14 +10,13 @@ function InputModal(props) {
   var title = props.title;
   var subTitle = props.subTitle;
   var [modalErrorMessage, setModalErrorMessage] = useState("");
+  var clientIDList = props.clientIDList;
 
   const handleSubmit = (event) => {
     event.preventDefault();
     var userInput = event.target.clientID.value;
     if (userInput == "") {
-      setModalErrorMessage("Client ID can't be null");
-    } else if (userInput == initValue) {
-      setModalErrorMessage("Please enter a different Client ID");
+      toast.error("Input can't be null");
     } else {
       getInputCallback(userInput);
     }
@@ -38,15 +39,39 @@ function InputModal(props) {
         ></img>
         <p className="heading3">{title}</p>
         <p className="subHeading margin-top-8">{subTitle}</p>
-        <form className="inputModal-textfield-flex" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="clientID"
-            className="inputModal-textfield"
-            placeholder={initValue}
-          />
-          <input type="submit" className="inputModal-button buttonText"></input>
-        </form>
+        {clientIDList == null ? (
+          <form className="inputModal-textfield-flex" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="clientID"
+              className="inputModal-textfield"
+              placeholder={initValue}
+            />
+            <input
+              type="submit"
+              className="inputModal-button buttonText"
+            ></input>
+          </form>
+        ) : (
+          <DropdownButton
+            as={ButtonGroup}
+            key="0"
+            id="000"
+            size="lg"
+            title={initValue!=""?initValue:"Select client id"}
+            variant=""
+            bsPrefix={"client-id-dropdown" + " " + "buttonText"}
+            onSelect={(selectedIndex) => {
+              getInputCallback(clientIDList[selectedIndex]);
+            }}
+            children={clientIDList.map((item, idx) => (
+              <Dropdown.Item key={idx} eventKey={idx}>
+                {item}
+              </Dropdown.Item>
+            ))}
+          ></DropdownButton>
+        )}
+
         {modalErrorMessage != "" && (
           <p className="input-modal-error">{modalErrorMessage}</p>
         )}

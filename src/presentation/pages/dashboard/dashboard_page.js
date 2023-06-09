@@ -4,7 +4,12 @@ import "./dashboard_page.css";
 import "react-dropdown/style.css";
 import DropdownComponent from "../../components/dropdownMenu/dropdown";
 import Dropdown from "react-bootstrap/Dropdown";
-import { DropdownButton, SplitButton, ButtonGroup } from "react-bootstrap";
+import {
+  DropdownButton,
+  SplitButton,
+  ButtonGroup,
+  Toast,
+} from "react-bootstrap";
 import { useState } from "react";
 import DashboardCard from "../../components/dashboardCard/dashboard_card";
 import AnalyticsLineChart from "../../components/charts/line_chart";
@@ -21,7 +26,7 @@ import {
   CLIENT_ID,
   APP_BASE_URL,
   GRAPH_COLORS,
-  COGNITO_USERNAME
+  COGNITO_USERNAME,
 } from "core/constants";
 import { useDispatch } from "react-redux";
 import {
@@ -40,9 +45,12 @@ function DashboardPage() {
 
   var [isModalVisible, setModalVisiblity] = useState(true);
   var [clientID, setClientID] = useState("");
+  var [clientIDList, setClientIDList] = useState([]);
 
   const handleClientIDChange = (input) => {
     setClientID(input);
+    localStorage.setItem(CLIENT_ID, input);
+    setModalVisiblity(false);
   };
 
   const closeModalCallback = () => {
@@ -65,19 +73,29 @@ function DashboardPage() {
   useEffect(() => {
     dispatch(loaderActions.toggleLoader(true));
     var cachedClientId = localStorage.getItem(CLIENT_ID);
+
+    if(clientIDList.length==0){
+      fetchClientIDList();
+    }
+
+    if (clientID != "") {
+      setModalVisiblity(false);
+      fetchModelList();
+      fetchMetrics(null, null);
+    }
+
     if (clientID == "" && cachedClientId != null) {
       setClientID(cachedClientId);
     } else if (clientID == "") {
       dispatch(loaderActions.toggleLoader(false));
     }
-    if (clientID != "") {
-      validateCliendID();
-    }
+
   }, [clientID]);
 
-  const validateCliendID = async () => {
+  const fetchClientIDList = async () => {
+    console.log(localStorage.getItem(ACCESS_TOKEN));
     await axios
-      .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
+      .get(`${APP_BASE_URL}/mds/api/v1/admin/user/clients`, {
         headers: {
           AuthMethod: "Cognito",
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -88,26 +106,21 @@ function DashboardPage() {
       })
       .then((res) => {
         if (res.status == 200) {
-          localStorage.setItem(CLIENT_ID, clientID);
-          fetchModelList();
-          setModalVisiblity(false);
+          console.log(res);
+          setClientIDList(res.data.Clients);
         } else {
-          toast.error("Wrong Clientid");
+          Toast.error("Can't fetch client ids");
         }
       })
       .catch((e) => {
         console.log(e);
-
         var errorDescription = e.response?.data?.error?.description;
         if (errorDescription != null) toast.error(errorDescription);
         else toast.error("Something Went Wrong.");
-
-        dispatch(loaderActions.toggleLoader(false));
       });
   };
 
   const fetchModelList = async () => {
-    toast("Fetching data", { autoClose: 100 });
     var tempJson = {};
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
@@ -120,6 +133,7 @@ function DashboardPage() {
         },
       })
       .then((res) => {
+        console.log("models",res);
         tempJson["All Models"] = ["Latest"];
         res.data.models.forEach((modelNameVersionMap) => {
           var key = modelNameVersionMap.modelName;
@@ -177,8 +191,11 @@ function DashboardPage() {
     <div className="dashboardPage">
       {isModalVisible && (
         <InputModal
-        title = {"Enter clientID"}
-        subTitle = {"Entered clientId will be verified from our backend services"}
+          clientIDList={clientIDList}
+          title={"Enter clientID"}
+          subTitle={
+            "Entered clientId will be verified from our backend services"
+          }
           initValue={clientID}
           getInputCallback={handleClientIDChange}
           closeModalCallback={closeModalCallback}
