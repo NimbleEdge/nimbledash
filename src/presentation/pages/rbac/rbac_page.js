@@ -20,6 +20,7 @@ import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
 function RBACPage() {
   var [isModalVisible, setModalVisiblity] = useState(false);
   var [userList, setUserList] = useState([]);
+  const [userEmailLocal,setUserEmailLocal] = useState("");
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
 
@@ -145,6 +146,7 @@ function RBACPage() {
   };
 
   useEffect(() => {
+    setUserEmailLocal(localStorage.getItem(USER_EMAIL));
     listUsers();
   }, []);
 
@@ -162,7 +164,7 @@ function RBACPage() {
         ></InputModal>
       )}
 
-      {!isModalVisible && (
+      {!isModalVisible && userEmailLocal!="" && (
         <div className="admin-page-left-pane">
           <div className="page-title">
             <p className="heading3">Superuser Panel</p>
@@ -174,10 +176,10 @@ function RBACPage() {
               <p className="heading4 pane-title">Email</p>
               <div className="rbac-table-controls-header">
                 <p className="heading4 pane-title rbac-control-width-container">
-                  Read Access
+                  Write Access
                 </p>
                 <p className="heading4 pane-title rbac-control-width-container">
-                  Write Access
+                  Admin Privileges
                 </p>
                 <p className="heading4 pane-title rbac-control-width-container">
                   Delete User
@@ -195,16 +197,6 @@ function RBACPage() {
                     {user.email}
                   </a>
                   <div className="rbac-controls">
-                    <div className="rbac-control-width-container">
-                      <Toggle
-                        className="toggle-button"
-                        defaultChecked={true}
-                        icons={false}
-                        aria-label="No label tag"
-                        disabled={true}
-                        onChange={() => {}}
-                      />
-                    </div>
                     <div className="rbac-control-width-container">
                       <Toggle
                         className="toggle-button"
@@ -228,6 +220,29 @@ function RBACPage() {
                             );
                           }
                           console.log(permission.target.checked);
+                        }}
+                      />
+                    </div>
+                    <div className="rbac-control-width-container">
+                      <Toggle
+                        className="toggle-button"
+                        defaultChecked={user.permission == PermissionEnum.ADMIN}
+                        icons={false}
+                        aria-label="No label tag"
+                        disabled={false}
+                        onChange={(permission) => {
+                          var isChecked = permission.target.checked;
+                          if (isChecked) {
+                            updateUserPermission(
+                              user.email,
+                              PermissionEnum.ADMIN
+                            );
+                          } else {
+                            updateUserPermission(
+                              user.email,
+                              PermissionEnum.READ_WRITE
+                            );
+                          }
                         }}
                       />
                     </div>
