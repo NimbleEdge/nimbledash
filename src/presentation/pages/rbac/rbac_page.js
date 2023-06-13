@@ -16,10 +16,12 @@ import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { useNavigate } from "react-router-dom";
 import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
+import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
 
 function RBACPage() {
   var [isModalVisible, setModalVisiblity] = useState(false);
   var [userList, setUserList] = useState([]);
+  const [userEmailLocal, setUserEmailLocal] = useState("");
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
 
@@ -108,6 +110,7 @@ function RBACPage() {
       .then((res) => {
         dispatch(loaderActions.toggleLoader(false));
         toast.success("Permission updated succesfully.");
+        window.location.reload();
       })
       .catch((e) => {
         dispatch(loaderActions.toggleLoader(false));
@@ -145,6 +148,7 @@ function RBACPage() {
   };
 
   useEffect(() => {
+    setUserEmailLocal(localStorage.getItem(USER_EMAIL));
     listUsers();
   }, []);
 
@@ -162,7 +166,7 @@ function RBACPage() {
         ></InputModal>
       )}
 
-      {!isModalVisible && (
+      {!isModalVisible && userEmailLocal != "" && (
         <div className="admin-page-left-pane">
           <div className="page-title">
             <p className="heading3">Superuser Panel</p>
@@ -174,10 +178,7 @@ function RBACPage() {
               <p className="heading4 pane-title">Email</p>
               <div className="rbac-table-controls-header">
                 <p className="heading4 pane-title rbac-control-width-container">
-                  Read Access
-                </p>
-                <p className="heading4 pane-title rbac-control-width-container">
-                  Write Access
+                  Manage Permission
                 </p>
                 <p className="heading4 pane-title rbac-control-width-container">
                   Delete User
@@ -196,17 +197,37 @@ function RBACPage() {
                   </a>
                   <div className="rbac-controls">
                     <div className="rbac-control-width-container">
-                      <Toggle
-                        className="toggle-button"
-                        defaultChecked={true}
-                        icons={false}
-                        aria-label="No label tag"
-                        disabled={true}
-                        onChange={() => {}}
-                      />
-                    </div>
-                    <div className="rbac-control-width-container">
-                      <Toggle
+                      <DropdownComponent
+                        customClass={"rbac-dropdown"}
+                        itemList={["Read Only", "Read & Write", "Admin"]}
+                        onChangeCallback={(index) => {
+                          if (index == 0) {
+                            updateUserPermission(
+                              user.email,
+                              PermissionEnum.READ
+                            );
+                          } else if (index == 1) {
+                            updateUserPermission(
+                              user.email,
+                              PermissionEnum.READ_WRITE
+                            );
+                          } else if (index == 2) {
+                            updateUserPermission(
+                              user.email,
+                              PermissionEnum.ADMIN
+                            );
+                          }
+                        }}
+                        selectedItemIndex={
+                          user.permission == PermissionEnum.ADMIN
+                            ? 2
+                            : user.permission == PermissionEnum.READ_WRITE
+                            ? 1
+                            : 0
+                        }
+                      ></DropdownComponent>
+
+                      {/* <Toggle
                         className="toggle-button"
                         icons={false}
                         defaultChecked={
@@ -229,17 +250,52 @@ function RBACPage() {
                           }
                           console.log(permission.target.checked);
                         }}
-                      />
+                      /> */}
                     </div>
+                    {/* <div className="rbac-control-width-container">
+                      <Toggle
+                        className="toggle-button"
+                        defaultChecked={user.permission == PermissionEnum.ADMIN}
+                        icons={false}
+                        aria-label="No label tag"
+                        disabled={false}
+                        onChange={(permission) => {
+                          var isChecked = permission.target.checked;
+                          if (isChecked) {
+                            updateUserPermission(
+                              user.email,
+                              PermissionEnum.ADMIN
+                            );
+                          } else {
+                            updateUserPermission(
+                              user.email,
+                              PermissionEnum.READ_WRITE
+                            );
+                          }
+                        }}
+                      />
+                    </div> */}
                     <div
-                      className="rbac-control-width-container rbac-trash" title={user.permission == PermissionEnum.ADMIN?"Superuser. Can't delete.":""}
+                      className="rbac-control-width-container rbac-trash"
+                      title={
+                        user.permission == PermissionEnum.ADMIN
+                          ? "Superuser. Can't delete."
+                          : ""
+                      }
                       onClick={() => {
-                        if(user.permission!=PermissionEnum.ADMIN){
+                        if (user.permission != PermissionEnum.ADMIN) {
                           deleteUser(user.email);
                         }
                       }}
                     >
-                      <img className="delete-user-icon" src={user.permission == PermissionEnum.ADMIN?"/assets/icons/super_user.svg":"/assets/icons/trash.svg"}></img>
+                      <img
+                        className="delete-user-icon"
+                        src={
+                          user.permission == PermissionEnum.ADMIN
+                            ? "/assets/icons/super_user.svg"
+                            : "/assets/icons/trash.svg"
+                        }
+                      ></img>
                     </div>
                   </div>
                 </div>

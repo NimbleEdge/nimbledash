@@ -16,7 +16,7 @@
 
 .rbac-control-width-container {
   /* background-color: red; */
-  width: 150px;
+  width: 184px;
   text-align: center;
   margin: auto 0;
 }
@@ -66,6 +66,12 @@
 .rbac-trash:hover {
   filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg)
     brightness(104%) contrast(97%);
+}
+
+.rbac-dropdown{
+  border: 0;
+  background-color: white;
+  color: black;
 }
 
 /* .rbac-trash[title]:hover:after {
