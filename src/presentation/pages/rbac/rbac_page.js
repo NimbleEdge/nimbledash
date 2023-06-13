@@ -45,7 +45,11 @@ function RBACPage() {
         },
       })
       .then((res) => {
-        setUserList(res.data.users);
+        var listOfObjects = res.data.users;
+        listOfObjects.sort(function(a, b){
+          return a.email.localeCompare(b.email);
+      });
+        setUserList(listOfObjects);
       })
       .catch((e) => {
         console.log(e);
