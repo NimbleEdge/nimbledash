@@ -182,7 +182,8 @@ function DashboardPage() {
     num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num;
 
   const fetchMetrics = async (modelName, versionName) => {
-    console.log(`GIOME ${modelName}`);
+    if (modelName == "All Models") modelName = null;
+
     var uri = "";
     if (modelName == null && versionName == null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/inference`;
@@ -191,7 +192,14 @@ function DashboardPage() {
     } else if (modelName != null && versionName != null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/inference`;
     }
-    console.log("request uri is", uri + " " + intervalObject["startDate"].toISOString() + " " + intervalObject["endDate"].toISOString());
+    console.log(
+      "request uri is",
+      uri +
+        " " +
+        intervalObject["startDate"].toISOString() +
+        " " +
+        intervalObject["endDate"].toISOString()
+    );
     await axios
       .get(uri, {
         headers: {
@@ -327,7 +335,10 @@ function DashboardPage() {
                     onClick={() => {
                       toggleDatePicker(false);
                       setIntervalObjectPrev(intervalObject);
-                      fetchMetrics(null,null);
+                      fetchMetrics(
+                        Object.keys(modelJson)[selectedModelIndex],
+                        null
+                      );
                     }}
                   >
                     <p className="centerText">Apply</p>
@@ -335,7 +346,7 @@ function DashboardPage() {
                   <div
                     className="datePickerCancel"
                     onClick={() => {
-                    toggleDatePicker(false);
+                      toggleDatePicker(false);
                       setIntervalObject(intervalObjectPrev);
                     }}
                   >
