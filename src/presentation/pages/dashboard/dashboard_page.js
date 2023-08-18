@@ -182,6 +182,7 @@ function DashboardPage() {
     num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num;
 
   const fetchMetrics = async (modelName, versionName) => {
+    console.log(`GIOME ${modelName}`);
     var uri = "";
     if (modelName == null && versionName == null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/inference`;
@@ -326,7 +327,7 @@ function DashboardPage() {
                     onClick={() => {
                       toggleDatePicker(false);
                       setIntervalObjectPrev(intervalObject);
-                      fetchMetrics(modelJson[Object.keys(modelJson)[selectedModelIndex]],null);
+                      fetchMetrics(null,null);
                     }}
                   >
                     <p className="centerText">Apply</p>
