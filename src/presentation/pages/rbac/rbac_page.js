@@ -46,16 +46,22 @@ function RBACPage() {
       })
       .then((res) => {
         var listOfObjects = res.data.users;
-        listOfObjects.sort(function(a, b){
+        listOfObjects.sort(function (a, b) {
           return a.email.localeCompare(b.email);
-      });
+        });
         setUserList(listOfObjects);
       })
       .catch((e) => {
         console.log(e);
         var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
         navigateTo(DASHBOARD_PAGE_ROUTE);
       });
     dispatch(loaderActions.toggleLoader(false));
@@ -88,8 +94,14 @@ function RBACPage() {
         dispatch(loaderActions.toggleLoader(false));
         console.log(e);
         var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
   };
 
@@ -120,8 +132,14 @@ function RBACPage() {
         dispatch(loaderActions.toggleLoader(false));
         console.log(e);
         var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
   };
 
@@ -146,8 +164,14 @@ function RBACPage() {
         dispatch(loaderActions.toggleLoader(false));
         console.log(e);
         var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
   };
 
