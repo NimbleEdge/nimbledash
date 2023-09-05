@@ -63,8 +63,14 @@ function AdminPage() {
       .catch((e) => {
         console.log(e);
         var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
     dispatch(loaderActions.toggleLoader(false));
   };
@@ -80,14 +86,20 @@ function AdminPage() {
 
   const uploadModel = async () => {
     if (modelContentBase64 == "") {
-      toast.error("Please select a valid model");
+      toast.error("Please select a valid model", {
+        toastId: "errorToast",
+      });
     } else if (Object.keys(modelConfigJson).length == 0) {
-      toast.error("Please select a valid model config");
+      toast.error("Please select a valid model config", {
+        toastId: "errorToast",
+      });
     } else {
       if (selectedUploadTypeIndex == 0) {
         const modelName = document.getElementById("modelNameInput").value;
         if (modelName == null || modelName == "") {
-          toast.error("Please enter a valid model name");
+          toast.error("Please enter a valid model name", {
+            toastId: "errorToast",
+          });
         } else {
           dispatch(loaderActions.toggleLoader(true));
           await axios
@@ -115,8 +127,14 @@ function AdminPage() {
             .catch((e) => {
               console.log(e);
               var errorDescription = e.response.data?.error?.description;
-              if (errorDescription != null) toast.error(errorDescription);
-              else toast.error("Something Went Wrong.");
+              if (errorDescription != null)
+                toast.error(errorDescription, {
+                  toastId: "errorToast",
+                });
+              else
+                toast.error("Something Went Wrong.", {
+                  toastId: "errorToast",
+                });
             });
         }
       } else {
@@ -126,7 +144,9 @@ function AdminPage() {
             `${APP_BASE_URL}/mds/api/v1/admin/model`,
             {
               modelConfig: modelConfigJson,
-              modelName: modelList[selectedModelIndex].modelName,
+              modelName: Array.from(
+                new Set(modelList.map((item) => item.modelName))
+              )[selectedModelIndex],
               model: modelContentBase64,
               updateType: selectedUploadTypeIndex,
             },
@@ -147,8 +167,14 @@ function AdminPage() {
           .catch((e) => {
             console.log(e);
             var errorDescription = e.response.data?.error?.description;
-            if (errorDescription != null) toast.error(errorDescription);
-            else toast.error("Something Went Wrong.");
+            if (errorDescription != null)
+              toast.error(errorDescription, {
+                toastId: "errorToast",
+              });
+            else
+              toast.error("Something Went Wrong.", {
+                toastId: "errorToast",
+              });
           });
       }
     }
@@ -190,8 +216,14 @@ function AdminPage() {
       .catch((e) => {
         console.log(e);
         var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
   };
 

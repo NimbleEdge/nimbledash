@@ -37,6 +37,9 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LOGIN_PAGE_ROUTE } from "presentation/routes/route-paths";
+import { DateRangePicker } from "react-date-range";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 
 function DashboardPage() {
   var [metrics, setMetrics] = useState({});
@@ -49,6 +52,23 @@ function DashboardPage() {
   var [isModalVisible, setModalVisiblity] = useState(true);
   var [clientID, setClientID] = useState("");
   var [clientIDList, setClientIDList] = useState([]);
+
+  const subtractMonths = (date, months) => {
+    date.setMonth(date.getMonth() - months);
+    return date;
+  };
+
+  var [intervalObject, setIntervalObject] = useState({
+    startDate: subtractMonths(new Date(), 1),
+    endDate: new Date(),
+    key: "selection",
+  });
+  var [intervalObjectPrev, setIntervalObjectPrev] = useState({
+    startDate: subtractMonths(new Date(), 1),
+    endDate: new Date(),
+    key: "selection",
+  });
+  var [isDatePickerVisible, toggleDatePicker] = useState(false);
 
   const handleClientIDChange = (input) => {
     setClientID(input);
@@ -114,14 +134,22 @@ function DashboardPage() {
           console.log(res);
           setClientIDList(res.data.Clients);
         } else {
-          Toast.error("Can't fetch client ids");
+          Toast.error("Can't fetch client ids", {
+            toastId: "errorToast",
+          });
         }
       })
       .catch((e) => {
         console.log(e);
         var errorDescription = e.response?.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
   };
 
@@ -153,8 +181,14 @@ function DashboardPage() {
       .catch((e) => {
         console.log(e);
         var errorDescription = e.response?.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
   };
 
@@ -162,6 +196,8 @@ function DashboardPage() {
     num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num;
 
   const fetchMetrics = async (modelName, versionName) => {
+    if (modelName == "All Models") modelName = null;
+
     var uri = "";
     if (modelName == null && versionName == null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/inference`;
@@ -170,7 +206,14 @@ function DashboardPage() {
     } else if (modelName != null && versionName != null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/inference`;
     }
-    console.log("request uri is", uri);
+    console.log(
+      "request uri is",
+      uri +
+        " " +
+        intervalObject["startDate"].toISOString() +
+        " " +
+        intervalObject["endDate"].toISOString()
+    );
     await axios
       .get(uri, {
         headers: {
@@ -180,17 +223,33 @@ function DashboardPage() {
           TokenId: localStorage.getItem(USER_EMAIL),
           CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
+        params: {
+          startTime: intervalObject["startDate"].toISOString(),
+          endTime: intervalObject["endDate"].toISOString(),
+        },
       })
       .then((res) => {
         setMetrics(res.data);
+        console.log(res.data);
       })
       .catch((e) => {
         var errorDescription = e.response?.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
 
     dispatch(loaderActions.toggleLoader(false));
+  };
+
+  const handleSelect = (ranges) => {
+    setIntervalObject(ranges["selection"]);
+    // toggleDatePicker(!isDatePickerVisible);
   };
 
   return (
@@ -260,6 +319,61 @@ function DashboardPage() {
                   setSelectedVersionIndex(versionIndex);
                 }}
               ></DropdownComponent>
+            </div>
+            <div className="interval-box">
+              <p
+                className="buttonText intervalText"
+                onClick={() => {
+                  toggleDatePicker(true);
+                }}
+              >
+                {intervalObject["startDate"].getDate() +
+                  "/" +
+                  (
+                    parseInt(intervalObject["startDate"].getMonth()) + 1
+                  ).toString() +
+                  "/" +
+                  intervalObject["startDate"].getFullYear() +
+                  " - " +
+                  intervalObject["endDate"].getDate() +
+                  "/" +
+                  (
+                    parseInt(intervalObject["endDate"].getMonth()) + 1
+                  ).toString() +
+                  "/" +
+                  intervalObject["endDate"].getFullYear()}
+              </p>
+              {isDatePickerVisible && (
+                <div>
+                  <DateRangePicker
+                    className="datePicker"
+                    ranges={[intervalObject]}
+                    onChange={handleSelect}
+                  />
+                  <div
+                    className="datePickerApply"
+                    onClick={() => {
+                      toggleDatePicker(false);
+                      setIntervalObjectPrev(intervalObject);
+                      fetchMetrics(
+                        Object.keys(modelJson)[selectedModelIndex],
+                        null
+                      );
+                    }}
+                  >
+                    <p className="centerText">Apply</p>
+                  </div>
+                  <div
+                    className="datePickerCancel"
+                    onClick={() => {
+                      toggleDatePicker(false);
+                      setIntervalObject(intervalObjectPrev);
+                    }}
+                  >
+                    <p className="centerText">Cancel</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="number-card-array">

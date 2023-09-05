@@ -16,7 +16,9 @@ function InputModal(props) {
     event.preventDefault();
     var userInput = event.target.clientID.value;
     if (userInput == "") {
-      toast.error("Input can't be null");
+      toast.error("Input can't be null", {
+        toastId: "errorToast",
+      });
     } else {
       getInputCallback(userInput);
     }
@@ -58,7 +60,7 @@ function InputModal(props) {
             key="0"
             id="000"
             size="lg"
-            title={initValue!=""?initValue:"Select client id"}
+            title={initValue != "" ? initValue : "Select client id"}
             variant=""
             bsPrefix={"client-id-dropdown" + " " + "buttonText"}
             onSelect={(selectedIndex) => {
