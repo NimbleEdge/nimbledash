@@ -100,7 +100,9 @@ function AppRouter(props) {
       <Route path={DASHBOARD_PAGE_ROUTE} element={<DashboardPage />} />
       <Route path={ADMIN_PAGE_ROUTE} element={<AdminPage />} />
       <Route path={RBAC_PAGE_ROUTE} element={<RBACPage />} />
-      {localStorage.getItem(ACCESS_TOKEN)!=null && <Route path="/" element={<DashboardPage />} />}
+      {localStorage.getItem(ACCESS_TOKEN) != null && (
+        <Route path="/" element={<DashboardPage />} />
+      )}
     </Routes>
   );
 }

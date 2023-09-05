@@ -134,14 +134,22 @@ function DashboardPage() {
           console.log(res);
           setClientIDList(res.data.Clients);
         } else {
-          Toast.error("Can't fetch client ids");
+          Toast.error("Can't fetch client ids", {
+            toastId: "errorToast",
+          });
         }
       })
       .catch((e) => {
         console.log(e);
         var errorDescription = e.response?.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
   };
 
@@ -173,8 +181,14 @@ function DashboardPage() {
       .catch((e) => {
         console.log(e);
         var errorDescription = e.response?.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
   };
 
@@ -220,8 +234,14 @@ function DashboardPage() {
       })
       .catch((e) => {
         var errorDescription = e.response?.data?.error?.description;
-        if (errorDescription != null) toast.error(errorDescription);
-        else toast.error("Something Went Wrong.");
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
       });
 
     dispatch(loaderActions.toggleLoader(false));
