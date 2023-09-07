@@ -27,7 +27,7 @@ function AdminPage() {
   const [selectedModelIndex, setSelectedModelIndex] = useState(0);
   const [modelList, setModelList] = useState([]);
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
-    accept: [".onnx", ".json"],
+    accept: [".ort", ".json"],
     readAs: "ArrayBuffer",
     multiple: true,
     limitFilesConfig: { max: 2, min: 2 },
@@ -76,7 +76,7 @@ function AdminPage() {
   };
 
   filesContent.map((file) => {
-    if (file["name"].includes(".onnx")) {
+    if (file["name"].includes(".ort")) {
       const binary8 = new Uint8Array(file.content);
       modelContentBase64 = Buffer.from(binary8).toString("base64");
     } else {
