@@ -1,6 +1,7 @@
 import { ACCESS_TOKEN, CLIENT_ID, USER_EMAIL } from "core/constants";
 import {
   ADMIN_PAGE_ROUTE,
+  CONTACT_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
   RBAC_PAGE_ROUTE,
@@ -16,11 +17,11 @@ function SideBar() {
   useEffect(() => {
     if (window.location.href.includes(ADMIN_PAGE_ROUTE)) {
       setCurrentTab(1);
-    } 
-    else if(window.location.href.includes(RBAC_PAGE_ROUTE)){
+    } else if (window.location.href.includes(RBAC_PAGE_ROUTE)) {
       setCurrentTab(2);
-    }
-    else {
+    } else if (window.location.href.includes(CONTACT_PAGE_ROUTE)) {
+      setCurrentTab(3);
+    } else {
       setCurrentTab(0);
     }
   });
@@ -107,6 +108,33 @@ function SideBar() {
             }
           >
             Access control
+          </p>
+        </div>
+
+        <div
+          className={
+            (currentTab == 3 ? "sidebar-item-selected " : "") +
+            "sidebar-item clickable"
+          }
+          onClick={() => {
+            setCurrentTab(3);
+            navigateTo(CONTACT_PAGE_ROUTE);
+          }}
+        >
+          <img
+            className="sidebar-icon"
+            src={
+              currentTab == 3
+                ? "/assets/icons/contact_us_selected.svg"
+                : "/assets/icons/contact_us.svg"
+            }
+          ></img>
+          <p
+            className={
+              (currentTab == 3 ? "selected-desc " : "") + "sidebar-item-desc"
+            }
+          >
+            Contact Us
           </p>
         </div>
 
