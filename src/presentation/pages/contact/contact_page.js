@@ -33,36 +33,36 @@ function ContactPage() {
   }, []);
 
   const fetchModelList = async () => {
-    dispatch(loaderActions.toggleLoader(true));
+    // dispatch(loaderActions.toggleLoader(true));
 
-    await axios
-      .get(`${APP_BASE_URL}/dms/api/v1/oncall`, {
-        headers: {
-          AuthMethod: "Cognito",
-          Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-        },
-      })
-      .then((res) => {
-        var listOfModels = res.data.models;
-        listOfModels.reverse();
-        // setModelList(listOfModels);
-      })
-      .catch((e) => {
-        console.log(e);
-        var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null)
-          toast.error(errorDescription, {
-            toastId: "errorToast",
-          });
-        else
-          toast.error("Something Went Wrong.", {
-            toastId: "errorToast",
-          });
-      });
-    dispatch(loaderActions.toggleLoader(false));
+    // await axios
+    //   .get(`${APP_BASE_URL}/dms/api/v1/oncall`, {
+    //     headers: {
+    //       AuthMethod: "Cognito",
+    //       Token: localStorage.getItem(ACCESS_TOKEN),
+    //       ClientId: localStorage.getItem(CLIENT_ID),
+    //       TokenId: localStorage.getItem(USER_EMAIL),
+    //       CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+    //     },
+    //   })
+    //   .then((res) => {
+    //     var listOfModels = res.data.models;
+    //     listOfModels.reverse();
+    //     // setModelList(listOfModels);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //     var errorDescription = e.response.data?.error?.description;
+    //     if (errorDescription != null)
+    //       toast.error(errorDescription, {
+    //         toastId: "errorToast",
+    //       });
+    //     else
+    //       toast.error("Something Went Wrong.", {
+    //         toastId: "errorToast",
+    //       });
+    //   });
+    // dispatch(loaderActions.toggleLoader(false));
   };
 
   return (

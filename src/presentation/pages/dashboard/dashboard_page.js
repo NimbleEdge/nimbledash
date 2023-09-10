@@ -40,10 +40,12 @@ import { LOGIN_PAGE_ROUTE } from "presentation/routes/route-paths";
 import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
+import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
 
 function DashboardPage() {
   var [metrics, setMetrics] = useState({});
   var [modelJson, setModelJson] = useState({});
+  var [dau, setDau] = useState({});
   var [selectedModelIndex, setSelectedModelIndex] = useState(0);
   var [selectedVersionIndex, setSelectedVersionIndex] = useState(0);
   const dispatch = useDispatch();
@@ -199,12 +201,16 @@ function DashboardPage() {
     if (modelName == "All Models") modelName = null;
 
     var uri = "";
+    var uriDau = "";
     if (modelName == null && versionName == null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/inference`;
+      uriDau = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/dau`;
     } else if (modelName != null && versionName == null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/inference`;
+      uriDau = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/dau`;
     } else if (modelName != null && versionName != null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/inference`;
+      uriDau = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/dau`;
     }
     console.log(
       "request uri is",
@@ -244,7 +250,47 @@ function DashboardPage() {
           });
       });
 
+    await axios
+      .get(uriDau, {
+        headers: {
+          AuthMethod: "Cognito",
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientId: clientID,
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+        },
+        params: {
+          startTime: intervalObject["startDate"].toISOString(),
+          endTime: intervalObject["endDate"].toISOString(),
+        },
+      })
+      .then((res) => {
+        setDau(res.data);
+        console.log(res.data);
+      })
+      .catch((e) => {
+        var errorDescription = e.response?.data?.error?.description;
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
+      });
+
     dispatch(loaderActions.toggleLoader(false));
+  };
+
+  const calculateAvgDAU = () => {
+    const valuesArray = Object.values(dau);
+    const sum = valuesArray.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    if (valuesArray.length == 0) return 0;
+    return Math.floor(sum / valuesArray.length);
   };
 
   const handleSelect = (ranges) => {
@@ -352,13 +398,16 @@ function DashboardPage() {
                   />
                   <div
                     className="datePickerApply"
-                    onClick={() => {
+                    onClick={async () => {
+                      dispatch(loaderActions.toggleLoader(true));
                       toggleDatePicker(false);
                       setIntervalObjectPrev(intervalObject);
-                      fetchMetrics(
+                      await fetchMetrics(
                         Object.keys(modelJson)[selectedModelIndex],
                         null
                       );
+                      dispatch(loaderActions.toggleLoader(false));
+
                     }}
                   >
                     <p className="centerText">Apply</p>
@@ -398,8 +447,18 @@ function DashboardPage() {
             <div className="right-margin24"></div>
 
             <DashboardCard
+              cardIconAddress="/assets/icons/avg_latency.jpg"
+              cardInfoTitle="Avg DAU"
+              cardInfoSubtitle="Per Day"
+              cardText={calculateAvgDAU()}
+              cardSubText="users"
+            ></DashboardCard>
+
+            <div className="right-margin24"></div>
+
+            <DashboardCard
               cardIconAddress="/assets/icons/avg_inferences.jpg"
-              cardInfoTitle="Average Inferences"
+              cardInfoTitle="Avg Inferences"
               cardInfoSubtitle="Per Day"
               cardText={shortenNumber(metrics["averageInferences"])}
               cardSubText="calls made"
@@ -409,7 +468,7 @@ function DashboardPage() {
 
             <DashboardCard
               cardIconAddress="/assets/icons/avg_latency.jpg"
-              cardInfoTitle="Average Latency"
+              cardInfoTitle="Avg Latency"
               cardInfoSubtitle="Per Day"
               cardText={(metrics["averageLatency"] / 1000).toFixed(2)}
               cardSubText="milliseconds"
@@ -430,6 +489,20 @@ function DashboardPage() {
             <AnalyticsLineChart
               trends={metrics["LatencyTrends"]}
             ></AnalyticsLineChart>
+          </div>
+
+          <div className="graph-holder">
+            <div className="heading-row">
+              <img
+                className="card-icon"
+                src="/assets/icons/avg_latency.jpg"
+              ></img>
+              <div className="card-info">
+                <p className="bodyText">Daily Active Users</p>
+                <p className="subHeading2">Users with atleast 1 predict call each day</p>
+              </div>
+            </div>
+            <AnalyticsLineChartSingle trends={dau}></AnalyticsLineChartSingle>
           </div>
 
           <div className="row-flex">
