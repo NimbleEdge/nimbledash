@@ -40,6 +40,7 @@ import { LOGIN_PAGE_ROUTE } from "presentation/routes/route-paths";
 import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
+import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
 
 function DashboardPage() {
   var [metrics, setMetrics] = useState({});
@@ -196,9 +197,12 @@ function DashboardPage() {
     num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num;
 
   const fetchMetrics = async (modelName, versionName) => {
+    dispatch(loaderActions.toggleLoader(true));
+
     if (modelName == "All Models") modelName = null;
 
     var uri = "";
+    var uriDau = "";
     if (modelName == null && versionName == null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/inference`;
     } else if (modelName != null && versionName == null) {
@@ -245,6 +249,16 @@ function DashboardPage() {
       });
 
     dispatch(loaderActions.toggleLoader(false));
+  };
+
+  const calculateAvgDAU = () => {
+    const valuesArray = Object.values(metrics["dau"]);
+    const sum = valuesArray.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    if (valuesArray.length == 0) return 0;
+    return Math.floor(sum / valuesArray.length);
   };
 
   const handleSelect = (ranges) => {
@@ -352,13 +366,16 @@ function DashboardPage() {
                   />
                   <div
                     className="datePickerApply"
-                    onClick={() => {
+                    onClick={async () => {
+                      dispatch(loaderActions.toggleLoader(true));
                       toggleDatePicker(false);
                       setIntervalObjectPrev(intervalObject);
-                      fetchMetrics(
+                      await fetchMetrics(
                         Object.keys(modelJson)[selectedModelIndex],
                         null
                       );
+                      dispatch(loaderActions.toggleLoader(false));
+
                     }}
                   >
                     <p className="centerText">Apply</p>
@@ -398,8 +415,18 @@ function DashboardPage() {
             <div className="right-margin24"></div>
 
             <DashboardCard
+              cardIconAddress="/assets/icons/avg_dau.jpg"
+              cardInfoTitle="Avg DAU"
+              cardInfoSubtitle="Per Day"
+              cardText={calculateAvgDAU()}
+              cardSubText="users"
+            ></DashboardCard>
+
+            <div className="right-margin24"></div>
+
+            <DashboardCard
               cardIconAddress="/assets/icons/avg_inferences.jpg"
-              cardInfoTitle="Average Inferences"
+              cardInfoTitle="Avg Inferences"
               cardInfoSubtitle="Per Day"
               cardText={shortenNumber(metrics["averageInferences"])}
               cardSubText="calls made"
@@ -409,7 +436,7 @@ function DashboardPage() {
 
             <DashboardCard
               cardIconAddress="/assets/icons/avg_latency.jpg"
-              cardInfoTitle="Average Latency"
+              cardInfoTitle="Avg Latency"
               cardInfoSubtitle="Per Day"
               cardText={(metrics["averageLatency"] / 1000).toFixed(2)}
               cardSubText="milliseconds"
@@ -430,6 +457,20 @@ function DashboardPage() {
             <AnalyticsLineChart
               trends={metrics["LatencyTrends"]}
             ></AnalyticsLineChart>
+          </div>
+
+          <div className="graph-holder">
+            <div className="heading-row">
+              <img
+                className="card-icon"
+                src="/assets/icons/avg_dau.jpg"
+              ></img>
+              <div className="card-info">
+                <p className="bodyText">Daily Active Users</p>
+                <p className="subHeading2">Users with atleast 1 predict call each day</p>
+              </div>
+            </div>
+            <AnalyticsLineChartSingle trends={metrics["dau"]}></AnalyticsLineChartSingle>
           </div>
 
           <div className="row-flex">
