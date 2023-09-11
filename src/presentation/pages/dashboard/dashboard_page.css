@@ -152,7 +152,7 @@
 
 .graph-holder {
   height: 500px;
-  margin-top: 24px;
+  margin-top: 12px;
   padding: 24px 20px;
 
   flex-grow: 1;
@@ -165,7 +165,7 @@
 
 .pie-graph-holder {
   height: 550px;
-  margin-top: 24px;
+  margin-top: 12px;
   padding: 24px 20px;
 
   flex-grow: 1;
@@ -212,7 +212,7 @@
 }
 
 .right-margin24 {
-  margin-right: 24px;
+  margin-right: 12px;
 }
 
 .center-chart {

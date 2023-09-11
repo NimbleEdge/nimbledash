@@ -45,7 +45,6 @@ import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_
 function DashboardPage() {
   var [metrics, setMetrics] = useState({});
   var [modelJson, setModelJson] = useState({});
-  var [dau, setDau] = useState({});
   var [selectedModelIndex, setSelectedModelIndex] = useState(0);
   var [selectedVersionIndex, setSelectedVersionIndex] = useState(0);
   const dispatch = useDispatch();
@@ -198,19 +197,18 @@ function DashboardPage() {
     num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num;
 
   const fetchMetrics = async (modelName, versionName) => {
+    dispatch(loaderActions.toggleLoader(true));
+
     if (modelName == "All Models") modelName = null;
 
     var uri = "";
     var uriDau = "";
     if (modelName == null && versionName == null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/inference`;
-      uriDau = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/dau`;
     } else if (modelName != null && versionName == null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/inference`;
-      uriDau = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/dau`;
     } else if (modelName != null && versionName != null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/inference`;
-      uriDau = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/dau`;
     }
     console.log(
       "request uri is",
@@ -250,41 +248,11 @@ function DashboardPage() {
           });
       });
 
-    await axios
-      .get(uriDau, {
-        headers: {
-          AuthMethod: "Cognito",
-          Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientId: clientID,
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-        },
-        params: {
-          startTime: intervalObject["startDate"].toISOString(),
-          endTime: intervalObject["endDate"].toISOString(),
-        },
-      })
-      .then((res) => {
-        setDau(res.data);
-        console.log(res.data);
-      })
-      .catch((e) => {
-        var errorDescription = e.response?.data?.error?.description;
-        if (errorDescription != null)
-          toast.error(errorDescription, {
-            toastId: "errorToast",
-          });
-        else
-          toast.error("Something Went Wrong.", {
-            toastId: "errorToast",
-          });
-      });
-
     dispatch(loaderActions.toggleLoader(false));
   };
 
   const calculateAvgDAU = () => {
-    const valuesArray = Object.values(dau);
+    const valuesArray = Object.values(metrics["dau"]);
     const sum = valuesArray.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0
@@ -447,7 +415,7 @@ function DashboardPage() {
             <div className="right-margin24"></div>
 
             <DashboardCard
-              cardIconAddress="/assets/icons/avg_latency.jpg"
+              cardIconAddress="/assets/icons/avg_dau.jpg"
               cardInfoTitle="Avg DAU"
               cardInfoSubtitle="Per Day"
               cardText={calculateAvgDAU()}
@@ -495,14 +463,14 @@ function DashboardPage() {
             <div className="heading-row">
               <img
                 className="card-icon"
-                src="/assets/icons/avg_latency.jpg"
+                src="/assets/icons/avg_dau.jpg"
               ></img>
               <div className="card-info">
                 <p className="bodyText">Daily Active Users</p>
                 <p className="subHeading2">Users with atleast 1 predict call each day</p>
               </div>
             </div>
-            <AnalyticsLineChartSingle trends={dau}></AnalyticsLineChartSingle>
+            <AnalyticsLineChartSingle trends={metrics["dau"]}></AnalyticsLineChartSingle>
           </div>
 
           <div className="row-flex">

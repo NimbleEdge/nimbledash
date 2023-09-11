@@ -15,54 +15,41 @@ import "./contact_page.css";
 
 function ContactPage() {
   const dispatch = useDispatch();
-  const [onCallList, setOnCallList] = useState({
-    primary: {
-      name: "Kushal",
-      email: "kushal.patil@nimbleedgehq.ai",
-      mobile: "+91-9560118127",
-    },
-    secondary: {
-      name: "Saket",
-      email: "saket.harsh@nimbleedgehq.ai",
-      mobile: "+91-7209338593",
-    },
-  });
+  const [onCallList, setOnCallList] = useState({});
 
   useEffect(() => {
-    fetchModelList();
+    fetchOnCallList();
   }, []);
 
-  const fetchModelList = async () => {
-    // dispatch(loaderActions.toggleLoader(true));
+  const fetchOnCallList = async () => {
+    dispatch(loaderActions.toggleLoader(true));
 
-    // await axios
-    //   .get(`${APP_BASE_URL}/dms/api/v1/oncall`, {
-    //     headers: {
-    //       AuthMethod: "Cognito",
-    //       Token: localStorage.getItem(ACCESS_TOKEN),
-    //       ClientId: localStorage.getItem(CLIENT_ID),
-    //       TokenId: localStorage.getItem(USER_EMAIL),
-    //       CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-    //     },
-    //   })
-    //   .then((res) => {
-    //     var listOfModels = res.data.models;
-    //     listOfModels.reverse();
-    //     // setModelList(listOfModels);
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //     var errorDescription = e.response.data?.error?.description;
-    //     if (errorDescription != null)
-    //       toast.error(errorDescription, {
-    //         toastId: "errorToast",
-    //       });
-    //     else
-    //       toast.error("Something Went Wrong.", {
-    //         toastId: "errorToast",
-    //       });
-    //   });
-    // dispatch(loaderActions.toggleLoader(false));
+    await axios
+      .get(`${APP_BASE_URL}/dms/api/v1/oncall`, {
+        headers: {
+          AuthMethod: "Cognito",
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientId: localStorage.getItem(CLIENT_ID),
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+        },
+      })
+      .then((res) => {
+        setOnCallList(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+        var errorDescription = e.response.data?.error?.description;
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
+      });
+    dispatch(loaderActions.toggleLoader(false));
   };
 
   return (
@@ -75,17 +62,31 @@ function ContactPage() {
 
         <p className="heading4 pane-title">Details.</p>
 
-        {Object.keys(onCallList).map((key, index) => (
-          <div className="model-holder-card">
-            <div className="left-content">
-              <p className="heading5">{onCallList[key]["name"]}</p>
-              <p className="subHeading3">{onCallList[key]["email"]}</p>
+        {Object.keys(onCallList).length!=0 && (
+          <div>
+            <div className="model-holder-card">
+              <div className="left-content">
+                <p className="heading5">{onCallList["primary"]["name"]}</p>
+                <p className="subHeading3">{onCallList["primary"]["email"]}</p>
+              </div>
+              <div className="right-content" onClick={() => {}}>
+                <p className="heading5">{onCallList["primary"]["mobile"]}</p>
+              </div>
             </div>
-            <div className="right-content" onClick={() => {}}>
-              <p className="heading5">{onCallList[key]["mobile"]}</p>
+
+            <div className="model-holder-card">
+              <div className="left-content">
+                <p className="heading5">{onCallList["secondary"]["name"]}</p>
+                <p className="subHeading3">
+                  {onCallList["secondary"]["email"]}
+                </p>
+              </div>
+              <div className="right-content" onClick={() => {}}>
+                <p className="heading5">{onCallList["secondary"]["mobile"]}</p>
+              </div>
             </div>
           </div>
-        ))}
+        )}
       </div>
 
       <div className="divider flex-vertical"></div>
