@@ -285,7 +285,7 @@ function DashboardPage() {
         <div className="dashboard-content">
           <div className="page-title">
             <p className="heading3">Dashboard</p>
-            <p className="subHeading">Live Analytical Updates.</p>
+            <p className="subHeading">Analytics Overview.</p>
           </div>
           <div className="dropdown-array">
             <div
