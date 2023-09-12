@@ -57,7 +57,7 @@ function ContactPage() {
       <div className="admin-page-left-pane">
         <div className="page-title">
           <p className="heading3">Contact Us</p>
-          <p className="subHeading">Our Current On Call Engineers.</p>
+          <p className="subHeading">In Case Of Any Production Issues.</p>
         </div>
 
         <p className="heading4 pane-title">Details.</p>
