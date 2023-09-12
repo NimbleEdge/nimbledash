@@ -110,7 +110,7 @@
 .clientID-selector {
   width: 200px;
   height: 48px;
-  margin-right: 16px;
+  margin-right: 12px;
   background-color: var(--clr-accent);
   border-radius: 8px;
   position: relative;
@@ -133,7 +133,7 @@
 .custom-dropdown {
   width: 200px;
   height: 48px;
-  margin-right: 16px;
+  margin-right: 12px;
   background-color: var(--clr-dropdown);
   border-radius: 8px;
   position: relative;
