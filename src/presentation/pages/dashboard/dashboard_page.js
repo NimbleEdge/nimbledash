@@ -214,9 +214,9 @@ function DashboardPage() {
       "request uri is",
       uri +
         " " +
-        intervalObject["startDate"].toISOString() +
+        intervalObject["startDate"].toISOString().slice(0,11) +"00:00:01.000Z" +
         " " +
-        intervalObject["endDate"].toISOString()
+        intervalObject["endDate"].toISOString().slice(0,11) +"23:59:59.000Z"
     );
     await axios
       .get(uri, {
@@ -228,8 +228,8 @@ function DashboardPage() {
           CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
         params: {
-          startTime: intervalObject["startDate"].toISOString(),
-          endTime: intervalObject["endDate"].toISOString(),
+          startTime: intervalObject["startDate"].toISOString().slice(0,11) +"00:00:01.000Z",
+          endTime: intervalObject["endDate"].toISOString().slice(0,11) +"23:59:59.000Z",
         },
       })
       .then((res) => {
