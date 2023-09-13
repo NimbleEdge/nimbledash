@@ -211,11 +211,13 @@ function DashboardPage() {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/inference`;
     }
 
-    var startDateTimeRange = intervalObject["startDate"];
-    var endDateTimeRange = intervalObject["endDate"];
+    let startDateTimeRange = new Date(intervalObject["startDate"]);
+    let endDateTimeRange = new Date(intervalObject["endDate"]);
 
-    startDateTimeRange.setHours(0,0,0);
-    endDateTimeRange.setHours(23,59,59);
+    startDateTimeRange.setHours(0);
+    startDateTimeRange.setMinutes(0);
+    endDateTimeRange.setHours(23);
+    endDateTimeRange.setMinutes(59);
 
     console.log("CHOO",startDateTimeRange,endDateTimeRange)
 
