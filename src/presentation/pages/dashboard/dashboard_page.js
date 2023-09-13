@@ -210,13 +210,22 @@ function DashboardPage() {
     } else if (modelName != null && versionName != null) {
       uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/inference`;
     }
+
+    var startDateTimeRange = intervalObject["startDate"];
+    var endDateTimeRange = intervalObject["endDate"];
+
+    startDateTimeRange.setHours(0,0,0);
+    endDateTimeRange.setHours(23,59,59);
+
+    console.log("CHOO",startDateTimeRange,endDateTimeRange)
+
     console.log(
       "request uri is",
       uri +
         " " +
-        intervalObject["startDate"].toISOString().slice(0,11) +"00:00:01.000Z" +
+        startDateTimeRange.toISOString() +
         " " +
-        intervalObject["endDate"].toISOString().slice(0,11) +"23:59:59.000Z"
+        endDateTimeRange.toISOString()
     );
     await axios
       .get(uri, {
@@ -228,8 +237,8 @@ function DashboardPage() {
           CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
         params: {
-          startTime: intervalObject["startDate"].toISOString().slice(0,11) +"00:00:01.000Z",
-          endTime: intervalObject["endDate"].toISOString().slice(0,11) +"23:59:59.000Z",
+          startTime: startDateTimeRange.toISOString(),
+          endTime: endDateTimeRange.toISOString(),
         },
       })
       .then((res) => {
