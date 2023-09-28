@@ -30,7 +30,7 @@ function AnalyticsLineChart(props) {
 
     //add 0 to the shorter arrays
     modelKeys.forEach((modelName) => {
-      var modelArray = trends[modelName].map((num) => num / 1000);
+      var modelArray = trends[modelName].map((num) => (num / 1000).toFixed(2));
       modelArray.reverse();
       trends[modelName] = Array.from(
         { length: maxLen - modelArray.length },
@@ -44,7 +44,7 @@ function AnalyticsLineChart(props) {
       modelKeys.forEach((modelName) => {
         tempMap[modelName] = trends[modelName][index];
       });
-      tempMap["unit"] = "millis";
+      tempMap["unit"] = "ms";
       tempData.push(tempMap);
     }
 
@@ -66,7 +66,7 @@ function AnalyticsLineChart(props) {
       >
         {/* <CartesianGrid strokeDasharray="3 3" /> */}
         <XAxis dataKey="name" />
-        <YAxis unit=" millls" width={100} />
+        <YAxis unit=" ms" width={100} />
         <Tooltip />
         <Legend />
         {Object.keys(trends).map((key, index) => (
