@@ -30,7 +30,7 @@ function AnalyticsLineChart(props) {
 
     //add 0 to the shorter arrays
     modelKeys.forEach((modelName) => {
-      var modelArray = trends[modelName].map((num) => (num / 1000).toFixed(2));
+      var modelArray = trends[modelName].map((num) => parseFloat((num / 1000).toFixed(2)));
       modelArray.reverse();
       trends[modelName] = Array.from(
         { length: maxLen - modelArray.length },
