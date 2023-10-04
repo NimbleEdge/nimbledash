@@ -41,6 +41,7 @@ import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
+import ShapeBarChart from "presentation/components/charts/shape_bar_chart";
 
 function DashboardPage() {
   var [metrics, setMetrics] = useState({});
@@ -303,7 +304,7 @@ function DashboardPage() {
               className="clientID-selector"
               onClick={() => setModalVisiblity(true)}
             >
-              <p className="buttonText spinner-text">{clientID}</p>
+              <p className="buttonText spinner-text">{"Client ID"}</p>
             </div>
 
             <div>
@@ -408,7 +409,7 @@ function DashboardPage() {
             <DashboardCard
               cardIconAddress="/assets/icons/total_inferences.jpg"
               cardInfoTitle="Total Inferences"
-              cardInfoSubtitle="Lifetime"
+              cardInfoSubtitle="Over Timeframe"
               cardText={shortenNumber(metrics["totalInferences"])}
               cardSubText="calls made"
             ></DashboardCard>
@@ -418,7 +419,7 @@ function DashboardPage() {
             <DashboardCard
               cardIconAddress="/assets/icons/total_error.jpg"
               cardInfoTitle="Total Errors"
-              cardInfoSubtitle="Lifetime"
+              cardInfoSubtitle="Over Timeframe"
               cardText={metrics["totalErrors"]}
               cardSubText="calls made"
             ></DashboardCard>
@@ -428,7 +429,7 @@ function DashboardPage() {
             <DashboardCard
               cardIconAddress="/assets/icons/avg_dau.jpg"
               cardInfoTitle="Avg DAU"
-              cardInfoSubtitle="Per Day"
+              cardInfoSubtitle="Over Timeframe"
               cardText={calculateAvgDAU()}
               cardSubText="users"
             ></DashboardCard>
@@ -462,11 +463,12 @@ function DashboardPage() {
               ></img>
               <div className="card-info">
                 <p className="bodyText">Latency Trends</p>
-                <p className="subHeading2">Average latency per 30 mins</p>
+                <p className="subHeading2">Average latency per 15 mins</p>
               </div>
             </div>
             <AnalyticsLineChart
-              trends={metrics["LatencyTrends"]}
+              trends={metrics["LatencyTrends"]==null?{"none":[]}:metrics["LatencyTrends"]}
+              trendsTimeline = {metrics["latencyTrendsTimeline"]}
             ></AnalyticsLineChart>
           </div>
 
@@ -516,7 +518,7 @@ function DashboardPage() {
                   <p className="subHeading2">Across all the live models</p>
                 </div>
               </div>
-              <div className="pie-chart-legend chart-legend">
+              {/* <div className="pie-chart-legend chart-legend">
                 {calculateRadarLegend(metrics["activeUsersTrends"]).map(
                   (item, index) => (
                     <div className="sub-chart-legend">
@@ -536,10 +538,11 @@ function DashboardPage() {
                     </div>
                   )
                 )}
-              </div>
-              <AnalyticsRadarChart
+              </div> */}
+              {/* <AnalyticsRadarChart
                 trends={metrics["activeUsersTrends"]}
-              ></AnalyticsRadarChart>
+              ></AnalyticsRadarChart> */}
+              <ShapeBarChart trends={metrics["activeUsersTrends"]}></ShapeBarChart>
             </div>
           </div>
         </div>
