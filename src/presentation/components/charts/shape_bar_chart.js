@@ -8,6 +8,7 @@ import {
   YAxis,
   CartesianGrid,
   ResponsiveContainer,
+  Tooltip,
 } from "recharts";
 
 function ShapeBarChart(props) {
@@ -55,15 +56,10 @@ function ShapeBarChart(props) {
           bottom: 60,
         }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
-        <Bar
-          dataKey="count"
-          fill="#8884d8"
-          shape={<TriangleBar />}
-          label={{ position: "top" }}
-        >
+        <Tooltip />
+        <Bar barSize={32} dataKey="count" fill="#8884d8">
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={GRAPH_COLORS[index % 20]} />
           ))}
