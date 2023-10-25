@@ -22,12 +22,13 @@ function AdminPage() {
   const dispatch = useDispatch();
   var modelContentBase64 = "";
   var modelConfigJson = {};
+  var modelType = "";
   const uploadType = ["New Model", "Build", "Update", "Fix"];
   const [selectedUploadTypeIndex, setSelectedUploadTypeIndex] = useState(0);
   const [selectedModelIndex, setSelectedModelIndex] = useState(0);
   const [modelList, setModelList] = useState([]);
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
-    accept: [".ort", ".json"],
+    accept: [".ort", ".tar", ".json"],
     readAs: "ArrayBuffer",
     multiple: true,
     limitFilesConfig: { max: 2, min: 2 },
@@ -79,6 +80,11 @@ function AdminPage() {
     if (file["name"].includes(".ort")) {
       const binary8 = new Uint8Array(file.content);
       modelContentBase64 = Buffer.from(binary8).toString("base64");
+      modelType = "ort";
+    } else if (file["name"].includes(".tar")) {
+      const binary8 = new Uint8Array(file.content);
+      modelContentBase64 = Buffer.from(binary8).toString("base64");
+      modelType = "tar";
     } else {
       modelConfigJson = JSON.parse(new TextDecoder().decode(file.content));
     }
@@ -109,6 +115,7 @@ function AdminPage() {
                 modelConfig: modelConfigJson,
                 modelName: modelName,
                 model: modelContentBase64,
+                fileType: modelType,
               },
               {
                 headers: {
@@ -149,6 +156,7 @@ function AdminPage() {
               )[selectedModelIndex],
               model: modelContentBase64,
               updateType: selectedUploadTypeIndex,
+              fileType: modelType,
             },
             {
               headers: {
@@ -204,7 +212,7 @@ function AdminPage() {
         saveFile(
           modelBinary,
           "application/octet-stream",
-          modelName + "_" + modelVersion + ".ort"
+          modelName + "_" + modelVersion + "." + res["data"]["fileType"]
         );
 
         saveFile(
