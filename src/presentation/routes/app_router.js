@@ -26,6 +26,7 @@ import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
 import RBACPage from "presentation/pages/rbac/rbac_page";
 import ContactPage from "presentation/pages/contact/contact_page";
+import { getAuthMethod } from "core/utils";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -79,7 +80,7 @@ function AppRouter(props) {
     return await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/ping`, {
         headers: {
-          authMethod: "Cognito",
+          authMethod: getAuthMethod(),
           Token: token,
         },
       })

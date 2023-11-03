@@ -1,9 +1,3 @@
-//API BASE_URL
-export const PROXY_BASE_URL = "http://localhost:8010/proxy";
-export const NIMBLEEDGE_STAGING_BASE_URL = "https://api.nimbleedge-staging.com";
-export const TEMP_BASE_URL = "https://dc66-2406-7400-56-8255-2120-fe1f-87a8-39ef.ngrok-free.app";
-export const NIMBLEEDGE_PROD_BASE_URL = "";
-
 //API ENDPOINTS
 export const GET_ANALYTICS = "geteAnalytics";
 

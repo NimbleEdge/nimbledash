@@ -43,6 +43,8 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
 import ShapeBarChart from "presentation/components/charts/shape_bar_chart";
+import { getAuthMethod } from "core/utils";
+
 
 function DashboardPage() {
   var [metrics, setMetrics] = useState({});
@@ -125,7 +127,7 @@ function DashboardPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/user/clients`, {
         headers: {
-          AuthMethod: "Cognito",
+          AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -134,7 +136,7 @@ function DashboardPage() {
       })
       .then((res) => {
         if (res.status == 200) {
-          console.log(res);
+          console.log("client IDS",res);
           setClientIDList(res.data.Clients);
         } else {
           Toast.error("Can't fetch client ids", {
@@ -161,7 +163,7 @@ function DashboardPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
         headers: {
-          AuthMethod: "Cognito",
+          AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -238,7 +240,7 @@ function DashboardPage() {
     await axios
       .get(uri, {
         headers: {
-          AuthMethod: "Cognito",
+          AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
