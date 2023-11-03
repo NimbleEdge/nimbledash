@@ -28,3 +28,37 @@ export const PermissionEnum = {
     READ : "read_only",
     ADMIN : "admin"
 }
+
+//Defaults
+export const DEFAULT_ANALYTICS={
+    "status": 200,
+    "error": null,
+    "totalInferences": 0,
+    "totalErrors": 0,
+    "averageInferences": 0,
+    "averageLatency": 0,
+    "activeUsersTrends": {
+        "DummyAnalytics": 2
+    },
+    "LatencyTrends": {
+        "DummyAnalytics": [
+            1,2,3,4,5,6,7,8,9,10
+        ]
+    },
+    "totalInferenceTrends": {
+        "DummyAnalytics": 136
+    },
+    "dau": {},
+    "latencyTrendsTimeline": [
+        "2023-06-19T12:45:00Z",
+        "2023-06-19T10:11:00Z",
+        "2023-06-19T07:37:00Z",
+        "2023-06-19T05:03:00Z",
+        "2023-06-19T02:29:00Z",
+        "2023-06-18T23:55:00Z",
+        "2023-06-18T21:21:00Z",
+        "2023-06-18T18:47:00Z",
+        "2023-06-18T16:13:00Z",
+        "2023-06-18T13:39:00Z",
+    ]
+}

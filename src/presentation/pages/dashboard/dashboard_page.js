@@ -28,6 +28,7 @@ import {
   APP_BASE_URL,
   GRAPH_COLORS,
   COGNITO_USERNAME,
+  DEFAULT_ANALYTICS,
 } from "core/constants";
 import { useDispatch } from "react-redux";
 import {
@@ -198,6 +199,12 @@ function DashboardPage() {
     num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num;
 
   const fetchMetrics = async (modelName, versionName) => {
+    if (process.env.REACT_APP_IS_ANALYTICS_DISABLED == "TRUE") {
+      setMetrics(DEFAULT_ANALYTICS);
+      dispatch(loaderActions.toggleLoader(false));
+      return;
+    }
+
     dispatch(loaderActions.toggleLoader(true));
 
     if (modelName == "All Models") modelName = null;
@@ -219,8 +226,6 @@ function DashboardPage() {
     startDateTimeRange.setMinutes(0);
     endDateTimeRange.setHours(23);
     endDateTimeRange.setMinutes(59);
-
-    console.log("CHOO",startDateTimeRange,endDateTimeRange)
 
     console.log(
       "request uri is",
@@ -387,7 +392,6 @@ function DashboardPage() {
                         null
                       );
                       dispatch(loaderActions.toggleLoader(false));
-
                     }}
                   >
                     <p className="centerText">Apply</p>
@@ -467,23 +471,28 @@ function DashboardPage() {
               </div>
             </div>
             <AnalyticsLineChart
-              trends={metrics["LatencyTrends"]==null?{"none":[]}:metrics["LatencyTrends"]}
-              trendsTimeline = {metrics["latencyTrendsTimeline"]}
+              trends={
+                metrics["LatencyTrends"] == null
+                  ? { none: [] }
+                  : metrics["LatencyTrends"]
+              }
+              trendsTimeline={metrics["latencyTrendsTimeline"]}
             ></AnalyticsLineChart>
           </div>
 
           <div className="graph-holder">
             <div className="heading-row">
-              <img
-                className="card-icon"
-                src="/assets/icons/avg_dau.jpg"
-              ></img>
+              <img className="card-icon" src="/assets/icons/avg_dau.jpg"></img>
               <div className="card-info">
                 <p className="bodyText">Daily Active Users</p>
-                <p className="subHeading2">Users with atleast 1 predict call each day</p>
+                <p className="subHeading2">
+                  Users with atleast 1 predict call each day
+                </p>
               </div>
             </div>
-            <AnalyticsLineChartSingle trends={metrics["dau"]}></AnalyticsLineChartSingle>
+            <AnalyticsLineChartSingle
+              trends={metrics["dau"]}
+            ></AnalyticsLineChartSingle>
           </div>
 
           <div className="row-flex">
@@ -542,7 +551,9 @@ function DashboardPage() {
               {/* <AnalyticsRadarChart
                 trends={metrics["activeUsersTrends"]}
               ></AnalyticsRadarChart> */}
-              <ShapeBarChart trends={metrics["activeUsersTrends"]}></ShapeBarChart>
+              <ShapeBarChart
+                trends={metrics["activeUsersTrends"]}
+              ></ShapeBarChart>
             </div>
           </div>
         </div>
