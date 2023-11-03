@@ -17,6 +17,7 @@ import { loaderActions } from "presentation/redux/stores/store";
 import { useNavigate } from "react-router-dom";
 import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
 import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
+import { getAuthMethod } from "core/utils";
 
 function RBACPage() {
   var [isModalVisible, setModalVisiblity] = useState(false);
@@ -38,7 +39,7 @@ function RBACPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/users`, {
         headers: {
-          AuthMethod: "Cognito",
+          AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -78,7 +79,7 @@ function RBACPage() {
         },
         {
           headers: {
-            AuthMethod: "Cognito",
+            AuthMethod: getAuthMethod(),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),
@@ -116,7 +117,7 @@ function RBACPage() {
         },
         {
           headers: {
-            AuthMethod: "Cognito",
+            AuthMethod: getAuthMethod(),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),
@@ -147,7 +148,7 @@ function RBACPage() {
     await axios
       .delete(`${APP_BASE_URL}/mds/api/v1/admin/user`, {
         headers: {
-          AuthMethod: "Cognito",
+          AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),

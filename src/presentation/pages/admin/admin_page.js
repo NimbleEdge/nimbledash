@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import { loaderActions } from "presentation/redux/stores/store";
+import { getAuthMethod } from "core/utils";
 
 function AdminPage() {
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ function AdminPage() {
     await axios
       .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
         headers: {
-          AuthMethod: "Cognito",
+          AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -119,7 +120,7 @@ function AdminPage() {
               },
               {
                 headers: {
-                  AuthMethod: "Cognito",
+                  AuthMethod: getAuthMethod(),
                   Token: localStorage.getItem(ACCESS_TOKEN),
                   ClientId: localStorage.getItem(CLIENT_ID),
                   TokenId: localStorage.getItem(USER_EMAIL),
@@ -160,7 +161,7 @@ function AdminPage() {
             },
             {
               headers: {
-                AuthMethod: "Cognito",
+                AuthMethod: getAuthMethod(),
                 Token: localStorage.getItem(ACCESS_TOKEN),
                 ClientId: localStorage.getItem(CLIENT_ID),
                 TokenId: localStorage.getItem(USER_EMAIL),
@@ -195,7 +196,7 @@ function AdminPage() {
         `${APP_BASE_URL}/mds/api/v1/admin/models/${modelName}/versions/${modelVersion}`,
         {
           headers: {
-            AuthMethod: "Cognito",
+            AuthMethod: getAuthMethod(),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),
