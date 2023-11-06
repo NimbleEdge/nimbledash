@@ -16,10 +16,21 @@ import { getAuthMethod } from "core/utils";
 
 function ContactPage() {
   const dispatch = useDispatch();
-  const [onCallList, setOnCallList] = useState({});
+  const [onCallList, setOnCallList] = useState({
+    primary: {
+      email: "kushal.patil@nimbleedgehq.ai",
+      mobile: "+91-9560118127",
+      name: "Kushal",
+    },
+    secondary: {
+      email: "saket.harsh@nimbleedgehq.ai",
+      mobile: "+91-7209338593",
+      name: "Saket",
+    },
+  });
 
   useEffect(() => {
-    fetchOnCallList();
+    // fetchOnCallList();
   }, []);
 
   const fetchOnCallList = async () => {
@@ -36,6 +47,7 @@ function ContactPage() {
         },
       })
       .then((res) => {
+        console.log(res);
         setOnCallList(res.data);
       })
       .catch((e) => {
@@ -63,7 +75,7 @@ function ContactPage() {
 
         <p className="heading4 pane-title">Details.</p>
 
-        {Object.keys(onCallList).length!=0 && (
+        {Object.keys(onCallList).length != 0 && (
           <div>
             <div className="model-holder-card">
               <div className="left-content">
