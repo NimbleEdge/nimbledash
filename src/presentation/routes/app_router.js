@@ -41,6 +41,7 @@ function AppRouter(props) {
       var myUrl = new URL(window.location.href.replace(/#/g, "?"));
       var access_token = myUrl.searchParams.get("access_token");
       var id_token = myUrl.searchParams.get("id_token");
+
       isTokenValid(access_token).then((isValid) => {
         if (!isValid) {
           navigateTo(LOGIN_PAGE_ROUTE);
