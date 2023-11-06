@@ -17,6 +17,7 @@ function LoginPage() {
     window.location.href = loginUrl;
   };
 
+
   return (
     <div className="loginPage">
       <img
