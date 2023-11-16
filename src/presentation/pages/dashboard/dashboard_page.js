@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from "react";
 import "./dashboard_page.css";
 import "react-dropdown/style.css";
@@ -25,10 +24,11 @@ import {
   ACCESS_TOKEN,
   USER_EMAIL,
   CLIENT_ID,
-  APP_BASE_URL,
   GRAPH_COLORS,
   COGNITO_USERNAME,
   DEFAULT_ANALYTICS,
+  APP_BASE_MDS_URL,
+  APP_BASE_DMS_URL,
 } from "core/constants";
 import { useDispatch } from "react-redux";
 import {
@@ -125,7 +125,7 @@ function DashboardPage() {
 
   const fetchClientIDList = async () => {
     await axios
-      .get(`${APP_BASE_URL}/mds/api/v1/admin/user/clients`, {
+      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/user/clients`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -161,7 +161,7 @@ function DashboardPage() {
   const fetchModelList = async () => {
     var tempJson = {};
     await axios
-      .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
+      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/models`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -214,11 +214,11 @@ function DashboardPage() {
     var uri = "";
     var uriDau = "";
     if (modelName == null && versionName == null) {
-      uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/inference`;
+      uri = `${APP_BASE_DMS_URL}/dms/api/v1/metrics/clients/${clientID}/inference`;
     } else if (modelName != null && versionName == null) {
-      uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/inference`;
+      uri = `${APP_BASE_DMS_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/inference`;
     } else if (modelName != null && versionName != null) {
-      uri = `${APP_BASE_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/inference`;
+      uri = `${APP_BASE_DMS_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${versionName}/inference`;
     }
 
     let startDateTimeRange = new Date(intervalObject["startDate"]);

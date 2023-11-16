@@ -9,7 +9,7 @@ import { Base64 } from "js-base64";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ACCESS_TOKEN,
-  APP_BASE_URL,
+  APP_BASE_MDS_URL,
   CLIENT_ID,
   COGNITO_USERNAME,
   USER_EMAIL,
@@ -48,7 +48,7 @@ function AdminPage() {
     dispatch(loaderActions.toggleLoader(true));
 
     await axios
-      .get(`${APP_BASE_URL}/mds/api/v1/admin/models`, {
+      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/models`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -111,7 +111,7 @@ function AdminPage() {
           dispatch(loaderActions.toggleLoader(true));
           await axios
             .post(
-              `${APP_BASE_URL}/mds/api/v1/admin/model`,
+              `${APP_BASE_MDS_URL}/mds/api/v1/admin/model`,
               {
                 modelConfig: modelConfigJson,
                 modelName: modelName,
@@ -149,7 +149,7 @@ function AdminPage() {
         dispatch(loaderActions.toggleLoader(true));
         await axios
           .put(
-            `${APP_BASE_URL}/mds/api/v1/admin/model`,
+            `${APP_BASE_MDS_URL}/mds/api/v1/admin/model`,
             {
               modelConfig: modelConfigJson,
               modelName: Array.from(
@@ -193,7 +193,7 @@ function AdminPage() {
   const downloadModel = async (modelName, modelVersion) => {
     await axios
       .get(
-        `${APP_BASE_URL}/mds/api/v1/admin/models/${modelName}/versions/${modelVersion}`,
+        `${APP_BASE_MDS_URL}/mds/api/v1/admin/models/${modelName}/versions/${modelVersion}`,
         {
           headers: {
             AuthMethod: getAuthMethod(),

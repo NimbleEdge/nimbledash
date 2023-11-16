@@ -1,10 +1,10 @@
 import axios from "axios";
 import {
-  APP_BASE_URL,
   ACCESS_TOKEN,
   CLIENT_ID,
   USER_EMAIL,
   COGNITO_USERNAME,
+  APP_BASE_DMS_URL,
 } from "core/constants";
 import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
 import { loaderActions } from "presentation/redux/stores/store";
@@ -18,14 +18,14 @@ function ContactPage() {
   const dispatch = useDispatch();
   const [onCallList, setOnCallList] = useState({
     primary: {
-      email: "kushal.patil@nimbleedgehq.ai",
-      mobile: "+91-9560118127",
-      name: "Kushal",
-    },
-    secondary: {
       email: "saket.harsh@nimbleedgehq.ai",
       mobile: "+91-7209338593",
       name: "Saket",
+    },
+    secondary: {
+      email: "nishanth.shetty@nimbleedgehq.ai",
+      mobile: "+91-9900294148",
+      name: "Nishanth",
     },
   });
 
@@ -37,7 +37,7 @@ function ContactPage() {
     dispatch(loaderActions.toggleLoader(true));
 
     await axios
-      .get(`${APP_BASE_URL}/dms/api/v1/oncall`, {
+      .get(`${APP_BASE_DMS_URL}/dms/api/v1/oncall`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
