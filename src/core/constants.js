@@ -14,7 +14,8 @@ export const GRAPH_COLORS = ["#0D2535", "#5388D8", "#F4BE37", "#FF9F40"];
 
 
 //APP GLOBAL CONFIG
-export const APP_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+export const APP_BASE_DMS_URL = process.env.REACT_APP_API_DMS_URL;
+export const APP_BASE_MDS_URL = process.env.REACT_APP_API_MDS_URL;
 
 //APP ENUMS
 export const PermissionEnum = {

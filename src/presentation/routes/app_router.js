@@ -13,7 +13,7 @@ import InputModal from "presentation/components/inputModal/inputModal";
 import AdminPage from "presentation/pages/admin/admin_page";
 import {
   ACCESS_TOKEN,
-  APP_BASE_URL,
+  APP_BASE_MDS_URL,
   CLIENT_ID,
   COGNITO_USERNAME,
   USER_EMAIL,
@@ -79,7 +79,7 @@ function AppRouter(props) {
     if (token == null) return false;
 
     return await axios
-      .get(`${APP_BASE_URL}/mds/api/v1/admin/ping`, {
+      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/ping`, {
         headers: {
           authMethod: getAuthMethod(),
           Token: token,
