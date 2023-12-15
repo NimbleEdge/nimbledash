@@ -59,7 +59,7 @@ function AdminPage() {
       })
       .then((res) => {
         var listOfModels = res.data.models;
-        listOfModels.reverse();
+        listOfModels;
         setModelList(listOfModels);
       })
       .catch((e) => {
