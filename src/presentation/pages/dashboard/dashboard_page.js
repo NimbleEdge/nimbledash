@@ -59,7 +59,7 @@ function DashboardPage() {
   var [clientIDList, setClientIDList] = useState([]);
 
   const subtractDays = (date, days) => {
-    date.setMonth(date.getDate() - days);
+    date.setDate(date.getDate() - days);
     return date;
   };
 
