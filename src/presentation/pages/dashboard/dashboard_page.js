@@ -58,18 +58,18 @@ function DashboardPage() {
   var [clientID, setClientID] = useState("");
   var [clientIDList, setClientIDList] = useState([]);
 
-  const subtractMonths = (date, months) => {
-    date.setMonth(date.getMonth() - months);
+  const subtractDays = (date, days) => {
+    date.setMonth(date.getDate() - days);
     return date;
   };
 
   var [intervalObject, setIntervalObject] = useState({
-    startDate: subtractMonths(new Date(), 1),
+    startDate: subtractDays(new Date(), 2),
     endDate: new Date(),
     key: "selection",
   });
   var [intervalObjectPrev, setIntervalObjectPrev] = useState({
-    startDate: subtractMonths(new Date(), 1),
+    startDate: subtractDays(new Date(), 2),
     endDate: new Date(),
     key: "selection",
   });
