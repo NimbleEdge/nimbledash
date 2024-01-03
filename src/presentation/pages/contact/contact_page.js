@@ -17,20 +17,10 @@ import { getAuthMethod } from "core/utils";
 function ContactPage() {
   const dispatch = useDispatch();
   const [onCallList, setOnCallList] = useState({
-    primary: {
-      email: "saket.harsh@nimbleedgehq.ai",
-      mobile: "+91-7209338593",
-      name: "Saket",
-    },
-    secondary: {
-      email: "nishanth.shetty@nimbleedgehq.ai",
-      mobile: "+91-9900294148",
-      name: "Nishanth",
-    },
   });
 
   useEffect(() => {
-    // fetchOnCallList();
+    fetchOnCallList();
   }, []);
 
   const fetchOnCallList = async () => {
