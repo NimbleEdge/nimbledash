@@ -18,7 +18,6 @@ import AnalyticsRadarChart from "../../components/charts/radar_chart";
 import InputModal from "../../components/inputModal/inputModal";
 import { getRequest } from "data/remote_datasource";
 import { useNavigate } from "react-router-dom";
-import SideBar from "presentation/components/sideBar/side_bar";
 import axios from "axios";
 import {
   ACCESS_TOKEN,
@@ -125,7 +124,7 @@ function DashboardPage() {
 
   const fetchClientIDList = async () => {
     await axios
-      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/user/clients`, {
+      .get(`${APP_BASE_MDS_URL}/api/v1/admin/user/clients`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -161,7 +160,7 @@ function DashboardPage() {
   const fetchModelList = async () => {
     var tempJson = {};
     await axios
-      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/models`, {
+      .get(`${APP_BASE_MDS_URL}/api/v1/admin/models`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -253,7 +252,7 @@ function DashboardPage() {
       })
       .then((res) => {
         setMetrics(res.data);
-        console.log(res.data);
+        //console.log(res.data);
       })
       .catch((e) => {
         var errorDescription = e.response?.data?.error?.description;

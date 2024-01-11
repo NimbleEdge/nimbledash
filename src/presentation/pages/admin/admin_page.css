@@ -1,5 +1,29 @@
 .adminPage {
-  display: flex;
+  padding-left: 152px;
+  padding-top: 50px;
+  padding-right: 50px;
+}
+
+.adminPageHeader {
+  padding-bottom: 50px;
+}
+
+.adminPageTitle {
+  color: #000000;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.adminPageSubtitle {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.tableHolder {
+  margin-left: 150px;
+  margin-top: 100px;
+  width: 80%;
 }
 
 .admin-page-left-pane {
@@ -113,4 +137,32 @@
 
 .selected-files{
     /* margin-top: 4px; */
+}
+
+.subHeader {
+  align-items: center;
+  padding-bottom: 25px;
+  justify-content: space-between;
+}
+
+.subHeaderText {
+  color: #222222;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.selectedModelName {
+  color: #222222;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.modelDetailsBackButton {
+  display: flex;
+  padding-bottom: 25px;
+}
+
+.backArrow {
+  cursor: pointer;
+  margin-right: 15px;
 }

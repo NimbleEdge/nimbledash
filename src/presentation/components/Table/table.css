@@ -1,0 +1,61 @@
+.textTag {
+    text-align: center;
+    border-radius: 20px;
+    width: fit-content;
+    padding: 5px 20px 5px 20px;
+    font-size: 14px;
+    font-weight: 400;
+    min-height: 30px;
+    margin-right: 5px;
+}
+
+.textOnlyComponent {
+    color: #74828F;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.tagsList {
+    align-items: self-end;
+}
+
+.tagsListTruncated {
+    margin-bottom: -3px;
+    color: grey;
+}
+/* table {
+    width: 100%;
+}
+.tableHeaderRow {
+    height: 45px;
+    width: 80%;
+}
+.tableHeaderCell {
+    padding: 6px 24px 6px 24px;
+    background-color: #6565FF1A;
+}
+.leftmostHeaderCell {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}  
+.rightmostHeaderCell {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.tableHeaderText {
+    font-weight: 600;
+    font-size: 14px;
+    color: #464646;
+}
+.tableBodyRow {
+    height: 64px;
+    border-bottom: 1px solid #DBDBDB;
+}
+.tableBodyCell {
+    padding: 16px 24px 16px 24px;
+}
+.tableBodyText {
+    font-weight: 500px;
+    color: #74828F;
+    font-size: 14px;
+} */

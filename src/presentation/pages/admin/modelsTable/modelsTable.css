@@ -1,0 +1,21 @@
+.modelNameColumn {
+    color: #74828F;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.uploadNewModelFooter {
+    display: flex;
+    padding: 16px 24px;
+    color: #74828F;
+    font-size: 14px;
+    font-weight: 500;
+    align-items: baseline;
+}
+
+.uploadPlusSign {
+    font-size: 20px;
+    font-weight: 250;
+    padding-right: 10px;
+}
