@@ -120,7 +120,7 @@ const AdminPage = () => {
                 {
                     view == AdmninPageView.MODEL_VERSIONS_TABLE ? 
                     <div className="modelDetailsBackButton">
-                        <img className={"backArrow"} src={"/assets/icons/backArrow.svg"} onClick={clickBack}></img>
+                        <img className={"back-arrow-model-details-table"} src={"/assets/icons/backArrow.svg"} onClick={clickBack}></img>
                         <div className={`selectedModelName`}>{selectedModelName}</div>
                     </div> 
                     :
