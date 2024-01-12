@@ -1,4 +1,3 @@
-import { ACCESS_TOKEN, CLIENT_ID, USER_EMAIL } from "core/constants";
 import {
   ADMIN_PAGE_ROUTE,
   CONTACT_PAGE_ROUTE,
@@ -7,7 +6,6 @@ import {
   RBAC_PAGE_ROUTE,
 } from "presentation/routes/route-paths";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 function SideBar() {

@@ -1,0 +1,38 @@
+.toggle-container {
+    display: flex;
+    width: 150px;
+}
+
+.toggle-btn {
+    padding: 8px 16px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: #6565FF1A;
+    transition: background-color 0.3s ease;
+    font-size: 10px;
+    color: #222222;
+    width: 75px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.toggle-btn-left {
+    border-radius: 5px 0 0 5px;
+}
+
+.toggle-btn-right {
+    border-radius: 0 5px 5px 0;
+}
+  
+.toggle-btn-left.active {
+    background-color: #6c5ce7;
+    color: #FFFFFF;
+}
+
+.toggle-btn-right.active {
+    background-color: #6c5ce7;
+    color: #FFFFFF;
+}

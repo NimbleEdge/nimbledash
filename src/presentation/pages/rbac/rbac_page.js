@@ -38,7 +38,7 @@ function RBACPage() {
   const listUsers = async () => {
     dispatch(loaderActions.toggleLoader(true));
     await axios
-      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/users`, {
+      .get(`${APP_BASE_MDS_URL}/api/v1/admin/users`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -54,7 +54,7 @@ function RBACPage() {
         setUserList(listOfObjects);
       })
       .catch((e) => {
-        console.log(e);
+        //console.log(e);
         var errorDescription = e.response.data?.error?.description;
         if (errorDescription != null)
           toast.error(errorDescription, {
@@ -73,7 +73,7 @@ function RBACPage() {
     dispatch(loaderActions.toggleLoader(true));
     await axios
       .post(
-        `${APP_BASE_MDS_URL}/mds/api/v1/admin/user`,
+        `${APP_BASE_MDS_URL}/api/v1/admin/user`,
         {
           email: inputEmail,
           permission: PermissionEnum.READ,
@@ -88,13 +88,13 @@ function RBACPage() {
         }
       )
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setModalVisiblity(false);
         window.location.reload();
       })
       .catch((e) => {
         dispatch(loaderActions.toggleLoader(false));
-        console.log(e);
+        //console.log(e);
         var errorDescription = e.response.data?.error?.description;
         if (errorDescription != null)
           toast.error(errorDescription, {
@@ -111,7 +111,7 @@ function RBACPage() {
     dispatch(loaderActions.toggleLoader(true));
     await axios
       .put(
-        `${APP_BASE_MDS_URL}/mds/api/v1/admin/user`,
+        `${APP_BASE_MDS_URL}/api/v1/admin/user`,
         {
           email: inputEmail,
           permission: permission,
@@ -132,7 +132,7 @@ function RBACPage() {
       })
       .catch((e) => {
         dispatch(loaderActions.toggleLoader(false));
-        console.log(e);
+        //console.log(e);
         var errorDescription = e.response.data?.error?.description;
         if (errorDescription != null)
           toast.error(errorDescription, {
@@ -147,7 +147,7 @@ function RBACPage() {
 
   const deleteUser = async (inputEmail) => {
     await axios
-      .delete(`${APP_BASE_MDS_URL}/mds/api/v1/admin/user`, {
+      .delete(`${APP_BASE_MDS_URL}/api/v1/admin/user`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -159,12 +159,12 @@ function RBACPage() {
         },
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         window.location.reload();
       })
       .catch((e) => {
         dispatch(loaderActions.toggleLoader(false));
-        console.log(e);
+        //console.log(e);
         var errorDescription = e.response.data?.error?.description;
         if (errorDescription != null)
           toast.error(errorDescription, {

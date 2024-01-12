@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import LoginPage from "presentation/pages/login/login_page";
 import DashboardPage from "presentation/pages/dashboard/dashboard_page";
 import InputModal from "presentation/components/inputModal/inputModal";
-import AdminPage from "presentation/pages/admin/admin_page";
 import {
   ACCESS_TOKEN,
   APP_BASE_MDS_URL,
@@ -27,6 +26,7 @@ import jwt_decode from "jwt-decode";
 import RBACPage from "presentation/pages/rbac/rbac_page";
 import ContactPage from "presentation/pages/contact/contact_page";
 import { getAuthMethod } from "core/utils";
+import AdminPage from "presentation/pages/admin/adminPage";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -79,14 +79,14 @@ function AppRouter(props) {
     if (token == null) return false;
 
     return await axios
-      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/ping`, {
+      .get(`${APP_BASE_MDS_URL}/api/v1/admin/ping`, {
         headers: {
           authMethod: getAuthMethod(),
           Token: token,
         },
       })
       .then((res) => {
-        console.log("NEXA",res);
+        //console.log("NEXA",res);
         if (res.status == 200) {
           return true;
         } else {
@@ -94,7 +94,8 @@ function AppRouter(props) {
         }
       })
       .catch((e) => {
-        console.log(e);
+        //console.log(e);
+        //console.log('palash');
         return false;
       });
   };
