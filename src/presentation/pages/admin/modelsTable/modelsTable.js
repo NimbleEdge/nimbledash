@@ -1,8 +1,9 @@
-import Table, { TagsListComponent, TextOnlyComponent } from "presentation/components/Table/table";
+import Table, { TextOnlyComponent } from "presentation/components/Table/table";
 import '../../../../common.css';
 import '../admin_page.css';
 import './modelsTable.css';
 import React, { useEffect, useState } from "react";
+import { TagsListComponent } from "presentation/components/Tags/tagsList";
 
 const uploadNewModalComponent = () => {
     return (

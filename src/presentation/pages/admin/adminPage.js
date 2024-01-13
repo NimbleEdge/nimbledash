@@ -1,7 +1,7 @@
 import { fetchDeploymentTagDetails, fetchDeploymentTags, fetchModelList } from "data/apis";
 import '../../../common.css';
 import './admin_page.css';
-import React, { useEffect, useState, version } from "react";
+import React, { useEffect, useState } from "react";
 import ToggleButton from "presentation/components/toggleButton/toggleButton";
 import ModelsTable from "./modelsTable/modelsTable";
 import TagsTable from "./tagsTable/tagsTable";
@@ -34,7 +34,7 @@ function getBiggerVersions(version1, version2) {
 }
 
 const AdminPage = () => {
-    const [view, setView] = useState(AdmninPageView.MODELS_TABLE);
+    const [currentView, setView] = useState(AdmninPageView.DEPLOYMENT_TAGS_TABLE);
     const [tagsList, updateTagsList] = useState([]);
     const [modelsList, udpateModelsList] = useState([]);
     const [tagsDetails, updateTagsDetails] = useState({});
@@ -51,8 +51,7 @@ const AdminPage = () => {
             const promises = tagsList.map((tag) => fetchDeploymentTagDetails(tag));
             const results = await Promise.all(promises);
             results.forEach((data) => {
-                console.log(data);
-                tagsDetails[data.name] = data.modelVersions;
+                tagsDetails[data.name] = {description: data.description, models: data.modelVersions};
             });
             updateTagsDetails({...tagsDetails});
         }
@@ -75,9 +74,9 @@ const AdminPage = () => {
 
         // adding tags and version wise tags
         for(const tag in tagsDetails) {
-            for(const modelName in tagsDetails[tag]) {
+            for(const modelName in tagsDetails[tag]['models']) {
                 modelsDetails[modelName]['tags'][tag] = true;
-                tagsDetails[tag][modelName].forEach(version => {
+                tagsDetails[tag]['models'][modelName].forEach(version => {
                     if(!(version in modelsDetails[modelName]['versionToTags'])) {
                         modelsDetails[modelName]['versionToTags'][version] = {};
                     }
@@ -93,9 +92,9 @@ const AdminPage = () => {
     }, [modelsList, tagsDetails]);
 
     const toggleView = () => {
-        if(view == AdmninPageView.MODELS_TABLE) {
+        if(currentView == AdmninPageView.MODELS_TABLE) {
             setView(AdmninPageView.DEPLOYMENT_TAGS_TABLE);
-        } else if (view == AdmninPageView.DEPLOYMENT_TAGS_TABLE) {
+        } else if (currentView == AdmninPageView.DEPLOYMENT_TAGS_TABLE) {
             setView(AdmninPageView.MODELS_TABLE);
         }
     }
@@ -118,7 +117,7 @@ const AdminPage = () => {
             </div>
             <div className={`adminPageContent`}>
                 {
-                    view == AdmninPageView.MODEL_VERSIONS_TABLE ? 
+                    currentView == AdmninPageView.MODEL_VERSIONS_TABLE ? 
                     <div className="modelDetailsBackButton">
                         <img className={"back-arrow-model-details-table"} src={"/assets/icons/backArrow.svg"} onClick={clickBack}></img>
                         <div className={`selectedModelName`}>{selectedModelName}</div>
@@ -126,12 +125,12 @@ const AdminPage = () => {
                     :
                     <div className={`subHeader flexRow`}>
                         <div className={`subHeaderText`}>Correlations</div>
-                        {view != AdmninPageView.MODEL_VERSIONS_TABLE && <ToggleButton option1={'Models'} option2={'CT Tags'} handleToggle={toggleView} />}
+                        {currentView != AdmninPageView.MODEL_VERSIONS_TABLE && <ToggleButton option1={'Compatability Tags'} option2={'Models'} handleToggle={toggleView} selectedOption={currentView == AdmninPageView.MODELS_TABLE ? 'Models' : 'Compatability Tags'} />}
                     </div>
                 }
-                {view == AdmninPageView.MODELS_TABLE && <ModelsTable modelsDetails={modelsDetails} onModalClick={onModelClick}/>}
-                {view == AdmninPageView.DEPLOYMENT_TAGS_TABLE && <TagsTable tagsDetails={tagsDetails} modelsDetails={{...modelsDetails}} updateTagsList={updateTagsList} />}
-                {view == AdmninPageView.MODEL_VERSIONS_TABLE && <ModelDetailsTable modelDetails={{...modelsDetails[selectedModelName]}} modelName={selectedModelName} allTagsList={[...tagsList]} updateTagsList={updateTagsList} />}
+                {currentView == AdmninPageView.MODELS_TABLE && <ModelsTable modelsDetails={modelsDetails} onModalClick={onModelClick}/>}
+                {currentView == AdmninPageView.DEPLOYMENT_TAGS_TABLE && <TagsTable tagsDetails={tagsDetails} modelsDetails={{...modelsDetails}} updateTagsList={updateTagsList} />}
+                {currentView == AdmninPageView.MODEL_VERSIONS_TABLE && <ModelDetailsTable modelDetails={{...modelsDetails[selectedModelName]}} modelName={selectedModelName} allTagsList={[...tagsList]} updateTagsList={updateTagsList} />}
             </div>
         </div>
     )

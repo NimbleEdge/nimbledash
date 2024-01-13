@@ -1,41 +1,12 @@
-import Table, { TagsListComponent } from "presentation/components/Table/table";
+import Table from "presentation/components/Table/table";
 import '../../../../common.css';
 import '../admin_page.css';
 import './tagsTable.css';
 import React, { useEffect, useState } from "react";
 import Modal from "presentation/components/modal/modal";
-import Search from "./searchComponent";
+import Search from "../../../components/Search/searchComponent";
 import { createDeploymentTag } from "data/apis";
-
-// const AddModelsToTag = ({tagName, models}) => {
-    
-//     return (
-//         <div className="select-tags-modal-content">
-//             <div className="selectable-tags-container">
-//                 <div className="model-details-header-container">
-//                     <div className="model-details-header-container-text">{tagName}</div>
-//                 </div>
-//                 <div className="selectable-tags-list">
-//                     {models.map((tag) => (
-//                         <div key={tag} className={`selectable-tag-box ${selectedTags.includes(tag) ? 'selected-tag-box' : 'not-selected-tag-box'}`} onClick={() => toggleTag(tag)}>
-//                             <div className={`selectable-tag-name ${selectedTags.includes(tag) ? 'selected-tag-name' : 'not-selected-tag-name'}`}>{tag}</div>
-//                         </div>
-//                     ))}
-//                 </div>
-//             </div>
-//             <div className="existing-tags-container">
-//                 <div className="existing-tags-list-header">Previously attached deployment tags</div>
-//                 <div className="existing-tags-list">
-//                     {existingTagsList.map((tag) => (
-//                         <div key={tag} className="existing-tag">
-//                             <div className="existing-tag-name">{tag}</div>
-//                         </div>
-//                     ))}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
+import { TagsListComponent } from "presentation/components/Tags/tagsList";
 
 const ModelVersionSelection = ({modelName, modelDetails, preSelectedVersions, onClickBack, handleSave}) => {
     let modelVersions = [];
@@ -109,6 +80,7 @@ const CreateNewTagModal = ({modelsDetails, updateTagsList, onClose}) => {
         setCurrentView(Views.MODEL_VERSION_SELECTION_VIEW);
     }
     const handleSave = async () => {
+        if(tagName == '' || tagDescription == '') return;
         await createDeploymentTag({
             tagName: tagName,
             tagDescription: tagDescription,
@@ -137,7 +109,7 @@ const CreateNewTagModal = ({modelsDetails, updateTagsList, onClose}) => {
                 <>
                     <div className="create-new-tag-header">
                         <div className="create-new-tag-title">Create A New Compatability Tag</div>
-                        <img className={"create-new-tag-saveIcon"} src={"/assets/icons/saveIcon.svg"} onClick={handleSave}></img>
+                        <img className={`create-new-tag-saveIcon ${(tagName == '' || tagDescription == '') ? 'save-disabled' : 'cursorPointer'}`} src={"/assets/icons/saveIcon.svg"} onClick={handleSave}></img>
                     </div>
                     <div className="create-new-tag-input-content">
                         <div className="create-new-tag-name-input subsection">
@@ -192,45 +164,52 @@ const CreateNewTagButton = ({modelsDetails, updateTagsList}) => {
 }
 
 const TagNameColumnComponent = ({tagName}) => {
-    // const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // const openModal = () => {
-    //     setIsModalOpen(true);
-    // };
-
-    // const closeModal = () => {
-    //     setIsModalOpen(false);
-    // };
     return (
         <>
-            <div className={`tagsColumn`}>
+            <div className={`tags-name-column`}>
                 {tagName}
             </div>
         </>
     )
 }
 
-const TagsTable = ({tagsDetails, modelsDetails, updateTagsList}) => {
+const TagDescription = ({description}) => {
+    return(<div className="tags-description-column">{description}</div>)
+}
 
+const TagsTable = ({tagsDetails, modelsDetails, updateTagsList}) => {
     const [tagsViewData, updateTagsViewData] = useState({
-        headers: [{text: 'Compatibility Tags'}, {text: 'Models'}],
+        headers: [{text: 'Compatibility Tags'}, {text: 'Description'}, {text: 'Models'}],
         body: [],
         footer: {Component: CreateNewTagButton, data: {modelsDetails: modelsDetails, updateTagsList: updateTagsList}}
     });
 
     useEffect(() => {
+        tagsViewData.footer.data.modelsDetails = modelsDetails;
+        updateTagsViewData({...tagsViewData});
+    }, [modelsDetails])
+
+    useEffect(() => {
         tagsViewData.body = [];
         for(const tag in tagsDetails) {
             const modelsArray = [];
-            for(const model in tagsDetails[tag]) modelsArray.push(model);
-            tagsViewData.body.push([{Component: TagNameColumnComponent, data: {tagName: tag}}, {Component: TagsListComponent, data: {tags: modelsArray}}]);
+            for(const model in tagsDetails[tag]['models']) modelsArray.push(model);
+            tagsViewData.body.push([{Component: TagNameColumnComponent, data: {tagName: tag}}, {Component: TagDescription, data: {description: tagsDetails[tag]['description']}}, {Component: TagsListComponent, data: {tags: modelsArray}}]);
         }
         updateTagsViewData({...tagsViewData});
-    }, [tagsDetails])
+    }, [tagsDetails]);
+
+    const customStyles = {
+        headerCell : {
+            padding: '6px 24px 6px 24px',
+            backgroundColor: '#6565FF1A',
+            minWidth: '170px'
+        }
+    }
     
     return (
-        <div className={`tagsTableView flexColumn`}>
-            <Table data={tagsViewData}/>
+        <div className={`tagsTableView flexColumn overflowAuto`}>
+            <Table data={tagsViewData} customStyles={customStyles}/>
         </div>
     )
 }

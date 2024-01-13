@@ -1,21 +1,24 @@
-import Table, { TagsListComponent } from "presentation/components/Table/table";
+import Table from "presentation/components/Table/table";
 import '../../../../common.css';
 import '../admin_page.css';
 import './modelDetailsTable.css';
 import React, { useEffect, useState } from "react";
 import Modal from "presentation/components/modal/modal";
 import { addDeploymentTags } from "data/apis";
+import { CardsList, SelectableCardsList } from "presentation/components/RectangularCards/rectangularCards";
+import { TagsListComponent } from "presentation/components/Tags/tagsList";
 
 
 const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTagsList, onCloseModal}) => {
-    const remainingTagsList = [];
-    allTagsList.forEach(tag => {
-        if(!(tag.name in existingTags)) remainingTagsList.push(tag.name);
-    })
-    const existingTagsList = [];
-    for(const tag in existingTags) existingTagsList.push(tag);
     const [selectedTags, setSelectedTags] = useState([]);
 
+    const remainingTagsList = [];
+    const existingTagsList = [];
+    allTagsList.forEach(tag => {
+        if(!(tag.name in existingTags)) remainingTagsList.push({title: tag.name});
+    })
+    for(const tag in existingTags) existingTagsList.push({title: tag});
+    
     const toggleTag = (tag) => {
         setSelectedTags((prevTags) => {
             if (prevTags.includes(tag)) {
@@ -27,7 +30,8 @@ const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTa
     };
 
     const handleSave = async () => {
-        await addDeploymentTags(modelName, version, [...selectedTags, ...existingTagsList], null, updateTagsList);
+        const existingTagsName = existingTagsList.map(tag => tag.title);
+        await addDeploymentTags(modelName, version, [...selectedTags, ...existingTagsName], null, updateTagsList);
         onCloseModal();
     }
 
@@ -39,22 +43,12 @@ const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTa
                     <img className={"saveIcon"} src={"/assets/icons/saveIcon.svg"} onClick={handleSave}></img>
                 </div>
                 <div className="selectable-tags-list">
-                    {remainingTagsList.map((tag) => (
-                        <div key={tag} className={`selectable-tag-box ${selectedTags.includes(tag) ? 'selected-tag-box' : 'not-selected-tag-box'}`} onClick={() => toggleTag(tag)}>
-                            <div className={`selectable-tag-name ${selectedTags.includes(tag) ? 'selected-tag-name' : 'not-selected-tag-name'}`}>{tag}</div>
-                        </div>
-                    ))}
+                    <SelectableCardsList cards={remainingTagsList} selectedCards={selectedTags} handleCardClick={toggleTag} />
                 </div>
             </div>
             <div className="existing-tags-container">
                 <div className="existing-tags-list-header">Previously attached deployment tags</div>
-                <div className="existing-tags-list">
-                    {existingTagsList.map((tag) => (
-                        <div key={tag} className="existing-tag">
-                            <div className="existing-tag-name">{tag}</div>
-                        </div>
-                    ))}
-                </div>
+                <CardsList cards={existingTagsList} customStyle={{box: {backgroundColor: '#6565FF1A'}}} />
             </div>
         </div>
   );
@@ -98,7 +92,7 @@ const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList
             let existingTags = {};
             for(const tag in  modelDetails['versionToTags'][version]) {
                 tagsList.push(tag);
-                existingTags[tag]= true;
+                existingTags[tag] = true;
             }
             modelDetailsView.body.push([{Component: VersionColumnComponent, data: {version: version, existingTags: existingTags, allTagsList: allTagsList, modelName: modelName, updateTagsList: updateTagsList}}, {Component: TagsListComponent, data: {tags: [...tagsList]}}]);
         }
@@ -106,7 +100,7 @@ const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList
     }, [modelDetails])
     
     return (
-        <div className={`modelsTableView flexColumn`}>
+        <div className={`modelDetailsTableView flexColumn overflowAuto`}>
             <Table data={modelDetailsView}/>
         </div>
     )

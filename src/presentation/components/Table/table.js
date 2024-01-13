@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './table.css';
 import '../../../common.css';
+import Modal from '../modal/modal';
 
 
 export const TextOnlyComponent = ({text}) => {
@@ -12,41 +13,6 @@ export const TextOnlyComponent = ({text}) => {
 
 TextOnlyComponent.propTypes = {
     text: PropTypes.string.isRequired
-}
-
-const TagComponent = ({text, color}) => {
-    const bgColor = color || 'white';
-    return (
-        <div className={`textTag`} style={{backgroundColor: bgColor}}>{text}</div>
-    );
-}
-
-TagComponent.propTypes = {
-    color: PropTypes.string,
-    text: PropTypes.string.isRequired,
-};
-
-export const TagsListComponent = ({tags}) => {
-    const colors = ['#D4F8D3', '#F8F4D3', '#D3E8F8', '#EAD3F8', '#F8D3D3'];
-    const tagsReducedList = tags.slice(0, 5);
-    let truncated = false;
-    if(tags.length > 5) truncated = true;
-    return (
-        <div className={`tagsList flexRow`}>
-            {tagsReducedList.map((tag, index) => 
-                <TagComponent key={tag} text={tag} color={colors[index]} />
-            )}
-            {truncated && <div className='tagsListTruncated'>{'...more'}</div>}
-        </div>
-    )
-}
-
-TagsListComponent.propTypes = {
-    tags: PropTypes.arrayOf(
-        PropTypes.shape({
-          text: PropTypes.string.isRequired,
-        })
-    ).isRequired
 }
 
 const defaultStyles = {

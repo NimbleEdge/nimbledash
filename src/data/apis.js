@@ -50,6 +50,7 @@ export const fetchDeploymentTags = async (updateTagsList) => {
       })
       .then((res) => {
         const tags = res.data.tags;
+        console.log(res);
         updateTagsList([...tags]);
       })
       .catch((e) => {

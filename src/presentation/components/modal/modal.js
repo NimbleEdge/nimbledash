@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './modal.css';
 
-const Modal = ({ isOpen, onClose, children }) => {
+const Modal = ({ isOpen, onClose, children, customStyle = {} }) => {
     const [isModalOpen, setIsModalOpen] = useState(isOpen);
   
     useEffect(() => {
@@ -23,7 +23,7 @@ const Modal = ({ isOpen, onClose, children }) => {
       <>
         {isModalOpen && (
           <div className="modal-overlay" onClick={handleOverlayClick}>
-            <div className="modal-content">
+            <div className="modal-content" style={customStyle}>
               <button className="close-button" onClick={closeModal}>
                 &times;
               </button>
