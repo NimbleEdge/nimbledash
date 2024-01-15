@@ -34,36 +34,8 @@
     flex-wrap: wrap;
 }
 
-.selectable-tag-box {
-    padding: 18px;
-    background-color: #9898981A;
-    width: 240px;
-    height: 75px;
-    border-radius: 8px;
-    margin-right: 20px;
-    margin-bottom: 20px;
-    cursor: pointer;
-}
-
-.selectable-tag-name {
-    color: #222222;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.selected-tag-box {
-    background-color: #6565FF1A;
-    border: 2px solid #6565FF;
-}
-
-.selected-tag-name {
-    color: #222222;
-    font-size: 14px;
-    font-weight: 500;
-}
-
 .existing-tags-container {
-    margin-top: 20px;
+    margin-top: 60px;
 }
 
 .existing-tags-list-header {
@@ -71,25 +43,4 @@
     font-weight: 300;
     font-size: 16px;
     margin-bottom: 20px;
-}
-
-.existing-tags-list {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.existing-tag {
-    padding: 18px;
-    background-color: lightcyan;
-    width: 240px;
-    height: 75px;
-    border-radius: 8px;
-    margin-right: 20px;
-    margin-bottom: 20px;
-}
-
-.existing-tag-name {
-    color: #222222;
-    font-size: 14px;
-    font-weight: 500;
 }

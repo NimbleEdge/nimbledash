@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import './toggleButton.css';
 
-const ToggleButton = ({option1, option2, handleToggle}) => {
-    const [selected, updateSelected] = useState(option1);
+const ToggleButton = ({option1, option2, handleToggle, selectedOption}) => {
+    const [selected, updateSelected] = useState(selectedOption);
     const toggle = () => {
         if(selected == option1) {
             updateSelected(option2);

@@ -1,8 +1,13 @@
-.modelNameColumn {
+.modelName {
     color: #74828F;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
+}
+
+.modelNameCol {
+    display: flex;
+    align-items: center;
 }
 
 .uploadNewModelFooter {
@@ -18,4 +23,21 @@
     font-size: 20px;
     font-weight: 250;
     padding-right: 10px;
+}
+
+.uploadNewModelButton {
+    margin-bottom: 15px;
+    width: 180px;
+    height: 48px;
+    border: none;
+    border-radius: 8px;
+}
+
+.updateModelButton {
+    width: 100px;
+    height: 35px;
+    border: none;
+    border-radius: 8px;
+    font-size: 10px;
+    margin-right: 20px
 }

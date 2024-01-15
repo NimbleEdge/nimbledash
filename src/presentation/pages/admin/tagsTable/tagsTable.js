@@ -1,41 +1,14 @@
-import Table, { TagsListComponent } from "presentation/components/Table/table";
+import Table from "presentation/components/Table/table";
 import '../../../../common.css';
 import '../admin_page.css';
 import './tagsTable.css';
 import React, { useEffect, useState } from "react";
 import Modal from "presentation/components/modal/modal";
-import Search from "./searchComponent";
+import Search from "../../../components/Search/searchComponent";
 import { createDeploymentTag } from "data/apis";
-
-// const AddModelsToTag = ({tagName, models}) => {
-    
-//     return (
-//         <div className="select-tags-modal-content">
-//             <div className="selectable-tags-container">
-//                 <div className="model-details-header-container">
-//                     <div className="model-details-header-container-text">{tagName}</div>
-//                 </div>
-//                 <div className="selectable-tags-list">
-//                     {models.map((tag) => (
-//                         <div key={tag} className={`selectable-tag-box ${selectedTags.includes(tag) ? 'selected-tag-box' : 'not-selected-tag-box'}`} onClick={() => toggleTag(tag)}>
-//                             <div className={`selectable-tag-name ${selectedTags.includes(tag) ? 'selected-tag-name' : 'not-selected-tag-name'}`}>{tag}</div>
-//                         </div>
-//                     ))}
-//                 </div>
-//             </div>
-//             <div className="existing-tags-container">
-//                 <div className="existing-tags-list-header">Previously attached deployment tags</div>
-//                 <div className="existing-tags-list">
-//                     {existingTagsList.map((tag) => (
-//                         <div key={tag} className="existing-tag">
-//                             <div className="existing-tag-name">{tag}</div>
-//                         </div>
-//                     ))}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
+import { TagsListComponent } from "presentation/components/Tags/tagsList";
+import TruncatedDescription from "../modelDetailsTable/TagsDescription/tagDescription";
+import { toast } from "react-toastify";
 
 const ModelVersionSelection = ({modelName, modelDetails, preSelectedVersions, onClickBack, handleSave}) => {
     let modelVersions = [];
@@ -58,7 +31,8 @@ const ModelVersionSelection = ({modelName, modelDetails, preSelectedVersions, on
             <div className="create-new-tag-model-version-selection-header">
                 <img className={"backArrow"} src={"/assets/icons/backArrow.svg"} onClick={onClickBack}></img>
                 <div className="create-new-tag-version-selection-title">Create A New Compatability Tag &gt; {modelName}</div>
-                <img className={"create-new-tag-saveIcon"} src={"/assets/icons/saveIcon.svg"} onClick={(e) => handleSave(modelName, selectedVersions)}></img>
+                <button onClick={(e) => handleSave(modelName, selectedVersions)} className="newTag-modelVersion-selection-button">Update Selection</button>
+                {/* <img className={"create-new-tag-saveIcon"} src={"/assets/icons/saveIcon.svg"} onClick={(e) => handleSave(modelName, selectedVersions)}></img> */}
             </div>
             <div className="create-new-tag-model-version-selection">
                 {modelVersions.map((version) => (
@@ -109,6 +83,18 @@ const CreateNewTagModal = ({modelsDetails, updateTagsList, onClose}) => {
         setCurrentView(Views.MODEL_VERSION_SELECTION_VIEW);
     }
     const handleSave = async () => {
+        if(tagName == '') {
+            toast.error("Please enter a vaid tag name", {
+                toastId: "errorToast",
+            });
+            return;
+        }
+        if(tagDescription == '') {
+            toast.error("Please enter a vaid tag description", {
+                toastId: "errorToast",
+            });
+            return;
+        };
         await createDeploymentTag({
             tagName: tagName,
             tagDescription: tagDescription,
@@ -137,7 +123,8 @@ const CreateNewTagModal = ({modelsDetails, updateTagsList, onClose}) => {
                 <>
                     <div className="create-new-tag-header">
                         <div className="create-new-tag-title">Create A New Compatability Tag</div>
-                        <img className={"create-new-tag-saveIcon"} src={"/assets/icons/saveIcon.svg"} onClick={handleSave}></img>
+                        <button onClick={handleSave} className="newTag-saveButton">Save</button>
+                        {/* <img className={`create-new-tag-saveIcon ${(tagName == '' || tagDescription == '') ? 'save-disabled' : 'cursorPointer'}`} src={"/assets/icons/saveIcon.svg"} onClick={handleSave}></img> */}
                     </div>
                     <div className="create-new-tag-input-content">
                         <div className="create-new-tag-name-input subsection">
@@ -183,7 +170,7 @@ const CreateNewTagButton = ({modelsDetails, updateTagsList}) => {
             </div>
             {
                 isModalOpen && 
-                <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={{height: '600px', overflow: 'auto'}}>
                     <CreateNewTagModal modelsDetails={modelsDetails} updateTagsList={updateTagsList} onClose={closeModal}/>
                 </Modal>
             }
@@ -192,45 +179,73 @@ const CreateNewTagButton = ({modelsDetails, updateTagsList}) => {
 }
 
 const TagNameColumnComponent = ({tagName}) => {
-    // const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // const openModal = () => {
-    //     setIsModalOpen(true);
-    // };
-
-    // const closeModal = () => {
-    //     setIsModalOpen(false);
-    // };
     return (
         <>
-            <div className={`tagsColumn`}>
+            <div className={`tags-name-column`}>
                 {tagName}
             </div>
         </>
     )
 }
 
-const TagsTable = ({tagsDetails, modelsDetails, updateTagsList}) => {
+const TagDescription = ({description}) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+    return(
+        <>
+            <div className="tags-description-column" onMouseOver={openModal} >
+                {description}
+            </div>
+            {
+                isModalOpen && 
+                <Modal isOpen={isModalOpen} onClose={closeModal}>
+                    {<div>{description}</div>}
+                </Modal>
+            }
+        </>
+    );
+}
+
+const TagsTable = ({tagsDetails, modelsDetails, updateTagsList}) => {
     const [tagsViewData, updateTagsViewData] = useState({
-        headers: [{text: 'Compatibility Tags'}, {text: 'Models'}],
+        headers: [{text: 'Compatibility Tags'}, {text: 'Description'}, {text: 'Models'}],
         body: [],
         footer: {Component: CreateNewTagButton, data: {modelsDetails: modelsDetails, updateTagsList: updateTagsList}}
     });
 
     useEffect(() => {
+        tagsViewData.footer.data.modelsDetails = modelsDetails;
+        updateTagsViewData({...tagsViewData});
+    }, [modelsDetails])
+
+    useEffect(() => {
         tagsViewData.body = [];
         for(const tag in tagsDetails) {
             const modelsArray = [];
-            for(const model in tagsDetails[tag]) modelsArray.push(model);
-            tagsViewData.body.push([{Component: TagNameColumnComponent, data: {tagName: tag}}, {Component: TagsListComponent, data: {tags: modelsArray}}]);
+            for(const model in tagsDetails[tag]['models']) modelsArray.push(model);
+            tagsViewData.body.push([{Component: TagNameColumnComponent, data: {tagName: tag}}, {Component: TruncatedDescription, data: {message: tagsDetails[tag]['description'], maxLength: 400}}, {Component: TagsListComponent, data: {tags: modelsArray}}]);
         }
         updateTagsViewData({...tagsViewData});
-    }, [tagsDetails])
+    }, [tagsDetails]);
+
+    const customStyles = {
+        headerCell : {
+            padding: '6px 24px 6px 24px',
+            backgroundColor: '#6565FF1A',
+            minWidth: '170px'
+        }
+    }
     
     return (
-        <div className={`tagsTableView flexColumn`}>
-            <Table data={tagsViewData}/>
+        <div className={`tagsTableView flexColumn overflowAuto`}>
+            <Table data={tagsViewData} customStyles={customStyles}/>
         </div>
     )
 }

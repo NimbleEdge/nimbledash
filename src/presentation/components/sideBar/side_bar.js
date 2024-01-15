@@ -78,7 +78,7 @@ function SideBar() {
               (currentTab == 1 ? "selected-desc " : "") + "sidebar-item-desc"
             }
           >
-            Upload model
+            Model Management
           </p>
         </div>
 

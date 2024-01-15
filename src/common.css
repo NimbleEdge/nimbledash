@@ -7,3 +7,11 @@
     display: flex;
     flex-direction: column;
 }
+
+.overflowAuto {
+    overflow: auto;
+}
+
+.cursorPointer  {
+    cursor: pointer;
+}
