@@ -76,7 +76,6 @@ const AdminPage = () => {
         // adding tags and version wise tags
         for(const tag in tagsDetails) {
             for(const modelName in tagsDetails[tag]['models']) {
-                if(modelsDetails[modelName] == undefined) console.log(modelName, tag);
                 modelsDetails[modelName]['tags'][tag] = true;
                 tagsDetails[tag]['models'][modelName].forEach(version => {
                     if(!(version in modelsDetails[modelName]['versionToTags'])) {

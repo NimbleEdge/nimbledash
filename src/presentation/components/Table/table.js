@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './table.css';
 import '../../../common.css';
-import Modal from '../modal/modal';
 
 
 export const TextOnlyComponent = ({text}) => {
