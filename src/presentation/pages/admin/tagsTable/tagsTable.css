@@ -88,7 +88,8 @@ input:focus {
     left: 28px;
     top: 38px;
     width: 12px;
-    height: 12px
+    height: 12px;
+    cursor: pointer;
 }
 
 .version-box {
@@ -161,4 +162,28 @@ input:focus {
     font-weight: 400;
     padding-top: 5px;
     padding-left: 7px;
+}
+
+.newTag-saveButton {
+    width: 60px;
+    height: 25px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    background-color: #222222;
+    margin-left: 10px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.newTag-modelVersion-selection-button {
+    width: 100px;
+    height: 25px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    background-color: #222222;
+    margin-left: 10px;
+    font-size: 10px;
+    cursor: pointer;
 }

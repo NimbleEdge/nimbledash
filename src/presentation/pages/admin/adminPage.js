@@ -6,6 +6,7 @@ import ToggleButton from "presentation/components/toggleButton/toggleButton";
 import ModelsTable from "./modelsTable/modelsTable";
 import TagsTable from "./tagsTable/tagsTable";
 import ModelDetailsTable from "./modelDetailsTable/modelDetailsTable";
+import ModelUpload from "./ModelUpload/modelUpload";
 
 const AdmninPageView = { 
     MODELS_TABLE: 'modelsTable', 
@@ -75,6 +76,7 @@ const AdminPage = () => {
         // adding tags and version wise tags
         for(const tag in tagsDetails) {
             for(const modelName in tagsDetails[tag]['models']) {
+                if(modelsDetails[modelName] == undefined) console.log(modelName, tag);
                 modelsDetails[modelName]['tags'][tag] = true;
                 tagsDetails[tag]['models'][modelName].forEach(version => {
                     if(!(version in modelsDetails[modelName]['versionToTags'])) {
@@ -128,7 +130,7 @@ const AdminPage = () => {
                         {currentView != AdmninPageView.MODEL_VERSIONS_TABLE && <ToggleButton option1={'Compatability Tags'} option2={'Models'} handleToggle={toggleView} selectedOption={currentView == AdmninPageView.MODELS_TABLE ? 'Models' : 'Compatability Tags'} />}
                     </div>
                 }
-                {currentView == AdmninPageView.MODELS_TABLE && <ModelsTable modelsDetails={modelsDetails} onModalClick={onModelClick}/>}
+                {currentView == AdmninPageView.MODELS_TABLE && <ModelsTable modelsDetails={modelsDetails} onModelClick={onModelClick} allTagsList={tagsList} />}
                 {currentView == AdmninPageView.DEPLOYMENT_TAGS_TABLE && <TagsTable tagsDetails={tagsDetails} modelsDetails={{...modelsDetails}} updateTagsList={updateTagsList} />}
                 {currentView == AdmninPageView.MODEL_VERSIONS_TABLE && <ModelDetailsTable modelDetails={{...modelsDetails[selectedModelName]}} modelName={selectedModelName} allTagsList={[...tagsList]} updateTagsList={updateTagsList} />}
             </div>
