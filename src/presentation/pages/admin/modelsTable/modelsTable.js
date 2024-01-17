@@ -47,7 +47,7 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList}) => {
             <div className="modelNameCol">
                 {isModelUpdatelModalOpen && 
                     <Modal isOpen={isModelUpdatelModalOpen} onClose={closeModelUpdateModal}>
-                        <ModelUpload isNewModel={false} allTagsList={allTagsList} existingModelName={data.text}/>
+                        <ModelUpload isNewModel={false} allTagsList={allTagsList} existingModelName={data.text} closeModal={closeModelUpdateModal} />
                     </Modal>
                 }
                 <button className="updateModelButton" onClick={openModelUpdateModal}>Update</button>
@@ -77,7 +77,7 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList}) => {
             <button onClick={openNewModelModal} className="uploadNewModelButton">+ Upload new modal</button>
             {isNewModelModalOpen && 
                 <Modal isOpen={isNewModelModalOpen} onClose={closeNewModelModal}>
-                    <ModelUpload isNewModel={true} allTagsList={allTagsList}/>
+                    <ModelUpload isNewModel={true} allTagsList={allTagsList} closeModal={closeNewModelModal} />
                 </Modal>
             }
             <Table data={modelsViewData}/>
