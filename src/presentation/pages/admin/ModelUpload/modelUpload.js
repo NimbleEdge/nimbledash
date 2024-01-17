@@ -26,7 +26,7 @@ const uploadModelView = {
     CT_SELECTION_VIEW: 1
 }
 
-const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
+const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", closeModal}) => {
   const dispatch = useDispatch();
   var modelContentBase64 = "";
   var modelConfigJson = {};
@@ -117,6 +117,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
             .then((res) => {
               toast.success("Model uploaded successfully");
               fetchModelList();
+              closeModal();
             })
             .catch((e) => {
               //console.log(e);
@@ -135,12 +136,12 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
         dispatch(loaderActions.toggleLoader(true));
         await axios
           .post(
-            `${APP_BASE_MDS_URL}/api/v1/admin/modelVersion`,
+            `${APP_BASE_MDS_URL}/api/v1/admin/modelversion`,
             {
               modelConfig: modelConfigJson,
               modelName: existingModelName,
               model: modelContentBase64,
-              updateType: selectedUpdateTypeIndex,
+              updateType: selectedUpdateTypeIndex + 1,
               fileType: modelType,
               deploymentTags: selectedTags,
             },
@@ -157,6 +158,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
           .then((res) => {
             toast.success("Model updated successfully");
             fetchModelList();
+            closeModal();
           })
           .catch((e) => {
             //console.log(e);

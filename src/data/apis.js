@@ -13,7 +13,7 @@ import { loaderActions } from "presentation/redux/stores/store";
 export const createDeploymentTag = async ({tagName, tagDescription, models, updateTagsList}) => {
   console.log(models);
   await axios
-    .post(`${APP_BASE_MDS_URL}api/v1/admin/deployment`,
+    .post(`${APP_BASE_MDS_URL}/api/v1/admin/deployment`,
     {
       name: tagName,
       description: tagDescription,
