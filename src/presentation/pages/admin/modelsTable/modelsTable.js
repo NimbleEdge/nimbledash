@@ -6,19 +6,11 @@ import React, { useEffect, useState } from "react";
 import { TagsListComponent } from "presentation/components/Tags/tagsList";
 import ModelUpload from "../ModelUpload/modelUpload";
 import Modal from "presentation/components/modal/modal";
+import { downloadModel } from "./modelDownload";
 
-const uploadNewModalComponent = () => {
-    return (
-        <div className="uploadNewModelFooter">
-            <div className={`uploadPlusSign`}>+</div>
-            <div>Upload new model</div>
-        </div>
-    )
-}
-
-const ModelsTable = ({modelsDetails, onModelClick, allTagsList}) => {
+const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList}) => {
     const [modelsViewData, updateModelsViewData] = useState({
-        headers: [{text: 'Models'}, {text: 'Compatability Tags'}, {text: 'Latest Version'}],
+        headers: [{text: 'Models'}, {text: 'Latest Version'}, {text: 'Actions'}, {text: 'Compatability Tags'}],
         body: [],
     });
     const [isNewModelModalOpen, setIsNewModelModalOpen] = useState(false);
@@ -31,10 +23,8 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList}) => {
         setIsNewModelModalOpen(false);
     };
 
-    const ModelNameColumnComponent = (data) => {
-
+    const ActionColComponent = ({modelName, modelVersion}) => {
         const [isModelUpdatelModalOpen, setIsModelUpdateModalOpen] = useState(false);
-
         const openModelUpdateModal = () => {
             setIsModelUpdateModalOpen(true);
         };
@@ -42,42 +32,44 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList}) => {
         const closeModelUpdateModal = () => {
             setIsModelUpdateModalOpen(false);
         };
-
         return (
-            <div className="modelNameCol">
+            <div className="actionColCell">
                 {isModelUpdatelModalOpen && 
                     <Modal isOpen={isModelUpdatelModalOpen} onClose={closeModelUpdateModal}>
-                        <ModelUpload isNewModel={false} allTagsList={allTagsList} existingModelName={data.text} closeModal={closeModelUpdateModal} />
+                        <ModelUpload isNewModel={false} allTagsList={allTagsList} existingModelName={modelName} updateModelsList={updateModelsList} closeModal={closeModelUpdateModal} />
                     </Modal>
                 }
-                <button className="updateModelButton" onClick={openModelUpdateModal}>Update</button>
-                <div className={`modelName`} onClick={() => data.onClick(data.text)}>{data.text}</div>
+                <button className="update-model-btn" onClick={openModelUpdateModal}>Update</button>
+                <button className="download-model-btn" onClick={() => downloadModel({modelName: modelName, modelVersion: modelVersion})}>Download</button>
             </div>
         )
     }
 
-    const updateModelButton = () => {
-        return <button className="uploadNewModelButton">Update</button>
+    const ModelNameColumnComponent = ({text, onClick}) => {
+
+        return (
+            <div className="modelNameCol">
+                <div className={`modelName`} onClick={() => onClick(text)}>{text}</div>
+            </div>
+        )
     }
 
     useEffect(() => {
         modelsViewData.body = [];
-        let index = 0;
         for(const modelName in modelsDetails) {
-            index++;
             const tagsArray = [];
             for(const tag in modelsDetails[modelName]['tags']) tagsArray.push(tag);
-            modelsViewData.body.push([{Component: ModelNameColumnComponent, data: {text: modelName, onClick: onModelClick}}, {Component: TagsListComponent, data: {tags: tagsArray}}, {Component: TextOnlyComponent, data: {text: modelsDetails[modelName].latestVersion}}]);
+            modelsViewData.body.push([{Component: ModelNameColumnComponent, data: {text: modelName, onClick: onModelClick}}, {Component: TextOnlyComponent, data: {text: modelsDetails[modelName].latestVersion}}, {Component: ActionColComponent, data: {modelName: modelName, modelVersion: modelsDetails[modelName].latestVersion}}, {Component: TagsListComponent, data: {tags: tagsArray}}]);
         }
         updateModelsViewData({...modelsViewData});
     }, [modelsDetails])
-    
+
     return (
         <div className={`modelsTableView flexColumn overflowAuto`}>
-            <button onClick={openNewModelModal} className="uploadNewModelButton">+ Upload new modal</button>
+            <button onClick={openNewModelModal} className="uploadNewModelButton">+ Upload new model</button>
             {isNewModelModalOpen && 
                 <Modal isOpen={isNewModelModalOpen} onClose={closeNewModelModal}>
-                    <ModelUpload isNewModel={true} allTagsList={allTagsList} closeModal={closeNewModelModal} />
+                    <ModelUpload isNewModel={true} allTagsList={allTagsList} updateModelsList={updateModelsList} closeModal={closeNewModelModal} />
                 </Modal>
             }
             <Table data={modelsViewData}/>

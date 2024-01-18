@@ -37,7 +37,6 @@ function ContactPage() {
         },
       })
       .then((res) => {
-        console.log(res);
         setOnCallList(res.data);
       })
       .catch((e) => {

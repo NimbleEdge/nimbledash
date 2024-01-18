@@ -5,7 +5,7 @@ import './tags.css';
 import { TagComponent } from './tag';
 
 export const TagsListComponent = ({tags, truncationLimit = 5}) => {
-    const colors = ['#D4F8D3', '#F8F4D3', '#D3E8F8', '#EAD3F8', '#F8D3D3'];
+    const colors = ['#F8D3D3', '#F8F4D3', '#EAD3F8', '#D3E8F8', '#D4F8D3'];
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => {
@@ -29,7 +29,7 @@ export const TagsListComponent = ({tags, truncationLimit = 5}) => {
                 truncated &&
                 <div className={`tagsList flexRow cursorPointer`} onClick={openModal}>
                     {tagsReducedList.map((tag, index) => {
-                        const cIdx = Math.floor((Math.random()*5));
+                        const cIdx = index; //Math.floor((Math.random()*5));
                         return (<TagComponent key={tag} text={tag} color={colors[cIdx]} />);
                     })}
                     {truncated && <div className='tagsListTruncated'>{'...more'}</div>}
@@ -39,7 +39,7 @@ export const TagsListComponent = ({tags, truncationLimit = 5}) => {
                 !truncated &&
                 <div className={`tagsList flexRow`}>
                     {tags.map((tag, index) => {
-                        const cIdx = Math.floor((Math.random()*truncationLimit));
+                        const cIdx = index; //Math.floor((Math.random()*truncationLimit));
                         return (<TagComponent key={tag} text={tag} color={colors[cIdx]} />);
                     })}
                     {truncated && <div className='tagsListTruncated'>{'...more'}</div>}
@@ -51,7 +51,7 @@ export const TagsListComponent = ({tags, truncationLimit = 5}) => {
                     <div className='completeListDisplayDiv'>
                     {
                         tags.map((tag, index) => {
-                            const cIdx = Math.floor((Math.random()*truncationLimit));
+                            const cIdx = Math.floor((Math.random()*5));
                             return (
                                 <TagComponent key={tag} text={tag} color={colors[cIdx]} customStyle={{margin: '5px'}} />
                             )
