@@ -7,12 +7,14 @@
   }
   
   .message-content {
+    max-width: 300px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   
-  .message-content.hovered {
+  .message-content:hover {
+    overflow: visible;
     white-space: normal;
   }
   

@@ -1,12 +1,13 @@
-import Table from "presentation/components/Table/table";
+import Table, { TextOnlyComponent } from "presentation/components/Table/table";
 import '../../../../common.css';
 import '../admin_page.css';
 import './modelDetailsTable.css';
 import React, { useEffect, useState } from "react";
 import Modal from "presentation/components/modal/modal";
-import { addDeploymentTags } from "data/apis";
+import { addDeploymentTags, fetchActiveUsers } from "data/apis";
 import { CardsList, SelectableCardsList } from "presentation/components/RectangularCards/rectangularCards";
 import { TagsListComponent } from "presentation/components/Tags/tagsList";
+import { downloadModel } from "../modelsTable/modelDownload";
 
 
 const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTagsList, onCloseModal}) => {
@@ -79,11 +80,38 @@ const VersionColumnComponent = ({version, existingTags, allTagsList, modelName, 
     )
 }
 
+const ActionColComponent = ({modelName, modelVersion}) => {
+    return (
+        <div className="actionColCell">
+            <button className="download-model-button" onClick={() => downloadModel({modelName: modelName, modelVersion: modelVersion})}>Download</button>
+        </div>
+    )
+}
+
 const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList}) => {
     const [modelDetailsView, updateModelDetailsView] = useState({
-        headers: [{text: 'Versions'}, {text: 'Compatability Tags'}],
+        headers: [{text: 'Versions'}, {text: 'Actions'}, {text: 'Compatability Tags'}, {text: 'Active Users ( last 7 days )'}],
         body: []
     });
+    const [activeUsers, updateActiveUsers] = useState({});
+
+    useEffect(() => {
+        const fetchVersionWiseActiveUsers = async () => {
+            const promises = [];
+            for(const version in modelDetails['versionToTags']) {
+                const request = fetchActiveUsers(modelName, version);
+                promises.push(request);
+            }
+            const results = await Promise.all(promises);
+            results.forEach((data) => {
+                for(const version in data.activeUsersTrends) {
+                    activeUsers[version] = data['activeUsersTrends'][version];
+                }
+            });
+            updateActiveUsers({...activeUsers});
+        }
+        fetchVersionWiseActiveUsers();
+    }, [])
 
     useEffect(() => {
         modelDetailsView.body = [];
@@ -94,10 +122,10 @@ const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList
                 tagsList.push(tag);
                 existingTags[tag] = true;
             }
-            modelDetailsView.body.push([{Component: VersionColumnComponent, data: {version: version, existingTags: existingTags, allTagsList: allTagsList, modelName: modelName, updateTagsList: updateTagsList}}, {Component: TagsListComponent, data: {tags: [...tagsList]}}]);
+            modelDetailsView.body.push([{Component: VersionColumnComponent, data: {version: version, existingTags: existingTags, allTagsList: allTagsList, modelName: modelName, updateTagsList: updateTagsList}}, {Component: ActionColComponent, data: {modelName: modelName, modelVersion: version}}, {Component: TagsListComponent, data: {tags: [...tagsList]}}, {Component: TextOnlyComponent, data:{text: activeUsers[version]}}]);
         }
         updateModelDetailsView({...modelDetailsView});
-    }, [modelDetails])
+    }, [modelDetails, activeUsers])
     
     return (
         <div className={`modelDetailsTableView flexColumn overflowAuto`}>

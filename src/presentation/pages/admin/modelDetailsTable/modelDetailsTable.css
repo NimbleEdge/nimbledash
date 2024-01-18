@@ -44,3 +44,13 @@
     font-size: 16px;
     margin-bottom: 20px;
 }
+
+.download-model-button {
+    border: none;
+    border-radius: 4px;
+    font-size: 10px;
+}
+
+.actionColCell {
+    display: flex;
+}

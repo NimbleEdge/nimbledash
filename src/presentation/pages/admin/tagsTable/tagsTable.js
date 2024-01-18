@@ -9,6 +9,7 @@ import { createDeploymentTag } from "data/apis";
 import { TagsListComponent } from "presentation/components/Tags/tagsList";
 import TruncatedDescription from "../modelDetailsTable/TagsDescription/tagDescription";
 import { toast } from "react-toastify";
+import { CardsList } from "presentation/components/RectangularCards/rectangularCards";
 
 const ModelVersionSelection = ({modelName, modelDetails, preSelectedVersions, onClickBack, handleSave}) => {
     let modelVersions = [];
@@ -213,9 +214,9 @@ const TagDescription = ({description}) => {
     );
 }
 
-const TagsTable = ({tagsDetails, modelsDetails, updateTagsList}) => {
+const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList}) => {
     const [tagsViewData, updateTagsViewData] = useState({
-        headers: [{text: 'Compatibility Tags'}, {text: 'Description'}, {text: 'Models'}],
+        headers: [{text: 'Compatibility Tags'}, {text: 'Description'}, {text: 'Tasks'}, {text: 'Models'}],
         body: [],
         footer: {Component: CreateNewTagButton, data: {modelsDetails: modelsDetails, updateTagsList: updateTagsList}}
     });
@@ -230,7 +231,9 @@ const TagsTable = ({tagsDetails, modelsDetails, updateTagsList}) => {
         for(const tag in tagsDetails) {
             const modelsArray = [];
             for(const model in tagsDetails[tag]['models']) modelsArray.push(model);
-            tagsViewData.body.push([{Component: TagNameColumnComponent, data: {tagName: tag}}, {Component: TruncatedDescription, data: {message: tagsDetails[tag]['description'], maxLength: 400}}, {Component: TagsListComponent, data: {tags: modelsArray}}]);
+            const tasksArray = [];
+            for(const task in tagsDetails[tag]['tasks']) tasksArray.push(task);
+            tagsViewData.body.push([{Component: TagNameColumnComponent, data: {tagName: tag}}, {Component: TruncatedDescription, data: {message: tagsDetails[tag]['description'], maxLength: 400}}, {Component: TagsListComponent, data: {tags: tasksArray, truncationLimit: 2}}, {Component: TagsListComponent, data: {tags: modelsArray, truncationLimit: 2}}]);
         }
         updateTagsViewData({...tagsViewData});
     }, [tagsDetails]);

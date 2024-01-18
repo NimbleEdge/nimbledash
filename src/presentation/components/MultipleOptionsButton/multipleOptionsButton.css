@@ -19,20 +19,15 @@
     align-items: center;
 }
   
-.toggle-btn-left {
+.leftmost-btn {
     border-radius: 5px 0 0 5px;
 }
 
-.toggle-btn-right {
+.rightmost-btn {
     border-radius: 0 5px 5px 0;
 }
   
-.toggle-btn-left.active {
-    background-color: #6c5ce7;
-    color: #FFFFFF;
-}
-
-.toggle-btn-right.active {
+.toggle-btn.active {
     background-color: #6c5ce7;
     color: #FFFFFF;
 }

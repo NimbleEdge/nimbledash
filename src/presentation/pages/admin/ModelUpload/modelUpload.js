@@ -26,28 +26,23 @@ const uploadModelView = {
     CT_SELECTION_VIEW: 1
 }
 
-const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
+const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateModelsList, closeModal}) => {
   const dispatch = useDispatch();
   var modelContentBase64 = "";
   var modelConfigJson = {};
   var modelType = "";
   const updateType = ["Build", "Update", "Fix"];
   const [selectedUpdateTypeIndex, setSelectedUpdateTypeIndex] = useState(0);
-  const [selectedModelIndex, setSelectedModelIndex] = useState(0);
-  const [modelList, setModelList] = useState([]);
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
     accept: [".ort", ".tar", ".json"],
     readAs: "ArrayBuffer",
     multiple: true,
     limitFilesConfig: { max: 2, min: 2 },
   });
-  const [openConfigSelector] = useFilePicker({
-    accept: ".json",
-    readAs: "Text",
-    multiple: false,
-  });
   const [currentView, setCurrentView] = useState(uploadModelView.UPLOAD_MODEL_VIEW);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [newModelName, setNewModelName] = useState(null);
+
   const handleTagSelection = (tag) => {
     setSelectedTags(prevSelectedTags => {
         if (prevSelectedTags.includes(tag)) {
@@ -56,11 +51,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
             return [...prevSelectedTags, tag];
         }
     });
-}
-
-  useEffect(() => {
-    fetchModelList(setModelList, dispatch);
-  }, []);
+  }
 
   filesContent.map((file) => {
     if (file["name"].includes(".ort")) {
@@ -115,11 +106,14 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
               }
             )
             .then((res) => {
-              toast.success("Model uploaded successfully");
-              fetchModelList();
+              const successToast = {message: "Model uploaded successfully"};
+              fetchModelList({updateModelsList: updateModelsList, dispatch: dispatch, closeModal: closeModal, successToast: successToast});
+              closeModal();
+              dispatch(loaderActions.toggleLoader(false));
             })
             .catch((e) => {
               //console.log(e);
+              dispatch(loaderActions.toggleLoader(false));
               var errorDescription = e.response.data?.error?.description;
               if (errorDescription != null)
                 toast.error(errorDescription, {
@@ -135,12 +129,12 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
         dispatch(loaderActions.toggleLoader(true));
         await axios
           .post(
-            `${APP_BASE_MDS_URL}/api/v1/admin/modelVersion`,
+            `${APP_BASE_MDS_URL}/api/v1/admin/modelversion`,
             {
               modelConfig: modelConfigJson,
               modelName: existingModelName,
               model: modelContentBase64,
-              updateType: selectedUpdateTypeIndex,
+              updateType: selectedUpdateTypeIndex + 1,
               fileType: modelType,
               deploymentTags: selectedTags,
             },
@@ -155,11 +149,11 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
             }
           )
           .then((res) => {
-            toast.success("Model updated successfully");
-            fetchModelList();
+            const successToast = {message: "Model updated successfully"};
+            fetchModelList({updateModelsList: updateModelsList, dispatch: dispatch, closeModal: closeModal, successToast: successToast});
           })
           .catch((e) => {
-            //console.log(e);
+            dispatch(loaderActions.toggleLoader(false));
             var errorDescription = e.response.data?.error?.description;
             if (errorDescription != null)
               toast.error(errorDescription, {
@@ -172,7 +166,6 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
           });
       }
     }
-    dispatch(loaderActions.toggleLoader(false));
   };
 
   const downloadModel = async (modelName, modelVersion) => {
@@ -246,16 +239,17 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
 
   return (
     <>
-            {currentView == uploadModelView.UPLOAD_MODEL_VIEW && <div className="modelUploadModal">
-                <p className="heading4">Upload Model</p>
+            {currentView == uploadModelView.UPLOAD_MODEL_VIEW && 
+            <div className="modelUploadModal">
+                <p className="heading4">{isNewModel ? 'Upload' : 'Update'} Model</p>
                 <div className="upload-card-grid">
                     <div
                     className="upload-card clickable"
                     onClick={async () => {
                         try {
-                        await openFileSelector();
+                          await openFileSelector();
                         } catch (err) {
-                        console.log("can't open file picker.");
+                          console.log("can't open file picker.");
                         }
                     }}
                     >
@@ -284,15 +278,14 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = ""}) => {
                         ></DropdownComponent>
                     }
                     {isNewModel && (
-                        <form className="expanded">
                         <input
                             id="modelNameInput"
                             type="text"
-                            name="clientID"
+                            value={newModelName}
+                            onChange={(e) => setNewModelName(e.target.value)}
                             className="model-upload-custom-dropdown"
                             placeholder={"Enter Model Name"}
                         />
-                        </form>
                     )}
                     {/* {!isNewModel &&
                     <DropdownComponent
