@@ -80,7 +80,7 @@
 //           dispatch(loaderActions.toggleLoader(true));
 //           await axios
 //             .post(
-//               `${APP_BASE_MDS_URL}/api/v1/admin/model`,
+//               `${APP_BASE_MDS_URL}api/v1/admin/model`,
 //               {
 //                 modelConfig: modelConfigJson,
 //                 modelName: modelName,
@@ -118,7 +118,7 @@
 //         dispatch(loaderActions.toggleLoader(true));
 //         await axios
 //           .put(
-//             `${APP_BASE_MDS_URL}/api/v1/admin/model`,
+//             `${APP_BASE_MDS_URL}api/v1/admin/model`,
 //             {
 //               modelConfig: modelConfigJson,
 //               modelName: Array.from(
@@ -162,7 +162,7 @@
 //   const downloadModel = async (modelName, modelVersion) => {
 //     await axios
 //       .get(
-//         `${APP_BASE_MDS_URL}/api/v1/admin/models/${modelName}/versions/${modelVersion}`,
+//         `${APP_BASE_MDS_URL}api/v1/admin/models/${modelName}/versions/${modelVersion}`,
 //         {
 //           headers: {
 //             AuthMethod: getAuthMethod(),
