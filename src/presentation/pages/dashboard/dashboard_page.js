@@ -124,7 +124,7 @@ function DashboardPage() {
 
   const fetchClientIDList = async () => {
     await axios
-      .get(`${APP_BASE_MDS_URL}/api/v1/admin/user/clients`, {
+      .get(`${APP_BASE_MDS_URL}api/v1/admin/user/clients`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -160,7 +160,7 @@ function DashboardPage() {
   const fetchModelList = async () => {
     var tempJson = {};
     await axios
-      .get(`${APP_BASE_MDS_URL}/api/v1/admin/models`, {
+      .get(`${APP_BASE_MDS_URL}api/v1/admin/models`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),

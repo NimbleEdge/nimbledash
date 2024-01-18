@@ -79,7 +79,7 @@ function AppRouter(props) {
     if (token == null) return false;
 
     return await axios
-      .get(`${APP_BASE_MDS_URL}/api/v1/admin/ping`, {
+      .get(`${APP_BASE_MDS_URL}api/v1/admin/ping`, {
         headers: {
           authMethod: getAuthMethod(),
           Token: token,
