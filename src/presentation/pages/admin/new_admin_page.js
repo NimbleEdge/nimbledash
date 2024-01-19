@@ -34,7 +34,7 @@ function getBiggerVersions(version1, version2) {
     return version1;  
 }
 
-const AdminPage = () => {
+const NewAdminPage = () => {
     const [currentView, setView] = useState(AdminPageView.DEPLOYMENT_TAGS_TABLE);
     const [tagsList, updateTagsList] = useState([]);
     const [tagsDetails, updateTagsDetails] = useState({});
@@ -174,4 +174,4 @@ const AdminPage = () => {
     )
 }
 
-export default AdminPage;
+export default NewAdminPage;

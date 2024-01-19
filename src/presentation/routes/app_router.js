@@ -26,7 +26,7 @@ import jwt_decode from "jwt-decode";
 import RBACPage from "presentation/pages/rbac/rbac_page";
 import ContactPage from "presentation/pages/contact/contact_page";
 import { getAuthMethod } from "core/utils";
-import AdminPage from "presentation/pages/admin/adminPage";
+import AdminPage from "presentation/pages/admin/admin_page";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();

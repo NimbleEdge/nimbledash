@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { TagsListComponent } from "presentation/components/Tags/tagsList";
 import Modal from "presentation/components/modal/modal";
 import TaskUpdate from "./taskUpdate";
-import { DEFAULT_TASK_NAME } from "../adminPage";
+import { DEFAULT_TASK_NAME } from "../new_admin_page";
 
 
 const taskTableView = {
