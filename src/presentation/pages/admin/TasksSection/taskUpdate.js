@@ -5,7 +5,7 @@ import { createNewTask, updateTask } from "data/apis";
 import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
 import "./taskUpdate.css";
 import { SelectableCardsList } from "presentation/components/RectangularCards/rectangularCards";
-import { DEFAULT_TASK_NAME } from "../adminPage";
+import { DEFAULT_TASK_NAME } from "../new_admin_page";
 import { useDispatch } from "react-redux";
 
 const upadteTaskView = {

@@ -1,3 +1,4 @@
+import { showOldView2 } from "presentation/pages/admin/admin_page";
 import {
   ADMIN_PAGE_ROUTE,
   CONTACT_PAGE_ROUTE,
@@ -78,7 +79,7 @@ function SideBar() {
               (currentTab == 1 ? "selected-desc " : "") + "sidebar-item-desc"
             }
           >
-            Model Management
+            {showOldView2() ? 'Admin Page' : 'Model Management'}
           </p>
         </div>
 
