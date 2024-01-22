@@ -18,9 +18,9 @@ function isSubstring(str, substr) {
 }  
 
 const clientsWithOldView = ['dream11', 'sostronk'];
-const clientsWithNewView = ['testclient'];
+const clientsWithNewView = ['testclient', 'siddharth-test', 'yash-test', 'saket-test', 'palash-test', 'kushal-test', 'naman-test'];
 
-export const showOldView1 = () => {
+export const showOldView = () => {
     const currentClientId = localStorage.getItem(CLIENT_ID);
     clientsWithOldView.forEach(clientId => {
         if(isSubstring(currentClientId, clientId)) return true;
@@ -28,19 +28,19 @@ export const showOldView1 = () => {
     return false;
 }
 
-export const showOldView2 = () => {
+export const showNewView = () => {
     const currentCientId = localStorage.getItem(CLIENT_ID);
-    if(currentCientId == 'testclient') return false;
-    return true;
+    clientsWithNewView.forEach(client => {
+        if(currentCientId == client) return true;
+    })
+    return false;
 }
 
 const AdminPage = () => {
     const [currentView, setCurrentView] = useState(null);
     useEffect(() => {
-        // if(showOldView()) setCurrentView(View.OLD)
-        // else setCurrentView(View.NEW);
-        if(showOldView2()) setCurrentView(View.OLD);
-        else setCurrentView(View.NEW);
+        if(showNewView()) setCurrentView(View.NEW);
+        else setCurrentView(View.OLD);
     }, [])
     return (
         <>
