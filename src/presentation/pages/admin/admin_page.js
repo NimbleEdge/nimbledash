@@ -30,10 +30,11 @@ export const showOldView = () => {
 
 export const showNewView = () => {
     const currentCientId = localStorage.getItem(CLIENT_ID);
+    let ans = false;
     clientsWithNewView.forEach(client => {
-        if(currentCientId == client) return true;
+        if(currentCientId == client) ans = true;
     })
-    return false;
+    return ans;
 }
 
 const AdminPage = () => {
