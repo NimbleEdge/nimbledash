@@ -10,6 +10,27 @@ import { getAuthMethod } from "core/utils";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { loaderActions } from "presentation/redux/stores/store";
+import { DEFAULT_TASK_NAME } from "presentation/pages/admin/new_admin_page";
+
+
+export const fetchTaskFile = async ({taskVersion}) => {
+  try{
+    const response  = await axios
+      .get(`${APP_BASE_MDS_URL}api/v1/admin/tasks/${DEFAULT_TASK_NAME}/versions/${taskVersion}`, {
+        headers: {
+          AuthMethod: getAuthMethod(),
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientId: localStorage.getItem(CLIENT_ID),
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+        },
+      });
+    return response;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
 
 function getCurrentISODateTime() {
   const now = new Date();

@@ -7,6 +7,9 @@ import { TagsListComponent } from "presentation/components/Tags/tagsList";
 import Modal from "presentation/components/modal/modal";
 import TaskUpdate from "./taskUpdate";
 import { DEFAULT_TASK_NAME } from "../new_admin_page";
+import { fetchTaskFile } from "data/apis";
+import FileDownloadComponent from "presentation/components/FileDownload/fileDownload";
+import { toast } from "react-toastify";
 
 
 const taskTableView = {
@@ -14,10 +17,15 @@ const taskTableView = {
     UPDATE_TASK_VIEW: 1
 }
 
+const taskActionColComponent = ({taskVersion}) => {
+    return (
+        <FileDownloadComponent fetchFunction={fetchTaskFile} fetchFuncData={{taskVersion: taskVersion}} fileName={DEFAULT_TASK_NAME} />
+    )
+}
+
 const TasksTable = ({tasksDetails, allTagsList, updateTasksList}) => {
-    console.log(tasksDetails);
     const [tasksViewData, updateTasksViewData] = useState({
-        headers: [{text: 'Version'}, {text: 'Compatability Tags'}, {text: 'Description'}],
+        headers: [{text: 'Version'}, {text: 'Actions'}, {text: 'Compatability Tags'}, {text: 'Description'}],
         body: [],
     });
     const [isUpdateTaskModalOpen, setIsUpdateTaskModalOpen] = useState(false);
@@ -25,7 +33,6 @@ const TasksTable = ({tasksDetails, allTagsList, updateTasksList}) => {
     const [currentView, setCurrentView] = useState(null);
 
     useEffect(() => {
-        console.log(tasksDetails);
         if(tasksDetails.hasOwnProperty(DEFAULT_TASK_NAME)) {
             setCurrentView(taskTableView.UPDATE_TASK_VIEW);
         } else {
@@ -56,7 +63,7 @@ const TasksTable = ({tasksDetails, allTagsList, updateTasksList}) => {
             for(const taskVersion in tasksDetails[taskName]['versions']) {
                 const tagsArray = [];
                 for(const tag in tasksDetails[taskName]['versionToTags'][taskVersion]) tagsArray.push(tag);
-                tasksViewData.body.push([{Component: TextOnlyComponent, data: {text: taskVersion}}, {Component: TagsListComponent, data: {tags: tagsArray}}, {Component: TextOnlyComponent, data: {text: tasksDetails[taskName]['versions'][taskVersion]['description']}}]);
+                tasksViewData.body.push([{Component: TextOnlyComponent, data: {text: taskVersion}}, {Component: taskActionColComponent, data: {taskVersion: taskVersion}}, {Component: TagsListComponent, data: {tags: tagsArray}}, {Component: TextOnlyComponent, data: {text: tasksDetails[taskName]['versions'][taskVersion]['description']}}]);
             }
             break;
         }
