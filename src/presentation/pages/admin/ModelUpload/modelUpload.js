@@ -29,15 +29,14 @@ const uploadModelView = {
 const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateModelsList, closeModal}) => {
   const dispatch = useDispatch();
   var modelContentBase64 = "";
-  var modelConfigJson = {};
   var modelType = "";
   const updateType = ["Build", "Update", "Fix"];
   const [selectedUpdateTypeIndex, setSelectedUpdateTypeIndex] = useState(0);
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
-    accept: [".ort", ".tar", ".json"],
+    accept: [".ort", ".tar"],
     readAs: "ArrayBuffer",
     multiple: true,
-    limitFilesConfig: { max: 2, min: 2 },
+    limitFilesConfig: { max: 1, min: 1 },
   });
   const [currentView, setCurrentView] = useState(uploadModelView.UPLOAD_MODEL_VIEW);
   const [selectedTags, setSelectedTags] = useState([]);
@@ -62,8 +61,6 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
       const binary8 = new Uint8Array(file.content);
       modelContentBase64 = Buffer.from(binary8).toString("base64");
       modelType = "tar";
-    } else {
-      modelConfigJson = JSON.parse(new TextDecoder().decode(file.content));
     }
   });
 
@@ -72,24 +69,22 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
       toast.error("Please select a valid model", {
         toastId: "errorToast",
       });
-    } else if (Object.keys(modelConfigJson).length == 0) {
-      toast.error("Please select a valid model config", {
-        toastId: "errorToast",
-      });
     } else {
       if (isNewModel) {
+        console.log('new');
         const modelName = document.getElementById("modelNameInput").value;
         if (modelName == null || modelName == "") {
           toast.error("Please enter a valid model name", {
             toastId: "errorToast",
           });
         } else {
+          console.log('api');
           dispatch(loaderActions.toggleLoader(true));
           await axios
             .post(
               `${APP_BASE_MDS_URL}api/v1/admin/model`,
               {
-                modelConfig: modelConfigJson,
+                modelConfig: {},
                 modelName: modelName,
                 model: modelContentBase64,
                 fileType: modelType,
@@ -112,7 +107,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
               dispatch(loaderActions.toggleLoader(false));
             })
             .catch((e) => {
-              //console.log(e);
+              console.log(e);
               dispatch(loaderActions.toggleLoader(false));
               var errorDescription = e.response.data?.error?.description;
               if (errorDescription != null)
@@ -131,7 +126,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
           .post(
             `${APP_BASE_MDS_URL}api/v1/admin/modelversion`,
             {
-              modelConfig: modelConfigJson,
+              modelConfig: {},
               modelName: existingModelName,
               model: modelContentBase64,
               updateType: selectedUpdateTypeIndex + 1,
@@ -256,11 +251,9 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
                         <div className="upload-card-content">
                             <img src="/assets/icons/upload.svg"></img>
                             <p className="heading6 margin-top-8">Upload Model</p>
-                            {modelContentBase64 != "" &&
-                            Object.keys(modelConfigJson).length != 0 ? (
+                            {modelContentBase64 != "" ? (
                             <p className="subHeading2 selected-files">
-                                Selected files: [{filesContent[0].name},{" "}
-                                {filesContent[1].name}]
+                                Selected file: {filesContent[0].name}
                             </p>
                             ) : (
                             <p className="subHeading2">Max upload size is 20 MBs</p>
