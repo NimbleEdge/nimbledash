@@ -71,14 +71,12 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
       });
     } else {
       if (isNewModel) {
-        console.log('new');
         const modelName = document.getElementById("modelNameInput").value;
         if (modelName == null || modelName == "") {
           toast.error("Please enter a valid model name", {
             toastId: "errorToast",
           });
         } else {
-          console.log('api');
           dispatch(loaderActions.toggleLoader(true));
           await axios
             .post(
@@ -107,7 +105,6 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
               dispatch(loaderActions.toggleLoader(false));
             })
             .catch((e) => {
-              console.log(e);
               dispatch(loaderActions.toggleLoader(false));
               var errorDescription = e.response.data?.error?.description;
               if (errorDescription != null)
