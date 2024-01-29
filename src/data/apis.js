@@ -16,7 +16,7 @@ import { DEFAULT_TASK_NAME } from "presentation/pages/admin/new_admin_page";
 export const fetchTaskFile = async ({taskVersion}) => {
   try{
     const response  = await axios
-      .get(`${APP_BASE_MDS_URL}api/v1/admin/tasks/${DEFAULT_TASK_NAME}/versions/${taskVersion}`, {
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/tasks/${DEFAULT_TASK_NAME}/versions/${taskVersion}`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -67,7 +67,7 @@ export const fetchActiveUsers = async (modelName, version) => {
 
 export const createDeploymentTag = async ({tagName, tagDescription, models, updateTagsList}) => {
   await axios
-    .post(`${APP_BASE_MDS_URL}api/v1/admin/deployment`,
+    .post(`${APP_BASE_MDS_URL}api/v2/admin/deployment`,
     {
       name: tagName,
       description: tagDescription,
@@ -93,7 +93,7 @@ export const createDeploymentTag = async ({tagName, tagDescription, models, upda
 
 export const fetchDeploymentTags = async (updateTagsList) => {
     await axios
-      .get(`${APP_BASE_MDS_URL}api/v1/admin/deployments`, {
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/deployments`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -114,7 +114,7 @@ export const fetchDeploymentTags = async (updateTagsList) => {
 export const fetchDeploymentTagDetails = async (tag) => {
     try{
       const response  = await axios
-        .get(`${APP_BASE_MDS_URL}api/v1/admin/deployments/${tag.name}`, {
+        .get(`${APP_BASE_MDS_URL}api/v2/admin/deployments/${tag.name}`, {
           headers: {
             AuthMethod: getAuthMethod(),
             Token: localStorage.getItem(ACCESS_TOKEN),
@@ -134,7 +134,7 @@ export const fetchModelList = async ({updateModelsList, dispatch = null, closeMo
     if(dispatch) dispatch(loaderActions.toggleLoader(true));
 
     await axios
-      .get(`${APP_BASE_MDS_URL}api/v1/admin/models`, {
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/models`, {
         headers: {
           AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -167,7 +167,7 @@ export const fetchModelList = async ({updateModelsList, dispatch = null, closeMo
 export const addDeploymentTags = async (modelName, modelVersion, deploymentTags, description, updateTagsList) => {
   await axios
       .put(
-        `${APP_BASE_MDS_URL}api/v1/admin/model`,
+        `${APP_BASE_MDS_URL}api/v2/admin/model`,
         {
           modelName: modelName,
           modelVersion: modelVersion,
@@ -204,7 +204,7 @@ export const addDeploymentTags = async (modelName, modelVersion, deploymentTags,
 export const fetchTasksList = async (updateTasksList, dispatch = null, successToast = null) => {
   if(dispatch) dispatch(loaderActions.toggleLoader(true));
   await axios
-    .get(`${APP_BASE_MDS_URL}api/v1/admin/tasks`, {
+    .get(`${APP_BASE_MDS_URL}api/v2/admin/tasks`, {
       headers: {
         AuthMethod: getAuthMethod(),
         Token: localStorage.getItem(ACCESS_TOKEN),
@@ -229,7 +229,7 @@ export const updateTask = async ({taskName, deploymentTags, taskCode, updateType
   if(dispatch) dispatch(loaderActions.toggleLoader(true));
   await axios
       .post(
-        `${APP_BASE_MDS_URL}api/v1/admin/taskversion`,
+        `${APP_BASE_MDS_URL}api/v2/admin/taskversion`,
         {
           taskName: taskName,
           deploymentTags: deploymentTags,
@@ -270,7 +270,7 @@ export const createNewTask = async ({taskName, deploymentTags, taskCode, descrip
   if(dispatch) dispatch(loaderActions.toggleLoader(true));
   await axios
       .post(
-        `${APP_BASE_MDS_URL}api/v1/admin/task`,
+        `${APP_BASE_MDS_URL}api/v2/admin/task`,
         {
           taskName: taskName,
           deploymentTags: deploymentTags,
