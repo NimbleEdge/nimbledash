@@ -38,7 +38,7 @@ export const downloadModel = async ({modelName, modelVersion}) => {
     toast.success("Download started");
     await axios
         .get(
-        `${APP_BASE_MDS_URL}api/v1/admin/models/${modelName}/versions/${modelVersion}`,
+        `${APP_BASE_MDS_URL}api/v2/admin/models/${modelName}/versions/${modelVersion}`,
         {
             headers: {
             AuthMethod: getAuthMethod(),

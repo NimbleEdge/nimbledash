@@ -80,7 +80,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
           dispatch(loaderActions.toggleLoader(true));
           await axios
             .post(
-              `${APP_BASE_MDS_URL}api/v1/admin/model`,
+              `${APP_BASE_MDS_URL}api/v2/admin/model`,
               {
                 modelConfig: {},
                 modelName: modelName,
@@ -121,7 +121,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
         dispatch(loaderActions.toggleLoader(true));
         await axios
           .post(
-            `${APP_BASE_MDS_URL}api/v1/admin/modelversion`,
+            `${APP_BASE_MDS_URL}api/v2/admin/modelversion`,
             {
               modelConfig: {},
               modelName: existingModelName,
@@ -163,7 +163,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
   const downloadModel = async (modelName, modelVersion) => {
     await axios
       .get(
-        `${APP_BASE_MDS_URL}api/v1/admin/models/${modelName}/versions/${modelVersion}`,
+        `${APP_BASE_MDS_URL}api/v2/admin/models/${modelName}/versions/${modelVersion}`,
         {
           headers: {
             AuthMethod: getAuthMethod(),
