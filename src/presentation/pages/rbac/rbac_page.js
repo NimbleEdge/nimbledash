@@ -110,7 +110,7 @@ function RBACPage() {
   const updateUserPermission = async (inputEmail, permission) => {
     dispatch(loaderActions.toggleLoader(true));
     await axios
-      .put(
+      .post(
         `${APP_BASE_MDS_URL}api/v2/admin/user`,
         {
           email: inputEmail,
