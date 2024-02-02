@@ -2,6 +2,7 @@ import {
     ACCESS_TOKEN,
     APP_BASE_DMS_URL,
     APP_BASE_MDS_URL,
+    AUTH_METHOD,
     CLIENT_ID,
     COGNITO_USERNAME,
     USER_EMAIL,
@@ -18,7 +19,7 @@ export const fetchTaskFile = async ({taskVersion}) => {
     const response  = await axios
       .get(`${APP_BASE_MDS_URL}api/v2/admin/tasks/${DEFAULT_TASK_NAME}/versions/${taskVersion}`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -51,7 +52,7 @@ export const fetchActiveUsers = async (modelName, version) => {
     const response  = await axios
       .get(`${APP_BASE_DMS_URL}/dms/api/v1/metrics/clients/${clientID}/models/${modelName}/versions/${version}/inference?startTime=${startDate}&endTime=${endDate}`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -75,7 +76,7 @@ export const createDeploymentTag = async ({tagName, tagDescription, models, upda
     },
     {
       headers: {
-        AuthMethod: getAuthMethod(),
+        AuthMethod: localStorage.getItem(AUTH_METHOD),
         Token: localStorage.getItem(ACCESS_TOKEN),
         ClientId: localStorage.getItem(CLIENT_ID),
         TokenId: localStorage.getItem(USER_EMAIL),
@@ -95,7 +96,7 @@ export const fetchDeploymentTags = async (updateTagsList) => {
     await axios
       .get(`${APP_BASE_MDS_URL}api/v2/admin/deployments`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -116,7 +117,7 @@ export const fetchDeploymentTagDetails = async (tag) => {
       const response  = await axios
         .get(`${APP_BASE_MDS_URL}api/v2/admin/deployments/${tag.name}`, {
           headers: {
-            AuthMethod: getAuthMethod(),
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),
@@ -136,7 +137,7 @@ export const fetchModelList = async ({updateModelsList, dispatch = null, closeMo
     await axios
       .get(`${APP_BASE_MDS_URL}api/v2/admin/models`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -176,7 +177,7 @@ export const addDeploymentTags = async (modelName, modelVersion, deploymentTags,
         },
         {
           headers: {
-            AuthMethod: getAuthMethod(),
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),
@@ -206,7 +207,7 @@ export const fetchTasksList = async (updateTasksList, dispatch = null, successTo
   await axios
     .get(`${APP_BASE_MDS_URL}api/v2/admin/tasks`, {
       headers: {
-        AuthMethod: getAuthMethod(),
+        AuthMethod: localStorage.getItem(AUTH_METHOD),
         Token: localStorage.getItem(ACCESS_TOKEN),
         ClientId: localStorage.getItem(CLIENT_ID),
         TokenId: localStorage.getItem(USER_EMAIL),
@@ -239,7 +240,7 @@ export const updateTask = async ({taskName, deploymentTags, taskCode, updateType
         },
         {
           headers: {
-            AuthMethod: getAuthMethod(),
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),
@@ -279,7 +280,7 @@ export const createNewTask = async ({taskName, deploymentTags, taskCode, descrip
         },
         {
           headers: {
-            AuthMethod: getAuthMethod(),
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),

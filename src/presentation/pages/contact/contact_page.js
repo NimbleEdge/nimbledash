@@ -5,6 +5,7 @@ import {
   USER_EMAIL,
   COGNITO_USERNAME,
   APP_BASE_DMS_URL,
+  AUTH_METHOD,
 } from "core/constants";
 import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
 import { loaderActions } from "presentation/redux/stores/store";
@@ -29,7 +30,7 @@ function ContactPage() {
     await axios
       .get(`${APP_BASE_DMS_URL}/dms/api/v1/oncall`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),

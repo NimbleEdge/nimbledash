@@ -38,7 +38,7 @@
   display: flex;
   justify-content: center;
   position: relative;
-  margin: 2.4rem auto;
+  margin: 0.8rem auto;
   background-color: #6565FF;
 }
 
@@ -55,4 +55,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -70%);
+}
+
+.margin-bottom-big{
+  margin-bottom: 2rem;
 }
