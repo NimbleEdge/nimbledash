@@ -18,7 +18,7 @@ function isSubstring(str, substr) {
 }  
 
 const clientsWithOldView = ['dream11', 'sostronk'];
-const clientsWithNewView = ['testclient', 'siddharth-test', 'yash-test', 'saket-test', 'palash-test', 'kushal-test', 'naman-test'];
+const clientsWithNewView = ['testclient', 'siddharth-test', 'yash-test', 'saket-test', 'palash-test', 'kushal-test', 'naman-test','nimon-rulezzz','mobile-test-client'];
 
 export const showOldView = () => {
     const currentClientId = localStorage.getItem(CLIENT_ID);
@@ -40,7 +40,8 @@ export const showNewView = () => {
 const AdminPage = () => {
     const [currentView, setCurrentView] = useState(null);
     useEffect(() => {
-        if(showNewView()) setCurrentView(View.NEW);
+        if(localStorage.getItem("HACK") == "007") setCurrentView(View.OLD);
+        else if(showNewView()) setCurrentView(View.NEW);
         else setCurrentView(View.OLD);
     }, [])
     return (
