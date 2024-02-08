@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import "../admin_page.css";
 import { toast } from "react-toastify";
 import { createNewTask, updateTask } from "data/apis";
-import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
 import "./taskUpdate.css";
 import { SelectableCardsList } from "presentation/components/RectangularCards/rectangularCards";
 import { DEFAULT_TASK_NAME } from "../new_admin_page";
@@ -89,15 +88,15 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
                     </div>
                     <input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} />
                     {
-                        !isNewTask &&
-                        <DropdownComponent
-                            selectedItemIndex={selectedUpdateTypeIndex}
-                            onChangeCallback={(selectedIndex) => {
-                                setSelectedUpdateTypeIndex(selectedIndex)
-                            }}
-                            itemList={updateTypes}
-                            customClass={"model-upload-custom-dropdown"}
-                        ></DropdownComponent>
+                        // !isNewTask &&
+                        // <DropdownComponent
+                        //     selectedItemIndex={selectedUpdateTypeIndex}
+                        //     onChangeCallback={(selectedIndex) => {
+                        //         setSelectedUpdateTypeIndex(selectedIndex)
+                        //     }}
+                        //     itemList={updateTypes}
+                        //     customClass={"model-upload-custom-dropdown"}
+                        // ></DropdownComponent>
                     }
                     {
                         isNewTask &&
@@ -111,12 +110,18 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
                     }
                     <input
                         type="text"
-                        className="model-upload-custom-dropdown"
+                        className="task-update-description"
                         placeholder={"Description"}
                         value={description}
                         onChange={handleDescriptionChange}
+                        maxLength={100}
                     />
-                    <div className="tagsBtn" onClick={() => setCurrentView(upadteTaskView.CT_SELECTION_VIEW)}>Configure Deployment Tags</div>
+                    <div className="tagsBtn" onClick={() => setCurrentView(upadteTaskView.CT_SELECTION_VIEW)}>
+                        {selectedDeploymentTags.length == 0 ? "Configure Compatability Tags" : selectedDeploymentTags.map((tag, index) => {
+                            if(index == selectedDeploymentTags.length - 1) return tag;
+                            else return tag + ", ";
+                         })}
+                    </div>
                 </div>
                 <button className={`uploadBtn ${description == '' || fileContent == '' ? 'disabledBtn' : ''}`} onClick={handleSubmit}>Update</button>
             </div>

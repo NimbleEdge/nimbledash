@@ -11,6 +11,8 @@
 }
 
 .modelUpdateTagSelectionButton {
+    grid-column: 1/3;
+    height: 48px;
     font-size: 14px;
     border: none;
     border-radius: 8px;
@@ -29,3 +31,45 @@
     top: 25px;
     cursor: pointer;
 }
+
+.model-update-custom-dropdown-new-flow {
+    grid-column: 1/3;
+    flex: 1;
+    height: 48px;
+    background: rgba(101, 101, 255, 0.1);
+    border-radius: 8px;
+    position: relative;
+    border: none;
+    text-align: start;
+    padding: 0 24px;
+    color: black;
+    width: 100%;
+  }
+
+.model-upload-name-input-new-flow {
+    grid-column: 1/3;
+    font-size: 14px;
+    height: 48px;
+    background: rgba(101, 101, 255, 0.1);
+    border-radius: 8px;
+    position: relative;
+    border: none;
+    text-align: start;
+    padding: 0 24px;
+    color: black;
+    width: 100%;
+  }
+
+  .model-upload-update-card-grid {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 12px;
+  }
+
+  .upload-card-new-flow {
+    background: rgba(101, 101, 255, 0.1);
+    border-radius: 8px;
+    position: relative;
+    height: 336px;
+  }

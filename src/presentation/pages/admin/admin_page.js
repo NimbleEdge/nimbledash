@@ -5,9 +5,6 @@ import React, { useEffect, useState } from "react";
 import OldAdminPage from './old_admin_page';
 import NewAdminPage from './new_admin_page';
 
-export const DEFAULT_TASK_NAME = 'DEFAULT_SCRIPT';
-
-
 export const View = {
     OLD: 0,
     NEW: 1
@@ -18,7 +15,7 @@ function isSubstring(str, substr) {
 }  
 
 const clientsWithOldView = ['dream11', 'sostronk'];
-const clientsWithNewView = ['testclient', 'siddharth-test', 'yash-test', 'saket-test', 'palash-test', 'kushal-test', 'naman-test'];
+const clientsWithNewView = ['testclient', 'siddharth-test', 'yash-test', 'saket-test', 'palash-test-1', 'kushal-test', 'naman-test'];
 
 export const showOldView = () => {
     const currentClientId = localStorage.getItem(CLIENT_ID);

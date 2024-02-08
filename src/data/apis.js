@@ -65,6 +65,32 @@ export const fetchActiveUsers = async (modelName, version) => {
   }
 }
 
+export const updateDeploymentTag = async ({tagName, tagDescription, models, updateTagsList}) => {
+  await axios
+    .post(`${APP_BASE_MDS_URL}api/v2/admin/deployment`,
+    {
+      name: tagName,
+      description: tagDescription,
+      modelVersions: models
+    },
+    {
+      headers: {
+        AuthMethod: getAuthMethod(),
+        Token: localStorage.getItem(ACCESS_TOKEN),
+        ClientId: localStorage.getItem(CLIENT_ID),
+        TokenId: localStorage.getItem(USER_EMAIL),
+        CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+      },
+    })
+    .then((res) => {
+      toast.success("Tag updated successfully");
+      fetchDeploymentTags(updateTagsList);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
+
 export const createDeploymentTag = async ({tagName, tagDescription, models, updateTagsList}) => {
   await axios
     .post(`${APP_BASE_MDS_URL}api/v2/admin/deployment`,

@@ -7,6 +7,7 @@ import ModelsTable from "./modelsTable/modelsTable";
 import TagsTable from "./tagsTable/tagsTable";
 import ModelDetailsTable from "./modelDetailsTable/modelDetailsTable";
 import TasksTable from "./TasksSection/tasksTable";
+import Dropdown from "presentation/components/DropdownInternal/dropdown";
 
 const AdminPageView = { 
     MODELS_TABLE: 'Models', 
@@ -43,6 +44,7 @@ const NewAdminPage = () => {
     const [selectedModelName, setSelectedModelName] = useState(null);
     const [tasksList, udpateTasksList] = useState([]);
     const [tasksDetails, updateTasksDetails] = useState({});
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
     useEffect(() => {
         fetchModelList({updateModelsList: udpateModelsList});
@@ -162,12 +164,21 @@ const NewAdminPage = () => {
                     :
                     <div className={`subHeader flexRow`}>
                         <div className={`subHeaderText`}>Correlations</div>
-                        {currentView != AdminPageView.MODEL_VERSIONS_TABLE && <MultipleOptionsButton options={[AdminPageView.DEPLOYMENT_TAGS_TABLE, AdminPageView.TASKS_TABLE, AdminPageView.MODELS_TABLE]} handleSelection={(view) => setView(view)} selectedOption={currentView} />}
+                        {/* {currentView != AdminPageView.MODEL_VERSIONS_TABLE && <MultipleOptionsButton options={[AdminPageView.DEPLOYMENT_TAGS_TABLE, AdminPageView.TASKS_TABLE, AdminPageView.MODELS_TABLE]} handleSelection={(view) => setView(view)} selectedOption={currentView} />} */}
+                        {currentView != AdminPageView.MODEL_VERSIONS_TABLE &&
+                            <div className="subHeaderActions">
+                                <Dropdown options={[AdminPageView.DEPLOYMENT_TAGS_TABLE, AdminPageView.TASKS_TABLE, AdminPageView.MODELS_TABLE]} handleSelection={(view) => setView(view)} defaultSelectedOption={currentView} />
+                                <div className="new-admin-page-upload-btn cursorPointer" onClick={() => setIsUploadModalOpen(true)}>
+                                    {currentView != AdminPageView.DEPLOYMENT_TAGS_TABLE && <img src={"/assets/icons/upload2.svg"} className={``} />}
+                                    {currentView == AdminPageView.DEPLOYMENT_TAGS_TABLE && <img src={"/assets/icons/CreatePlus.svg"} className={``} />}
+                                </div>
+                            </div>
+                        }
                     </div>
                 }
-                {currentView == AdminPageView.MODELS_TABLE && <ModelsTable modelsDetails={modelsDetails} onModelClick={onModelClick} allTagsList={tagsList} updateModelsList={udpateModelsList}/>}
-                {currentView == AdminPageView.TASKS_TABLE && <TasksTable tasksDetails={tasksDetails} allTagsList={tagsList} updateTasksList={udpateTasksList} />}
-                {currentView == AdminPageView.DEPLOYMENT_TAGS_TABLE && <TagsTable tagsDetails={tagsDetails} modelsDetails={{...modelsDetails}} tasksDetails={{...tasksDetails}} updateTagsList={updateTagsList} />}
+                {currentView == AdminPageView.MODELS_TABLE && <ModelsTable modelsDetails={modelsDetails} onModelClick={onModelClick} allTagsList={tagsList} updateModelsList={udpateModelsList} isUploadNewModelModalOpen={isUploadModalOpen} setIsUploadNewModelModalOpen={setIsUploadModalOpen} />}
+                {currentView == AdminPageView.TASKS_TABLE && <TasksTable tasksDetails={tasksDetails} allTagsList={tagsList} updateTasksList={udpateTasksList} isUpdateTaskModalOpen={isUploadModalOpen} setIsUpdateTaskModalOpen={setIsUploadModalOpen} />}
+                {currentView == AdminPageView.DEPLOYMENT_TAGS_TABLE && <TagsTable tagsDetails={tagsDetails} modelsDetails={{...modelsDetails}} tasksDetails={{...tasksDetails}} updateTagsList={updateTagsList} isCreateNewTagModalOpen={isUploadModalOpen} setIsCreateNewTagModalOpen={setIsUploadModalOpen} />}
                 {currentView == AdminPageView.MODEL_VERSIONS_TABLE && <ModelDetailsTable modelDetails={{...modelsDetails[selectedModelName]}} modelName={selectedModelName} allTagsList={[...tagsList]} updateTagsList={updateTagsList} />}
             </div>
         </div>
