@@ -32,6 +32,7 @@
 
 .filtered-items-table {
     display: flex;
+    overflow-y: auto;
 }
 
 .item-box {

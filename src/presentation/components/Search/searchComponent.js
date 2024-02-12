@@ -7,18 +7,19 @@ function fuzzySearchList(input, listOfStrings, maxResults = 5) {
     return listOfStrings.filter(item => item.toLowerCase().includes(lowerInput)).slice(0, maxResults);
 }
 
-function fuzzySearchTable(input, tableData, maxResults = 10) {
+function fuzzySearchTable(input, tableData) {
   const filteredRows = [];
   const lowerInput = input.toLowerCase();
   tableData.body.forEach(row => {
-    row.forEach(col => {
+    for(let idx = 0; idx < row.length; idx++) {
+      const col = row[idx];
       if(col.data && col.data.text && col.data.text.toLowerCase().includes(lowerInput)) {
-        filteredRows.push(row);
+          filteredRows.push(row);
         return;
       }
-    })
+    }
   })
-  return filteredRows.slice(0, maxResults);
+  return filteredRows;
 }
 
 const Search = ({list, handleItemClick, placeholder = "Search", maxResults = 5}) => {
@@ -46,14 +47,14 @@ const Search = ({list, handleItemClick, placeholder = "Search", maxResults = 5})
   );
 }
 
-export const SearchTable = ({tableData, placeholder = "Search", maxResults = 5}) => {
+export const SearchTable = ({tableData, placeholder = "Search"}) => {
   const [searchInput, setSearchInput] = useState('');
-  const [filteredItems, setFilteredItems] = useState(tableData.body.slice(0, maxResults));
+  const [filteredItems, setFilteredItems] = useState(tableData.body);
 
   const handleInputChange = (event) => {
     const searchText = event.target.value;
     setSearchInput(searchText);
-    const filtered = fuzzySearchTable(searchText, tableData,maxResults);
+    const filtered = fuzzySearchTable(searchText, tableData);
     setFilteredItems(filtered);
   };
 

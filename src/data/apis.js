@@ -7,7 +7,6 @@ import {
     COGNITO_USERNAME,
     USER_EMAIL,
   } from "core/constants";
-import { getAuthMethod } from "core/utils";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { loaderActions } from "presentation/redux/stores/store";
@@ -76,7 +75,7 @@ export const updateDeploymentTag = async ({tagName, tagDescription, models, upda
     },
     {
       headers: {
-        AuthMethod: getAuthMethod(),
+        AuthMethod: localStorage.getItem(AUTH_METHOD),
         Token: localStorage.getItem(ACCESS_TOKEN),
         ClientId: localStorage.getItem(CLIENT_ID),
         TokenId: localStorage.getItem(USER_EMAIL),
