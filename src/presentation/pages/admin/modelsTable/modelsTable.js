@@ -11,7 +11,12 @@ import DownloadIcon from "presentation/components/actionButtons/downloadIcon";
 
 const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList, isUploadNewModelModalOpen, setIsUploadNewModelModalOpen}) => {
     const [modelsViewData, updateModelsViewData] = useState({
-        headers: [{text: 'Models'}, {text: 'Latest Version'}, {text: 'Compatability Tags [ Latest Version ]'}, {text: 'Actions'}],
+        headers: [
+            {text: 'Models'}, 
+            {text: 'Latest Version'}, 
+            {text: 'Compatability Tags [ Latest Version ]'}, 
+            {text: 'Actions'}
+        ],
         body: [],
     });
     //const [isNewModelModalOpen, setIsNewModelModalOpen] = useState(false);
@@ -63,7 +68,7 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList
             modelsViewData.body.push([
                 {Component: ModelNameColumnComponent, data: {text: modelName, onClick: onModelClick}}, 
                 {Component: TextOnlyComponent, data: {text: modelsDetails[modelName].latestVersion}}, 
-                {Component: TagsListComponent, data: {tags: tagsArray, truncationLimit: 10000}},
+                {Component: TagsListComponent, data: {tags: tagsArray}},
                 {Component: ActionColComponent, data: {modelName: modelName, modelVersion: modelsDetails[modelName].latestVersion}}
             ]);
         }

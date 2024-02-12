@@ -10,7 +10,7 @@ import { TagsListComponent } from "presentation/components/Tags/tagsList";
 import { downloadModel } from "../modelsTable/modelDownload";
 import Search from "presentation/components/Search/searchComponent";
 
-const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTagsList, onCloseModal, attemptSave}) => {
+const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTagsList, onCloseModal, clickCount}) => {
     const [selectedTags, setSelectedTags] = useState([]);
     const remainingTagsList = []
     allTagsList.forEach(tag => {
@@ -36,8 +36,8 @@ const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTa
     }
 
     useEffect(() => {
-        if(attemptSave > 0) handleSave();
-    }, [attemptSave])
+        if(clickCount > 0) handleSave();
+    }, [clickCount])
 
     return (
         <div className="select-tags-modal-content">
@@ -81,11 +81,11 @@ const VersionColumnComponent = ({version, existingTags, allTagsList, modelName, 
             </div>
             {
                 isModalOpen && 
-                <Modal isOpen={isModalOpen} onClose={closeModal} hasSaveButton={true}>
+                <Modal isOpen={isModalOpen} onClose={closeModal} hasSaveButton={true} customStyle={{height: '586px'}}>
                     {
-                        ({attemptSave}) => {
+                        ({clickCount}) => {
                             return (
-                                <AddTagsToModel existingTags={existingTags} allTagsList={allTagsList} modelName={modelName} version={version} updateTagsList={updateTagsList} onCloseModal={closeModal} attemptSave={attemptSave} />
+                                <AddTagsToModel existingTags={existingTags} allTagsList={allTagsList} modelName={modelName} version={version} updateTagsList={updateTagsList} onCloseModal={closeModal} clickCount={clickCount} />
                             );
                         }
                     }
@@ -106,7 +106,12 @@ const ActionColComponent = ({modelName, modelVersion}) => {
 
 const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList}) => {
     const [modelDetailsView, updateModelDetailsView] = useState({
-        headers: [{text: 'Versions'}, {text: 'Actions'}, {text: 'Compatability Tags'}, {text: 'Active Users ( last 7 days )'}],
+        headers: [
+            {text: 'Versions'}, 
+            {text: 'Actions'}, 
+            {text: 'Compatability Tags'}, 
+            {text: 'Active Users ( last 7 days )'}
+        ],
         body: []
     });
     const [activeUsers, updateActiveUsers] = useState({});
@@ -138,7 +143,11 @@ const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList
                 tagsList.push(tag);
                 existingTags[tag] = true;
             }
-            modelDetailsView.body.push([{Component: VersionColumnComponent, data: {version: version, existingTags: existingTags, allTagsList: allTagsList, modelName: modelName, updateTagsList: updateTagsList}}, {Component: ActionColComponent, data: {modelName: modelName, modelVersion: version}}, {Component: TagsListComponent, data: {tags: [...tagsList], truncationLimit: 10000}}, {Component: TextOnlyComponent, data:{text: activeUsers[version]}}]);
+            modelDetailsView.body.push([
+                {Component: VersionColumnComponent, data: {version: version, existingTags: existingTags, allTagsList: allTagsList, modelName: modelName, updateTagsList: updateTagsList}}, 
+                {Component: ActionColComponent, data: {modelName: modelName, modelVersion: version}}, 
+                {Component: TagsListComponent, data: {tags: [...tagsList]}}, {Component: TextOnlyComponent, data:{text: activeUsers[version]}}
+            ]);
         }
         updateModelDetailsView({...modelDetailsView});
     }, [modelDetails, activeUsers])

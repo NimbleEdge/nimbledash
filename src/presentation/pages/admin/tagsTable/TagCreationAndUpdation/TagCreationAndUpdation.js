@@ -38,7 +38,7 @@ const changeSelectedModelsDataStructure = (selectedModels) => {
     return selectedModelsModifiedStruct;
 }
 
-export const CreateOrUpdateTagModal = ({modelsDetails, updateTagsList, onClose, updateTag = false, tagDetails = {}, attemptSave}) => {
+export const CreateOrUpdateTagModal = ({modelsDetails, updateTagsList, onClose, updateTag = false, tagDetails = {}, clickCount}) => {
     const modelNameList = [];
     for(const modelName in modelsDetails) modelNameList.push(modelName);
     const [tagName, setTagName] = useState(tagDetails.hasOwnProperty('name') ?  tagDetails['name'] : '');
@@ -121,8 +121,8 @@ export const CreateOrUpdateTagModal = ({modelsDetails, updateTagsList, onClose, 
     }
 
     useEffect(() => {
-        if(attemptSave > 0) updateTag ? handleTagUpdate() : handleTagCreation();
-    }, [attemptSave])
+       if(clickCount > 0) updateTag ? handleTagUpdate() : handleTagCreation();
+    }, [clickCount])
 
     return (
         <div className="create-new-tag-modal-content">

@@ -4,14 +4,14 @@ import Modal from '../modal/modal';
 import './tags.css';
 import { TagComponent } from './tag';
 import Table, { TABLE_STYLE_TYPE } from '../Table/table';
+import Search, { SearchTable } from '../Search/searchComponent';
 
-export const TagsListComponent = ({tags, tableData = {}, truncationLimit = 5, tableTitle = ""}) => {
+export const TagsListComponent = ({tags, tableData = {}, truncationLimit = 5, tableTitle = "", expandable = false}) => {
     const colors = ['#F8D3D3', '#F8F4D3', '#EAD3F8', '#D3E8F8', '#D4F8D3'];
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => {
-        if(truncationLimit > 1000) return
-        setIsModalOpen(true);
+        if(expandable) setIsModalOpen(true);
     };
 
     const closeModal = () => {
@@ -22,15 +22,15 @@ export const TagsListComponent = ({tags, tableData = {}, truncationLimit = 5, ta
     let truncated = false;
     if(tags.length > truncationLimit) truncated = true;
 
-    const modelCustomStyle= { maxHeight: '90%', display:'flex' };
+    const modelCustomStyle= { height: '563px', maxHeight: '90%', display:'flex' };
     const dotCustomStyle = { padding: '4px 12px 4px 12px', height: '30px', width: '33px', borderRadius: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' };
 
     return (
         <>
-            <div className={`tableCell ${truncationLimit < 1000 ? `cursorPointer` : ''}`}>
+            <div className={`tableCell ${expandable ? `cursorPointer` : ''}`}>
                 {
                     truncated &&
-                    <div className={`tagsList flexRow` + (truncationLimit < 1000 ?  `cursorPointer` : '')} onClick={openModal}>
+                    <div className={`tagsList flexRow` + (expandable ?  `cursorPointer` : '')} onClick={openModal}>
                         {tagsReducedList.map((tag, index) => {
                             const cIdx = index%(colors.length); //Math.floor((Math.random()*5));
                             return (<TagComponent key={tag} text={tag} color={colors[cIdx]} />);
@@ -40,7 +40,7 @@ export const TagsListComponent = ({tags, tableData = {}, truncationLimit = 5, ta
                 }
                 {
                     !truncated &&
-                    <div className={`tagsList flexRow` + (truncationLimit < 1000 ?  `cursorPointer` : '')} onClick={openModal}>
+                    <div className={`tagsList flexRow` + (expandable ?  `cursorPointer` : '')} onClick={openModal}>
                         {tags.map((tag, index) => {
                             const cIdx = index%(colors.length); //Math.floor((Math.random()*truncationLimit));
                             return (<TagComponent key={tag} text={tag} color={colors[cIdx]} />);
@@ -53,7 +53,7 @@ export const TagsListComponent = ({tags, tableData = {}, truncationLimit = 5, ta
                 <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={modelCustomStyle} closeButtonDisabled={true}>
                     <div className='tagsListModalContent'>
                         <div className='tagsListModalHeader'>{tableTitle}</div>
-                        <Table data={tableData} STYLE={TABLE_STYLE_TYPE.STYLE2} />
+                        <SearchTable tableData={tableData} />
                     {/* {
                         tags.map((tag, index) => {
                             const cIdx = Math.floor((Math.random()*5));

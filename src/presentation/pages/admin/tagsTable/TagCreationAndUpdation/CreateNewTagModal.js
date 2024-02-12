@@ -20,9 +20,9 @@ const CreateNewTagModal = ({modelsDetails, updateTagsList, isModalOpen = false, 
                 isModalOpen && 
                 <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={{overflow: 'auto'}} hasSaveButton={true}>
                     {
-                        ({attemptSave}) => {
+                        ({clickCount}) => {
                             return (
-                                <CreateOrUpdateTagModal modelsDetails={modelsDetails} updateTagsList={updateTagsList} onClose={closeModal} attemptSave={attemptSave}/>                            
+                                <CreateOrUpdateTagModal modelsDetails={modelsDetails} updateTagsList={updateTagsList} onClose={closeModal} clickCount={clickCount}/>                            
                             );
                         }
                     }

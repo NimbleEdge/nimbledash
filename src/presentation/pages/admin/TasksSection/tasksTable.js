@@ -28,7 +28,12 @@ const taskActionColComponent = ({taskVersion}) => {
 
 const TasksTable = ({tasksDetails, allTagsList, updateTasksList, isUpdateTaskModalOpen, setIsUpdateTaskModalOpen}) => {
     const [tasksViewData, updateTasksViewData] = useState({
-        headers: [{text: 'Version'}, {text: 'Description'}, {text: 'Compatability Tags'}, {text: 'Actions'}],
+        headers: [
+            {text: 'Version'}, 
+            {text: 'Description'}, 
+            {text: 'Compatability Tags'}, 
+            {text: 'Actions'}
+        ],
         body: [],
     });
     //const [isUpdateTaskModalOpen, setIsUpdateTaskModalOpen] = useState(false);

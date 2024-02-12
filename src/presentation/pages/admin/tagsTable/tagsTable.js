@@ -12,7 +12,12 @@ import CreateNewTagModal from "./TagCreationAndUpdation/CreateNewTagModal";
 
 const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, isCreateNewTagModalOpen, setIsCreateNewTagModalOpen}) => {
     const [tagsViewData, updateTagsViewData] = useState({
-        headers: [{text: 'Compatibility Tags'}, {text: 'Description'}, {text: 'Task Versions'}, {text: 'Models'}],
+        headers: [
+            {text: 'Compatibility Tags'}, 
+            {text: 'Description'}, 
+            {text: 'Task Versions'}, 
+            {text: 'Models'}
+        ],
         body: [],
     });
 
@@ -22,7 +27,6 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
 
     useEffect(() => {
         tagsViewData.body = [];
-        console.log(tasksDetails);
         for(const tag in tagsDetails) {
             const taskTableData = {
                 headers: [{text: 'Versions'}, {text: 'Description'}],
@@ -36,7 +40,6 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
                 })
             }
             const modelsArray = [];
-            console.log(tagsDetails);
             const modelTableData = {
                 headers: [{text: 'Model Name'}, {text: 'Version'}],
                 body: []
@@ -47,7 +50,11 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
                     modelTableData.body.push([{Component: TextOnlyComponent, data: {text: model, customStyle: {fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins'}}}, {Component: TextOnlyComponent, data: {text: 'v' + version, customStyle: {fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins'}}}])
                 })
             }
-            tagsViewData.body.push([{Component: TagNameColumnComponent, data: {tagName: tag, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag]}}, {Component: TruncatedDescription, data: {message: tagsDetails[tag]['description'], maxLength: 400, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag], tagName: tag}}, {Component: TagsListComponent, data: {tags: tasksArray, tableData: taskTableData, tableTitle: "Linked Task Versions",truncationLimit: 2}}, {Component: TagsListComponent, data: {tags: modelsArray, truncationLimit: 2, tableData: modelTableData, tableTitle: "Linked Models"}}]);
+            tagsViewData.body.push([
+                {Component: TagNameColumnComponent, data: {tagName: tag, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag]}}, 
+                {Component: TruncatedDescription, data: {message: tagsDetails[tag]['description'], maxLength: 400, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag], tagName: tag}}, 
+                {Component: TagsListComponent, data: {tags: tasksArray, tableData: taskTableData, tableTitle: "Linked Task Versions",truncationLimit: 2, expandable: true}}, 
+                {Component: TagsListComponent, data: {tags: modelsArray, truncationLimit: 2, tableData: modelTableData, tableTitle: "Linked Models", expandable: true}}]);
         }
         updateTagsViewData({...tagsViewData});
     }, [tagsDetails]);
@@ -89,9 +96,9 @@ const TagNameColumnComponent = ({tagName, modelsDetails, updateTagsList, tagDeta
                 isModalOpen && 
                 <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={{maxHeight: '90%'}} hasSaveButton={true} >
                     {
-                        ({attemptSave}) => {
+                        ({clickCount}) => {
                             return (
-                                <CreateOrUpdateTagModal modelsDetails={modelsDetails} updateTagsList={updateTagsList} onClose={closeModal} updateTag={true} tagDetails={{...tagDetails, 'name': tagName}} attemptSave={attemptSave} />
+                                <CreateOrUpdateTagModal modelsDetails={modelsDetails} updateTagsList={updateTagsList} onClose={closeModal} updateTag={true} tagDetails={{...tagDetails, 'name': tagName}} clickCount={clickCount} />
                             );
                         }
                     }

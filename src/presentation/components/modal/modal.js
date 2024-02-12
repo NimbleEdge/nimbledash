@@ -3,11 +3,11 @@ import './modal.css';
 
 const Modal = ({ isOpen, onClose, children, customStyle = {}, closeButtonDisabled = false, hasSaveButton = false }) => {
     const [isModalOpen, setIsModalOpen] = useState(isOpen);
-    const [attemptSave, setAttemptSave] = useState(0);
+    const [clickCount, setClickCount] = useState(0);
     const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false);
 
     const handleSave = () => {
-      setAttemptSave(num => num + 1);
+      setClickCount(num => num + 1);
       setIsSaveButtonDisabled(true);
     }
   
@@ -37,7 +37,7 @@ const Modal = ({ isOpen, onClose, children, customStyle = {}, closeButtonDisable
                   <img className={"saveTick"} src={"/assets/icons/saveTick.svg"}></img>
                 </div>
               }
-              {hasSaveButton && children({attemptSave: attemptSave})}
+              {hasSaveButton && children({clickCount: clickCount})}
               {!hasSaveButton && children}
             </div>
           </div>
