@@ -7,7 +7,6 @@ import { TagsListComponent } from "presentation/components/Tags/tagsList";
 import ModelUpload from "../ModelUpload/modelUpload";
 import Modal from "presentation/components/modal/modal";
 import { downloadModel } from "./modelDownload";
-import DownloadIcon from "presentation/components/actionButtons/downloadIcon";
 
 const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList, isUploadNewModelModalOpen, setIsUploadNewModelModalOpen}) => {
     const [modelsViewData, updateModelsViewData] = useState({
@@ -54,8 +53,8 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList
     const ModelNameColumnComponent = ({text, onClick}) => {
 
         return (
-            <div className="modelNameCol">
-                <div className={`modelName`} onClick={() => onClick(text)}>{text}</div>
+            <div className="modelNameCol" onClick={() => onClick(text)}>
+                <div className={`modelName`}>{text}</div>
             </div>
         )
     }
