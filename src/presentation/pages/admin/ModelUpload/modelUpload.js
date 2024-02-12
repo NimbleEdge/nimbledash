@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   ACCESS_TOKEN,
   APP_BASE_MDS_URL,
+  AUTH_METHOD,
   CLIENT_ID,
   COGNITO_USERNAME,
   USER_EMAIL,
@@ -90,7 +91,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
               },
               {
                 headers: {
-                  AuthMethod: getAuthMethod(),
+                  AuthMethod: localStorage.getItem(AUTH_METHOD),
                   Token: localStorage.getItem(ACCESS_TOKEN),
                   ClientId: localStorage.getItem(CLIENT_ID),
                   TokenId: localStorage.getItem(USER_EMAIL),
@@ -132,7 +133,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
             },
             {
               headers: {
-                AuthMethod: getAuthMethod(),
+                AuthMethod: localStorage.getItem(AUTH_METHOD),
                 Token: localStorage.getItem(ACCESS_TOKEN),
                 ClientId: localStorage.getItem(CLIENT_ID),
                 TokenId: localStorage.getItem(USER_EMAIL),
@@ -166,7 +167,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
         `${APP_BASE_MDS_URL}api/v2/admin/models/${modelName}/versions/${modelVersion}`,
         {
           headers: {
-            AuthMethod: getAuthMethod(),
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),

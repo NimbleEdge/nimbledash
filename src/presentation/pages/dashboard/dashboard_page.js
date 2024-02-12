@@ -28,6 +28,7 @@ import {
   DEFAULT_ANALYTICS,
   APP_BASE_MDS_URL,
   APP_BASE_DMS_URL,
+  AUTH_METHOD,
 } from "core/constants";
 import { useDispatch } from "react-redux";
 import {
@@ -126,7 +127,7 @@ function DashboardPage() {
     await axios
       .get(`${APP_BASE_MDS_URL}api/v2/admin/user/clients`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -162,7 +163,7 @@ function DashboardPage() {
     await axios
       .get(`${APP_BASE_MDS_URL}api/v2/admin/models`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -239,7 +240,7 @@ function DashboardPage() {
     await axios
       .get(uri, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),

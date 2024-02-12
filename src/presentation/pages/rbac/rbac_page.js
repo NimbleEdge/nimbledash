@@ -8,6 +8,7 @@ import {
   ACCESS_TOKEN,
   APP_BASE_MDS_URL,
   APP_BASE_URL,
+  AUTH_METHOD,
   CLIENT_ID,
   PermissionEnum,
   USER_EMAIL,
@@ -40,7 +41,7 @@ function RBACPage() {
     await axios
       .get(`${APP_BASE_MDS_URL}api/v2/admin/users`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -80,7 +81,7 @@ function RBACPage() {
         },
         {
           headers: {
-            AuthMethod: getAuthMethod(),
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),
@@ -118,7 +119,7 @@ function RBACPage() {
         },
         {
           headers: {
-            AuthMethod: getAuthMethod(),
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
             TokenId: localStorage.getItem(USER_EMAIL),
@@ -149,7 +150,7 @@ function RBACPage() {
     await axios
       .delete(`${APP_BASE_MDS_URL}api/v2/admin/user`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
           TokenId: localStorage.getItem(USER_EMAIL),
