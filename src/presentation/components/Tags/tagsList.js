@@ -22,7 +22,7 @@ export const TagsListComponent = ({tags, tableData = {}, truncationLimit = 5, ta
     let truncated = false;
     if(tags.length > truncationLimit) truncated = true;
 
-    const modelCustomStyle= { height: '563px', maxHeight: '90%', display:'flex' };
+    const modelCustomStyle= {maxHeight: '90%', display:'flex' };
     const dotCustomStyle = { padding: '4px 12px 4px 12px', height: '30px', width: '33px', borderRadius: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' };
 
     return (
