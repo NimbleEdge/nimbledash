@@ -5,9 +5,6 @@ import React, { useEffect, useState } from "react";
 import OldAdminPage from './old_admin_page';
 import NewAdminPage from './new_admin_page';
 
-export const DEFAULT_TASK_NAME = 'DEFAULT_SCRIPT';
-
-
 export const View = {
     OLD: 0,
     NEW: 1

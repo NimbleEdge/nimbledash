@@ -235,28 +235,27 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
             {currentView == uploadModelView.UPLOAD_MODEL_VIEW && 
             <div className="modelUploadModal">
                 <p className="heading4">{isNewModel ? 'Upload' : 'Update'} Model</p>
-                <div className="upload-card-grid">
+                <div className="model-upload-update-card-grid">
                     <div
-                    className="upload-card clickable"
-                    onClick={async () => {
-                        try {
-                          await openFileSelector();
-                        } catch (err) {
-                          console.log("can't open file picker.");
-                        }
-                    }}
-                    >
-                        <div className="upload-card-content">
-                            <img src="/assets/icons/upload.svg"></img>
-                            <p className="heading6 margin-top-8">Upload Model</p>
-                            {modelContentBase64 != "" ? (
-                            <p className="subHeading2 selected-files">
-                                Selected file: {filesContent[0].name}
-                            </p>
-                            ) : (
-                            <p className="subHeading2">Max upload size is 20 MBs</p>
-                            )}
-                        </div>
+                      className="upload-card-new-flow clickable"
+                      onClick={async () => {
+                          try {
+                            await openFileSelector();
+                          } catch (err) {
+                            console.log("can't open file picker.");
+                          }
+                      }}>
+                      <div className="upload-card-content">
+                          <img src="/assets/icons/upload.svg"></img>
+                          <p className="heading6 margin-top-8">Upload Model</p>
+                          {modelContentBase64 != "" ? (
+                          <p className="subHeading2 selected-files">
+                              Selected file: {filesContent[0].name}
+                          </p>
+                          ) : (
+                          <p className="subHeading2">Max upload size is 20 MBs</p>
+                          )}
+                      </div>
                     </div>
                     {   !isNewModel &&
                         <DropdownComponent
@@ -265,7 +264,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
                                 setSelectedUpdateTypeIndex(selectedIndex)
                             }}
                             itemList={updateType}
-                            customClass={"model-upload-custom-dropdown"}
+                            customClass={"model-update-custom-dropdown-new-flow"}
                         ></DropdownComponent>
                     }
                     {isNewModel && (
@@ -274,7 +273,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
                             type="text"
                             value={newModelName}
                             onChange={(e) => setNewModelName(e.target.value)}
-                            className="model-upload-custom-dropdown"
+                            className="model-upload-name-input-new-flow"
                             placeholder={"Enter Model Name"}
                         />
                     )}
@@ -295,9 +294,14 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
                         itemList={uploadType}
                         customClass={"model-upload-custom-dropdown"}
                     ></DropdownComponent> */}
-                    <button onClick={() => setCurrentView(uploadModelView.CT_SELECTION_VIEW)} className="modelUpdateTagSelectionButton">Configure Compatability Tags</button>
+                    <button onClick={() => setCurrentView(uploadModelView.CT_SELECTION_VIEW)} className="modelUpdateTagSelectionButton">
+                      {selectedTags.length == 0 ? "Configure Compatability Tags" : selectedTags.map((tag, index) => {
+                        if(index == selectedTags.length - 1) return tag;
+                        else return tag + ", ";
+                      })}
+                    </button>
                 </div>
-                <button className={`uploadButton`} onClick={uploadModel}>Upload</button>
+                <button className={`uploadButton`} onClick={uploadModel}>{isNewModel ? 'Upload' : 'Update'}</button>
             </div>}
             {
                 currentView == uploadModelView.CT_SELECTION_VIEW && 

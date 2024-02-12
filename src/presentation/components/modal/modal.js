@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './modal.css';
 
-const Modal = ({ isOpen, onClose, children, customStyle = {} }) => {
+const Modal = ({ isOpen, onClose, children, customStyle = {}, closeButtonDisabled = false, hasSaveButton = false }) => {
     const [isModalOpen, setIsModalOpen] = useState(isOpen);
+    const [clickCount, setClickCount] = useState(0);
+    const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false);
+
+    const handleSave = () => {
+      setClickCount(num => num + 1);
+      setIsSaveButtonDisabled(true);
+    }
   
     useEffect(() => {
       setIsModalOpen(isOpen);
@@ -24,10 +31,14 @@ const Modal = ({ isOpen, onClose, children, customStyle = {} }) => {
         {isModalOpen && (
           <div className="modal-overlay" onClick={handleOverlayClick}>
             <div className="modal-content" style={customStyle}>
-              <button className="close-button" onClick={closeModal}>
-                &times;
-              </button>
-              {children}
+              {!closeButtonDisabled && <button className="close-button" onClick={closeModal}>&times;</button>}
+              {hasSaveButton &&  
+                <div className={"modal-save-icon"} onClick={handleSave}>
+                  <img className={"saveTick"} src={"/assets/icons/saveTick.svg"}></img>
+                </div>
+              }
+              {hasSaveButton && children({clickCount: clickCount})}
+              {!hasSaveButton && children}
             </div>
           </div>
         )}

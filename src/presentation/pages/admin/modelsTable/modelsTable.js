@@ -7,20 +7,26 @@ import { TagsListComponent } from "presentation/components/Tags/tagsList";
 import ModelUpload from "../ModelUpload/modelUpload";
 import Modal from "presentation/components/modal/modal";
 import { downloadModel } from "./modelDownload";
+import DownloadIcon from "presentation/components/actionButtons/downloadIcon";
 
-const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList}) => {
+const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList, isUploadNewModelModalOpen, setIsUploadNewModelModalOpen}) => {
     const [modelsViewData, updateModelsViewData] = useState({
-        headers: [{text: 'Models'}, {text: 'Latest Version'}, {text: 'Actions'}, {text: 'Compatability Tags'}],
+        headers: [
+            {text: 'Models'}, 
+            {text: 'Latest Version'}, 
+            {text: 'Compatability Tags [ Latest Version ]'}, 
+            {text: 'Actions'}
+        ],
         body: [],
     });
-    const [isNewModelModalOpen, setIsNewModelModalOpen] = useState(false);
+    //const [isNewModelModalOpen, setIsNewModelModalOpen] = useState(false);
 
     const openNewModelModal = () => {
-        setIsNewModelModalOpen(true);
+        setIsUploadNewModelModalOpen(true);
     };
 
     const closeNewModelModal = () => {
-        setIsNewModelModalOpen(false);
+        setIsUploadNewModelModalOpen(false);
     };
 
     const ActionColComponent = ({modelName, modelVersion}) => {
@@ -39,8 +45,8 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList
                         <ModelUpload isNewModel={false} allTagsList={allTagsList} existingModelName={modelName} updateModelsList={updateModelsList} closeModal={closeModelUpdateModal} />
                     </Modal>
                 }
-                <button className="update-model-btn" onClick={openModelUpdateModal}>Update</button>
-                <button className="download-model-btn" onClick={() => downloadModel({modelName: modelName, modelVersion: modelVersion})}>Download</button>
+                <img className={"download-model-icon"} src={"/assets/icons/download.svg"} onClick={() => downloadModel({modelName: modelName, modelVersion: modelVersion})}></img>
+                <img className={"update-model-icon"} src={"/assets/icons/update.svg"} onClick={openModelUpdateModal}></img>
             </div>
         )
     }
@@ -59,16 +65,21 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList
         for(const modelName in modelsDetails) {
             const tagsArray = [];
             for(const tag in modelsDetails[modelName]['tags']) tagsArray.push(tag);
-            modelsViewData.body.push([{Component: ModelNameColumnComponent, data: {text: modelName, onClick: onModelClick}}, {Component: TextOnlyComponent, data: {text: modelsDetails[modelName].latestVersion}}, {Component: ActionColComponent, data: {modelName: modelName, modelVersion: modelsDetails[modelName].latestVersion}}, {Component: TagsListComponent, data: {tags: tagsArray}}]);
+            modelsViewData.body.push([
+                {Component: ModelNameColumnComponent, data: {text: modelName, onClick: onModelClick}}, 
+                {Component: TextOnlyComponent, data: {text: modelsDetails[modelName].latestVersion}}, 
+                {Component: TagsListComponent, data: {tags: tagsArray}},
+                {Component: ActionColComponent, data: {modelName: modelName, modelVersion: modelsDetails[modelName].latestVersion}}
+            ]);
         }
         updateModelsViewData({...modelsViewData});
     }, [modelsDetails])
 
     return (
         <div className={`modelsTableView flexColumn overflowAuto`}>
-            <button onClick={openNewModelModal} className="uploadNewModelButton">+ Upload new model</button>
-            {isNewModelModalOpen && 
-                <Modal isOpen={isNewModelModalOpen} onClose={closeNewModelModal}>
+            {/* <button onClick={openNewModelModal} className="uploadNewModelButton">+ Upload new model</button> */}
+            {isUploadNewModelModalOpen && 
+                <Modal isOpen={isUploadNewModelModalOpen} onClose={closeNewModelModal}>
                     <ModelUpload isNewModel={true} allTagsList={allTagsList} updateModelsList={updateModelsList} closeModal={closeNewModelModal} />
                 </Modal>
             }

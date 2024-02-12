@@ -1,0 +1,45 @@
+table.style2 {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+thead.style2 {
+    height: 52px;
+    border-radius: 20px;
+    background-color: rgba(101, 101, 255, 0.2);
+}
+thead.style2 > :first-child {
+    border-radius: 8px 0px 0px 8px;
+}
+thead.style2 > :last-child {
+    border-radius: 0 8px 8px 0;
+}
+th.style2 {
+    padding: 10px 16px;
+}
+th.style2 div.style2 {
+    font-weight: 600;
+    font-size: 14px;
+    color: #494949;
+    line-height: 32px;
+    font-family: Poppins;
+}
+tr.style2 {
+    height: 52px;
+}
+tr.style2 td.style2 {
+    background-color: rgba(101, 101, 255, 0.2);
+}
+tr.style2:nth-child(odd) td.style2 {
+    background-color: rgba(101, 101, 255, 0.1);
+}
+tr.style2 > :first-child {
+    border-radius: 8px 0px 0 8px;
+}
+tr.style2 > :last-child {
+    border-radius: 0 8px 8px 0;
+}
+tfoot.style2 tr.style2 {
+    height: 64px;
+    border-bottom: 1px solid #DBDBDB;
+}

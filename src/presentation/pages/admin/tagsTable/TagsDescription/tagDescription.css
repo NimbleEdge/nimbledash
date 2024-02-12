@@ -11,11 +11,18 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 16px 24px 16px 24px;
+    font-family: Poppins;
+    color: rgba(116, 130, 143, 1);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 32px;
   }
   
   .message-content:hover {
     overflow: visible;
     white-space: normal;
+    cursor: pointer;
   }
   
   .full-message-box {

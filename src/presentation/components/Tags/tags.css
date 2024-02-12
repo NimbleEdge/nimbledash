@@ -7,6 +7,9 @@
     font-weight: 400;
     min-height: 30px;
     margin-right: 5px;
+    font-family: DM Sans;
+    line-height: 20px;
+    color: rgba(34, 34, 34, 1);
 }
 
 .textOnlyComponent {
@@ -20,11 +23,6 @@
     display: flex;
 }
 
-.tagsListTruncated {
-    margin-bottom: -3px;
-    color: grey;
-}
-
 .cursorPointer {
     cursor: pointer;
 }
@@ -34,4 +32,22 @@
     flex-wrap: wrap;
     justify-content: center;
     overflow: auto;
+}
+
+.tableCell {
+    padding: 16px 24px 16px 24px;
+}
+
+.tagsListModalContent {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.tagsListModalHeader {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 16px;
+    font-family: Poppins;
 }

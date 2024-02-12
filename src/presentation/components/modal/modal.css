@@ -29,3 +29,18 @@
     color: #888888;
     font-weight: 200;
 }
+
+.modal-save-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    margin: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6565FF;
+    cursor: pointer;
+}

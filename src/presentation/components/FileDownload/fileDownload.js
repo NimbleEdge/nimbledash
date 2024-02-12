@@ -23,7 +23,10 @@ const FileDownloadComponent = ({ fileName = 'downloaded_file', fetchFunction, fe
   };
 
   return (
-      <button className={'download-btn'} onClick={handleDownload}>Download</button>
+      <>
+        <img className={"download-model-icon"} src={"/assets/icons/download.svg"} onClick={handleDownload}></img>
+        {/* <button className={'download-btn'} onClick={handleDownload}>Download</button> */}
+      </>
   );
 };
 

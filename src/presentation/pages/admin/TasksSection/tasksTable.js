@@ -19,16 +19,24 @@ const taskTableView = {
 
 const taskActionColComponent = ({taskVersion}) => {
     return (
-        <FileDownloadComponent fetchFunction={fetchTaskFile} fetchFuncData={{taskVersion: taskVersion}} fileName={DEFAULT_TASK_NAME} />
+        <div className="taskActionCol">
+            <FileDownloadComponent fetchFunction={fetchTaskFile} fetchFuncData={{taskVersion: taskVersion}} fileName={DEFAULT_TASK_NAME} />
+        </div>
+        
     )
 }
 
-const TasksTable = ({tasksDetails, allTagsList, updateTasksList}) => {
+const TasksTable = ({tasksDetails, allTagsList, updateTasksList, isUpdateTaskModalOpen, setIsUpdateTaskModalOpen}) => {
     const [tasksViewData, updateTasksViewData] = useState({
-        headers: [{text: 'Version'}, {text: 'Actions'}, {text: 'Compatability Tags'}, {text: 'Description'}],
+        headers: [
+            {text: 'Version'}, 
+            {text: 'Description'}, 
+            {text: 'Compatability Tags'}, 
+            {text: 'Actions'}
+        ],
         body: [],
     });
-    const [isUpdateTaskModalOpen, setIsUpdateTaskModalOpen] = useState(false);
+    //const [isUpdateTaskModalOpen, setIsUpdateTaskModalOpen] = useState(false);
     const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
     const [currentView, setCurrentView] = useState(null);
 
@@ -63,7 +71,11 @@ const TasksTable = ({tasksDetails, allTagsList, updateTasksList}) => {
             for(const taskVersion in tasksDetails[taskName]['versions']) {
                 const tagsArray = [];
                 for(const tag in tasksDetails[taskName]['versionToTags'][taskVersion]) tagsArray.push(tag);
-                tasksViewData.body.push([{Component: TextOnlyComponent, data: {text: taskVersion}}, {Component: taskActionColComponent, data: {taskVersion: taskVersion}}, {Component: TagsListComponent, data: {tags: tagsArray}}, {Component: TextOnlyComponent, data: {text: tasksDetails[taskName]['versions'][taskVersion]['description']}}]);
+                tasksViewData.body.push([
+                    {Component: TextOnlyComponent, data: {text: taskVersion, customStyle: {fontWeight: 500, color: '#494949', fontSize: '14px'}}}, 
+                    {Component: TextOnlyComponent, data: {text: tasksDetails[taskName]['versions'][taskVersion]['description'], customStyle: {color: '#74828F', fontWeight: 400, fontSize: '14px'}}},
+                    {Component: TagsListComponent, data: {tags: tagsArray}}, {Component: taskActionColComponent, data: {taskVersion: taskVersion}}
+                ]);
             }
             break;
         }
@@ -80,10 +92,10 @@ const TasksTable = ({tasksDetails, allTagsList, updateTasksList}) => {
             {
                 currentView == taskTableView.UPDATE_TASK_VIEW &&
                 <div className={`tasksTableView flexColumn overflowAuto`}>
-                    <div className="existing-script-header">
+                    {/* <div className="existing-script-header">
                         <div className="script-name">DEFAULT_SCRIPT</div>
                         <button onClick={openUpdateTaskModal} className="updateTaskButton">Update Workflow Script</button>
-                    </div>
+                    </div> */}
                     {isUpdateTaskModalOpen && 
                         <Modal isOpen={isUpdateTaskModalOpen} onClose={closeUpdateTaskModal}>
                             <TaskUpdate allTagsList={allTagsList} onCompletion={closeUpdateTaskModal} updateTasksList={updateTasksList} />
