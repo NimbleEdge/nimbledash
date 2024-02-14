@@ -29,33 +29,31 @@ const DashboardMetrics = ({clientID, selectedModelIndex, selectedVersionIndex, i
                 cardInfoTitle={'Daily Active Users'}
                 cardInfoSubtitle={'Users with atleast 1 predict call each day'}
             />
-            <div className="row-flex">
-                <MetricDisplay
-                    metricType={METRIC_TYPES.PIE_CHART}
-                    clientID={clientID}
-                    modelName={selectedModelIndex == 0 ? "" : Object.keys(modelJson)[selectedModelIndex]} 
-                    modelVersion={selectedModelIndex != 0 && selectedVersionIndex != 0 ? modelJson[Object.keys(modelJson)[selectedModelIndex]][selectedVersionIndex] : ""}
-                    intervalObject={intervalObject}
-                    metricPath={'inference-count-trends'}
-                    metricKey={'totalInferenceTrends'}
-                    cardIconAddress={'/assets/icons/total_inferences.jpg'}
-                    cardInfoTitle={'Total Inferences'}
-                    cardInfoSubtitle={'Comparing latest versions of all model'}
-                />
-                <div className="right-margin24"></div>
-                <MetricDisplay
-                    metricType={METRIC_TYPES.BAR_CHART}
-                    clientID={clientID}
-                    modelName={selectedModelIndex == 0 ? "" : Object.keys(modelJson)[selectedModelIndex]} 
-                    modelVersion={selectedModelIndex != 0 && selectedVersionIndex != 0 ? modelJson[Object.keys(modelJson)[selectedModelIndex]][selectedVersionIndex] : ""}
-                    intervalObject={intervalObject}
-                    metricPath={'active-user-trends'}
-                    metricKey={'activeUsersTrends'}
-                    cardIconAddress={'/assets/icons/total_inferences.jpg'}
-                    cardInfoTitle={'Active Users'}
-                    cardInfoSubtitle={'Across all the live models'}
-                />
-            </div>
+            <MetricDisplay
+                metricType={METRIC_TYPES.PIE_CHART}
+                clientID={clientID}
+                modelName={selectedModelIndex == 0 ? "" : Object.keys(modelJson)[selectedModelIndex]} 
+                modelVersion={selectedModelIndex != 0 && selectedVersionIndex != 0 ? modelJson[Object.keys(modelJson)[selectedModelIndex]][selectedVersionIndex] : ""}
+                intervalObject={intervalObject}
+                metricPath={'inference-count-trends'}
+                metricKey={'totalInferenceTrends'}
+                cardIconAddress={'/assets/icons/total_inferences.jpg'}
+                cardInfoTitle={'Total Inferences'}
+                cardInfoSubtitle={'Comparing latest versions of all model'}
+            />
+            <div className="right-margin24"></div>
+            <MetricDisplay
+                metricType={METRIC_TYPES.BAR_CHART}
+                clientID={clientID}
+                modelName={selectedModelIndex == 0 ? "" : Object.keys(modelJson)[selectedModelIndex]} 
+                modelVersion={selectedModelIndex != 0 && selectedVersionIndex != 0 ? modelJson[Object.keys(modelJson)[selectedModelIndex]][selectedVersionIndex] : ""}
+                intervalObject={intervalObject}
+                metricPath={'active-user-trends'}
+                metricKey={'activeUsersTrends'}
+                cardIconAddress={'/assets/icons/total_inferences.jpg'}
+                cardInfoTitle={'Active Users'}
+                cardInfoSubtitle={'Across all the live models'}
+            />
         </>
     )
 }
