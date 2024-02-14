@@ -53,12 +53,12 @@ const DashboardPage = () => {
     const [isModalVisible, setModalVisiblity] = useState(true);
     const [clientID, setClientID] = useState("");
     const [clientIDList, setClientIDList] = useState([]);
-    const [intervalObject, setIntervalObject] = useState({
+    const [internalInterval, setInternalInterval] = useState({
         startDate: subtractDays(new Date(), 2),
         endDate: new Date(),
         key: "selection",
     });
-    const [intervalObjectPrev, setIntervalObjectPrev] = useState({
+    const [interval, setInterval] = useState({
         startDate: subtractDays(new Date(), 2),
         endDate: new Date(),
         key: "selection",
@@ -78,7 +78,7 @@ const DashboardPage = () => {
     };
 
     const handleSelect = (ranges) => {
-        setIntervalObject(ranges["selection"]);
+        setInternalInterval(ranges["selection"])
     };
 
     const handleModelListUpdate = (modelsList) => {
@@ -159,22 +159,20 @@ const DashboardPage = () => {
                     </div>
                     <div className="interval-box">
                         <p className="buttonText intervalText" onClick={() => toggleDatePicker(true)}>
-                            {getIntervalString(intervalObject)}
+                            {getIntervalString(interval)}
                         </p>
                     {isDatePickerVisible && (
                         <div>
-                            <DateRangePicker className="datePicker" ranges={[intervalObject]} onChange={handleSelect} />
+                            <DateRangePicker className="datePicker" ranges={[internalInterval]} onChange={handleSelect} />
                             <div className="datePickerApply" onClick={async () => {
-                                dispatch(loaderActions.toggleLoader(true));
                                 toggleDatePicker(false);
-                                setIntervalObjectPrev(intervalObject);
-                                dispatch(loaderActions.toggleLoader(false));
+                                setInterval(internalInterval);
                             }}>
                                 <p className="centerText">Apply</p>
                             </div>
                             <div className="datePickerCancel" onClick={() => {
                                 toggleDatePicker(false);
-                                setIntervalObject(intervalObjectPrev);
+                                setInternalInterval(interval);
                             }}>
                             <p className="centerText">Cancel</p>
                         </div>
@@ -182,7 +180,7 @@ const DashboardPage = () => {
                     )}
                     </div>
                 </div>
-                <DashboardMetrics clientID={clientID} selectedModelIndex={selectedModelIndex} selectedVersionIndex={selectedVersionIndex} intervalObject={intervalObject} modelJson={modelJson} />
+                <DashboardMetrics clientID={clientID} selectedModelIndex={selectedModelIndex} selectedVersionIndex={selectedVersionIndex} intervalObject={interval} modelJson={modelJson} />
             </div>
         }
     </div>

@@ -76,7 +76,7 @@ export default function AnalyticsPieChart(props) {
 
         <div className="pie-chart-legend">
           {data.map((item, index) => (
-            <div className="sub-chart-legend">
+            <div className="sub-chart-legend" key={index}>
               <div className="legend-row">
                 <div
                   className="legend-color"
