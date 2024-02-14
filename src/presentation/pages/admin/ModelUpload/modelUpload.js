@@ -100,8 +100,11 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
               }
             )
             .then((res) => {
-              const successToast = {message: "Model uploaded successfully"};
-              fetchModelList({updateModelsList: updateModelsList, dispatch: dispatch, closeModal: closeModal, successToast: successToast});
+              fetchModelList({successCallback: (modelsList) => {
+                updateModelsList(modelsList);
+                closeModal();
+                toast.success("Model uploaded successfully")
+              }, dispatch: dispatch});
               closeModal();
               dispatch(loaderActions.toggleLoader(false));
             })
@@ -143,7 +146,11 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
           )
           .then((res) => {
             const successToast = {message: "Model updated successfully"};
-            fetchModelList({updateModelsList: updateModelsList, dispatch: dispatch, closeModal: closeModal, successToast: successToast});
+            fetchModelList({successCallback: (modelsList) => {
+              updateModelsList(modelsList);
+              closeModal();
+              toast.success("Model updated successfully")
+            }, dispatch: dispatch});
           })
           .catch((e) => {
             dispatch(loaderActions.toggleLoader(false));

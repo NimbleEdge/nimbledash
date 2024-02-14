@@ -46,7 +46,7 @@ import ShapeBarChart from "presentation/components/charts/shape_bar_chart";
 import { getAuthMethod } from "core/utils";
 
 
-function DashboardPage() {
+function OldDashboardPage() {
   var [metrics, setMetrics] = useState({});
   var [modelJson, setModelJson] = useState({});
   var [selectedModelIndex, setSelectedModelIndex] = useState(0);
@@ -98,7 +98,9 @@ function DashboardPage() {
   };
 
   useEffect(() => {
+    console.log('a')
     dispatch(loaderActions.toggleLoader(true));
+    console.log('b')
     var cachedClientId = localStorage.getItem(CLIENT_ID);
     var cachedAccessToken = localStorage.getItem(ACCESS_TOKEN);
 
@@ -136,7 +138,6 @@ function DashboardPage() {
       })
       .then((res) => {
         if (res.status == 200) {
-          console.log("client IDS",res);
           setClientIDList(res.data.Clients);
         } else {
           Toast.error("Can't fetch client ids", {
@@ -198,7 +199,7 @@ function DashboardPage() {
   };
 
   const shortenNumber = (num) =>
-    num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num;
+    num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num.toFixed(2);
 
   const fetchMetrics = async (modelName, versionName) => {
     if (process.env.REACT_APP_IS_ANALYTICS_DISABLED == "TRUE") {
@@ -564,4 +565,4 @@ function DashboardPage() {
   );
 }
 
-export default DashboardPage;
+export default OldDashboardPage;
