@@ -41,7 +41,6 @@ const DashboardMetrics = ({clientID, selectedModelIndex, selectedVersionIndex, i
                 cardInfoTitle={'Total Inferences'}
                 cardInfoSubtitle={'Comparing latest versions of all model'}
             />
-            <div className="right-margin24"></div>
             <MetricDisplay
                 metricType={METRIC_TYPES.BAR_CHART}
                 clientID={clientID}

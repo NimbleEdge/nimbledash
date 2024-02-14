@@ -71,6 +71,7 @@ function AnalyticsLineChart(props) {
             strokeWidth={3}
             activeDot={{ r: 4 }}
             dot={false}
+            key={index}
           />
         ))}
       </LineChart>

@@ -18,6 +18,8 @@ const fetchDmsMetric = async (clientID, modelName, modelVersion, metricPath, int
         startDateTimeRange.setMinutes(0);
         endDateTimeRange.setHours(23);
         endDateTimeRange.setMinutes(59);
+
+        const apiCalledAt = new Date()
         await axios
         .get(uri, {
             headers: {
@@ -35,6 +37,9 @@ const fetchDmsMetric = async (clientID, modelName, modelVersion, metricPath, int
             },
         })
         .then((res) => {
+            const currTime = new Date();
+            const elapsedTime = currTime - apiCalledAt;
+            console.log(metricPath, elapsedTime);
             if(successCallback) successCallback(res.data);
         })
         .catch((e) => {
@@ -73,127 +78,118 @@ const MetricDisplay = ({metricType = METRIC_TYPES.NUMBER_CARD, clientID, modelNa
             }
             setLoading(false);
         });
-    }, [clientID, modelName, modelVersion])
+    }, [clientID, modelName, modelVersion, intervalObject])
     return (
-        
         <>
             {
-                metricValue != null &&
-                <>
-                    {
-                        metricType == METRIC_TYPES.NUMBER_CARD &&
-                        <DashboardCard
-                            loading={loading}
-                            cardIconAddress={cardIconAddress}
-                            cardInfoTitle={cardInfoTitle}
-                            cardInfoSubtitle={cardInfoSubtitle}
-                            cardText={metricValue}
-                            cardSubText={cardSubText}
-                        ></DashboardCard>
-                    }
-                    {
-                        metricType == METRIC_TYPES.LATENCY_LINE_CHART &&
-                        <div className="graph-holder">
-                            {
-                                loading ?
-                                <div className="loader">
-                                    <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
-                                </div>
-                                :
-                                <>
-                                <div className="heading-row">
-                                    <img className="card-icon" src={cardIconAddress} />
-                                    <div className="card-info">
-                                        <p className="bodyText">{cardInfoTitle}</p>
-                                        <p className="subHeading2">{cardInfoSubtitle}</p>
-                                    </div>
-                                </div>
-                                <AnalyticsLineChart
-                                trends={
-                                    metricValue["LatencyTrends"] == null
-                                    ? { none: [] }
-                                    : metricValue["LatencyTrends"]
-                                }
-                                trendsTimeline={metricValue["latencyTrendsTimeline"]}
-                                ></AnalyticsLineChart>
-                                </>
-                            }
-                        </div>
-                    }
-                    {
-                        metricType == METRIC_TYPES.DAU_LINE_CHART &&
-                        <div className="graph-holder">
-                            {
-                                loading ?
-                                <div className="loader">
-                                    <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
-                                </div>
-                                :
-                                <>
-                                    <div className="heading-row">
-                                        <img className="card-icon" src={cardIconAddress} />
-                                        <div className="card-info">
-                                            <p className="bodyText">{cardInfoTitle}</p>
-                                            <p className="subHeading2">{cardInfoSubtitle}</p>
-                                        </div>
-                                    </div>
-                                    <AnalyticsLineChartSingle trends={metricValue}></AnalyticsLineChartSingle>
-                                </>
-                            }
-                        </div>
-                    }
-                    {
-                        metricType == METRIC_TYPES.PIE_CHART &&
-                        
-                        <div className="pie-graph-holder">
-                            {
-                                loading ?
-                                <div className="loader">
-                                    <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
-                                </div>
-                                :
-                                <>
-                                    <div className="heading-row">
-                                        <img className="card-icon" src={cardIconAddress} />
-                                        <div className="card-info">
-                                            <p className="bodyText">{cardInfoTitle}</p>
-                                            <p className="subHeading2">{cardInfoSubtitle}</p>
-                                        </div>
-                                    </div>
-                                    <AnalyticsPieChart trends={metricValue}></AnalyticsPieChart>
-                                </>
-                            }
-                            
-                        </div>
-                    }
-                    {
-                        metricType == METRIC_TYPES.BAR_CHART &&
-                        
-                        <div className="pie-graph-holder">
-                            {
-                                loading ?
-                                <div className="loader">
-                                    <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
-                                </div>
-                                :
-                                <>
-                                    <div className="heading-row">
-                                        <img className="card-icon" src={cardIconAddress} />
-                                        <div className="card-info">
-                                            <p className="bodyText">{cardInfoTitle}</p>
-                                            <p className="subHeading2">{cardInfoSubtitle}</p>
-                                        </div>
-                                    </div>
-                                    <ShapeBarChart trends={metricValue}></ShapeBarChart>
-                                </>
-                            }
-                            
-                        </div>
-                    }
-                </>
+                metricType == METRIC_TYPES.NUMBER_CARD &&
+                <DashboardCard
+                    loading={loading}
+                    cardIconAddress={cardIconAddress}
+                    cardInfoTitle={cardInfoTitle}
+                    cardInfoSubtitle={cardInfoSubtitle}
+                    cardText={metricValue}
+                    cardSubText={cardSubText}
+                ></DashboardCard>
             }
-        </>
-    )
+            {
+                metricType == METRIC_TYPES.LATENCY_LINE_CHART &&
+                <div className="graph-holder">
+                    {
+                        (loading || metricValue == null) ?
+                        <div className="loader">
+                            <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
+                        </div>
+                        :
+                        <>
+                        <div className="heading-row">
+                            <img className="card-icon" src={cardIconAddress} />
+                            <div className="card-info">
+                                <p className="bodyText">{cardInfoTitle}</p>
+                                <p className="subHeading2">{cardInfoSubtitle}</p>
+                            </div>
+                        </div>
+                        <AnalyticsLineChart
+                        trends={
+                            metricValue["LatencyTrends"] == null
+                            ? { none: [] }
+                            : metricValue["LatencyTrends"]
+                        }
+                        trendsTimeline={metricValue["latencyTrendsTimeline"]}
+                        ></AnalyticsLineChart>
+                        </>
+                    }
+                </div>
+            }
+            {
+                metricType == METRIC_TYPES.DAU_LINE_CHART &&
+                <div className="graph-holder">
+                    {
+                        (loading || metricValue == null) ?
+                        <div className="loader">
+                            <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
+                        </div>
+                        :
+                        <>
+                            <div className="heading-row">
+                                <img className="card-icon" src={cardIconAddress} />
+                                <div className="card-info">
+                                    <p className="bodyText">{cardInfoTitle}</p>
+                                    <p className="subHeading2">{cardInfoSubtitle}</p>
+                                </div>
+                            </div>
+                            <AnalyticsLineChartSingle trends={metricValue}></AnalyticsLineChartSingle>
+                        </>
+                    }
+                </div>
+            }
+            {
+                metricType == METRIC_TYPES.PIE_CHART &&
+                <div className="pie-graph-holder">
+                    {
+                        (loading || metricValue == null) ?
+                        <div className="loader">
+                            <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
+                        </div>
+                        :
+                        <>
+                            <div className="heading-row">
+                                <img className="card-icon" src={cardIconAddress} />
+                                <div className="card-info">
+                                    <p className="bodyText">{cardInfoTitle}</p>
+                                    <p className="subHeading2">{cardInfoSubtitle}</p>
+                                </div>
+                            </div>
+                            <AnalyticsPieChart trends={metricValue}></AnalyticsPieChart>
+                        </>
+                    }
+                    
+                </div>
+            }
+            {
+                metricType == METRIC_TYPES.BAR_CHART &&
+                <div className="pie-graph-holder">
+                    {
+                        (loading || metricValue == null) ?
+                        <div className="loader">
+                            <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
+                        </div>
+                        :
+                        <>
+                            <div className="heading-row">
+                                <img className="card-icon" src={cardIconAddress} />
+                                <div className="card-info">
+                                    <p className="bodyText">{cardInfoTitle}</p>
+                                    <p className="subHeading2">{cardInfoSubtitle}</p>
+                                </div>
+                            </div>
+                            <ShapeBarChart trends={metricValue}></ShapeBarChart>
+                        </>
+                    }
+                    
+                </div>
+            }
+    </>)
 }
 
 export default MetricDisplay;

@@ -25,7 +25,7 @@ function DropdownComponent(props) {
         }}
       >
         {itemList.map((item, idx) => (
-          <Dropdown.Item eventKey={idx}>{item}</Dropdown.Item>
+          <Dropdown.Item eventKey={idx} key={idx}>{item}</Dropdown.Item>
         ))}
       </DropdownButton>
     </>
