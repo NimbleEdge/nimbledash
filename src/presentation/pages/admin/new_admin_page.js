@@ -39,7 +39,7 @@ const NewAdminPage = () => {
     const [currentView, setView] = useState(AdminPageView.DEPLOYMENT_TAGS_TABLE);
     const [tagsList, updateTagsList] = useState([]);
     const [tagsDetails, updateTagsDetails] = useState({});
-    const [modelsList, udpateModelsList] = useState([]);
+    const [modelsList, updateModelsList] = useState([]);
     const [modelsDetails, updateModelsDetails] = useState({});
     const [selectedModelName, setSelectedModelName] = useState(null);
     const [tasksList, udpateTasksList] = useState([]);
@@ -47,7 +47,7 @@ const NewAdminPage = () => {
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
     useEffect(() => {
-        fetchModelList({updateModelsList: udpateModelsList});
+        fetchModelList({successCallback: (modelsList) => updateModelsList(modelsList)});
         fetchDeploymentTags(updateTagsList);
         fetchTasksList(udpateTasksList);
     }, []);
@@ -176,7 +176,7 @@ const NewAdminPage = () => {
                         }
                     </div>
                 }
-                {currentView == AdminPageView.MODELS_TABLE && <ModelsTable modelsDetails={modelsDetails} onModelClick={onModelClick} allTagsList={tagsList} updateModelsList={udpateModelsList} isUploadNewModelModalOpen={isUploadModalOpen} setIsUploadNewModelModalOpen={setIsUploadModalOpen} />}
+                {currentView == AdminPageView.MODELS_TABLE && <ModelsTable modelsDetails={modelsDetails} onModelClick={onModelClick} allTagsList={tagsList} updateModelsList={updateModelsList} isUploadNewModelModalOpen={isUploadModalOpen} setIsUploadNewModelModalOpen={setIsUploadModalOpen} />}
                 {currentView == AdminPageView.TASKS_TABLE && <TasksTable tasksDetails={tasksDetails} allTagsList={tagsList} updateTasksList={udpateTasksList} isUpdateTaskModalOpen={isUploadModalOpen} setIsUpdateTaskModalOpen={setIsUploadModalOpen} />}
                 {currentView == AdminPageView.DEPLOYMENT_TAGS_TABLE && <TagsTable tagsDetails={tagsDetails} modelsDetails={{...modelsDetails}} tasksDetails={{...tasksDetails}} updateTagsList={updateTagsList} isCreateNewTagModalOpen={isUploadModalOpen} setIsCreateNewTagModalOpen={setIsUploadModalOpen} />}
                 {currentView == AdminPageView.MODEL_VERSIONS_TABLE && <ModelDetailsTable modelDetails={{...modelsDetails[selectedModelName]}} modelName={selectedModelName} allTagsList={[...tagsList]} updateTagsList={updateTagsList} />}

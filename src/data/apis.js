@@ -12,6 +12,40 @@ import { toast } from "react-toastify";
 import { loaderActions } from "presentation/redux/stores/store";
 import { DEFAULT_TASK_NAME } from "presentation/pages/admin/new_admin_page";
 
+export const fetchClientIDList = async (clientID, setClientIDList) => {
+    await axios
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/user/clients`, {
+          headers: {
+              AuthMethod: localStorage.getItem(AUTH_METHOD),
+              Token: localStorage.getItem(ACCESS_TOKEN),
+              ClientId: clientID,
+              TokenId: localStorage.getItem(USER_EMAIL),
+              CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          },
+      })
+      .then((res) => {
+          if (res.status == 200) {
+              setClientIDList(res.data.Clients);
+          } else {
+              toast.error("Can't fetch client ids", {
+                  toastId: "errorToast",
+              });
+          }
+      })
+      .catch((e) => {
+          const errorDescription = e.response?.data?.error?.description;
+          if (errorDescription != null) {
+              toast.error(errorDescription, {
+                  toastId: "errorToast",
+              });
+          } else {
+              toast.error("Something Went Wrong.", {
+                toastId: "errorToast",
+              });
+          }
+      });
+};
+
 
 export const fetchTaskFile = async ({taskVersion}) => {
   try{
@@ -156,7 +190,7 @@ export const fetchDeploymentTagDetails = async (tag) => {
     }
 };
 
-export const fetchModelList = async ({updateModelsList, dispatch = null, closeModal = null, successToast = null}) => {
+export const fetchModelList = async ({successCallback, dispatch = null}) => {
     if(dispatch) dispatch(loaderActions.toggleLoader(true));
 
     await axios
@@ -171,10 +205,8 @@ export const fetchModelList = async ({updateModelsList, dispatch = null, closeMo
       })
       .then((res) => {
         let listOfModels = res.data.models;
-        updateModelsList(listOfModels);
-        if(closeModal) closeModal();
+        successCallback(listOfModels);
         if(dispatch) dispatch(loaderActions.toggleLoader(false));
-        if(successToast) toast.success(successToast.message);
       })
       .catch((e) => {
         if(dispatch) dispatch(loaderActions.toggleLoader(false));

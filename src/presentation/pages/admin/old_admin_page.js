@@ -40,7 +40,7 @@ function OldAdminPage() {
   });
 
   useEffect(() => {
-    fetchModelList({updateModelsList: setModelList, dispatch});
+    fetchModelList({successCallback: (modelsList) => setModelList(modelsList), dispatch});
   }, []);
 
   filesContent.map((file) => {
@@ -96,7 +96,7 @@ function OldAdminPage() {
             )
             .then((res) => {
               toast.success("Model uploaded successfully");
-              fetchModelList();
+              fetchModelList({successCallback: (modelList) => setModelList(modelList)});
             })
             .catch((e) => {
               //console.log(e);
@@ -137,7 +137,7 @@ function OldAdminPage() {
           )
           .then((res) => {
             toast.success("Model updated successfully");
-            fetchModelList();
+            fetchModelList({successCallback: (modelList) => setModelList(modelList)});
           })
           .catch((e) => {
             //console.log(e);
