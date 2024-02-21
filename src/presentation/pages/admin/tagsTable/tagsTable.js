@@ -51,10 +51,11 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
                 })
             }
             tagsViewData.body.push([
-                {Component: TagNameColumnComponent, data: {tagName: tag, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag]}}, 
-                {Component: TruncatedDescription, data: {message: tagsDetails[tag]['description'], maxLength: 400, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag], tagName: tag}}, 
-                {Component: TagsListComponent, data: {tags: tasksArray, tableData: taskTableData, tableTitle: "Linked Task Versions",truncationLimit: 2, expandable: true}}, 
-                {Component: TagsListComponent, data: {tags: modelsArray, truncationLimit: 2, tableData: modelTableData, tableTitle: "Linked Models", expandable: true}}]);
+                {Component: TagNameColumnComponent, data: {tagName: tag, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag], highlightOnHover: true}}, 
+                {Component: TruncatedDescription, data: {message: tagsDetails[tag]['description'], maxLength: 400, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag], tagName: tag, highlightOnHover: true}}, 
+                {Component: TagsListComponent, data: {tags: tasksArray, tableData: taskTableData, tableTitle: "Linked Task Versions",truncationLimit: 2, expandable: true, highlightOnHover: true}}, 
+                {Component: TagsListComponent, data: {tags: modelsArray, truncationLimit: 2, tableData: modelTableData, tableTitle: "Linked Models", expandable: true, highlightOnHover: true}}
+            ]);
         }
         updateTagsViewData({...tagsViewData});
     }, [tagsDetails]);
@@ -94,7 +95,7 @@ const TagNameColumnComponent = ({tagName, modelsDetails, updateTagsList, tagDeta
             </div>
             {
                 isModalOpen && 
-                <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={{maxHeight: '90%'}} hasSaveButton={true} >
+                <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={{maxHeight: '90%', height: '654px'}} hasSaveButton={true} >
                     {
                         ({clickCount}) => {
                             return (

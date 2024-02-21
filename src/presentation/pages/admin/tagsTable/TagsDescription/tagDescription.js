@@ -22,7 +22,7 @@ const TruncatedDescription = ({ message, maxLength, modelsDetails, updateTagsLis
         </div>
         {
           isModalOpen && 
-          <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={{maxHeight: '90%'}} hasSaveButton={true}>
+          <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={{maxHeight: '90%', height: '654px'}} hasSaveButton={true}>
             {
               ({clickCount}) => {
                 return (

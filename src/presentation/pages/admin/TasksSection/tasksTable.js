@@ -9,8 +9,6 @@ import TaskUpdate from "./taskUpdate";
 import { DEFAULT_TASK_NAME } from "../new_admin_page";
 import { fetchTaskFile } from "data/apis";
 import FileDownloadComponent from "presentation/components/FileDownload/fileDownload";
-import { toast } from "react-toastify";
-
 
 const taskTableView = {
     NEW_TASK_VIEW: 0,
@@ -72,9 +70,10 @@ const TasksTable = ({tasksDetails, allTagsList, updateTasksList, isUpdateTaskMod
                 const tagsArray = [];
                 for(const tag in tasksDetails[taskName]['versionToTags'][taskVersion]) tagsArray.push(tag);
                 tasksViewData.body.push([
-                    {Component: TextOnlyComponent, data: {text: taskVersion, customStyle: {fontWeight: 500, color: '#494949', fontSize: '14px'}}}, 
-                    {Component: TextOnlyComponent, data: {text: tasksDetails[taskName]['versions'][taskVersion]['description'], customStyle: {color: '#74828F', fontWeight: 400, fontSize: '14px'}}},
-                    {Component: TagsListComponent, data: {tags: tagsArray}}, {Component: taskActionColComponent, data: {taskVersion: taskVersion}}
+                    {Component: TextOnlyComponent, data: {text: taskVersion, customStyle: {fontWeight: 500, color: '#494949', fontSize: '14px'}, highlightOnHover: true}}, 
+                    {Component: TextOnlyComponent, data: {text: tasksDetails[taskName]['versions'][taskVersion]['description'], customStyle: {color: '#74828F', fontWeight: 400, fontSize: '14px'}, highlightOnHover: true}},
+                    {Component: TagsListComponent, data: {tags: tagsArray, highlightOnHover: true}}, 
+                    {Component: taskActionColComponent, data: {taskVersion: taskVersion}}
                 ]);
             }
             break;
@@ -97,7 +96,7 @@ const TasksTable = ({tasksDetails, allTagsList, updateTasksList, isUpdateTaskMod
                         <button onClick={openUpdateTaskModal} className="updateTaskButton">Update Workflow Script</button>
                     </div> */}
                     {isUpdateTaskModalOpen && 
-                        <Modal isOpen={isUpdateTaskModalOpen} onClose={closeUpdateTaskModal}>
+                        <Modal isOpen={isUpdateTaskModalOpen} onClose={closeUpdateTaskModal} customStyle={{height: '654px'}}>
                             <TaskUpdate allTagsList={allTagsList} onCompletion={closeUpdateTaskModal} updateTasksList={updateTasksList} />
                         </Modal>
                     }
@@ -109,7 +108,7 @@ const TasksTable = ({tasksDetails, allTagsList, updateTasksList, isUpdateTaskMod
                 <>
                     <button onClick={openNewTaskModal} className="uploadNewTaskButton">Upload Script</button>
                     {isNewTaskModalOpen && 
-                        <Modal isOpen={isNewTaskModalOpen} onClose={closeNewTaskModal}>
+                        <Modal isOpen={isNewTaskModalOpen} onClose={closeNewTaskModal} customStyle={{height: '654px'}}>
                             <TaskUpdate allTagsList={allTagsList} isNewTask={true} onCompletion={closeNewTaskModal} updateTasksList={updateTasksList} />
                         </Modal>
                     }

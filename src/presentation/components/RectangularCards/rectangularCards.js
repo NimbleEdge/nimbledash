@@ -66,3 +66,4 @@ export const SelectableCardsList = ({cards, selectedCards, handleCardClick}) => 
         </div>
     )
 }
+

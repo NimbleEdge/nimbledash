@@ -9,25 +9,26 @@ import { CardsList, SelectableCardsList } from "presentation/components/Rectangu
 import { TagsListComponent } from "presentation/components/Tags/tagsList";
 import { downloadModel } from "../modelsTable/modelDownload";
 import Search from "presentation/components/Search/searchComponent";
+import { RectCard } from "presentation/components/RectangularCards/card";
+import HoverText from "presentation/components/HoverText/hoverText";
 
 const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTagsList, onCloseModal, clickCount}) => {
     const [selectedTags, setSelectedTags] = useState([]);
-    const remainingTagsList = []
+    let remainingTagsList = [];
     allTagsList.forEach(tag => {
-        if(!(tag.name in existingTags)) remainingTagsList.push(tag.name);
+        if(!(tag.name in existingTags) && !selectedTags.includes(tag.name)) remainingTagsList.push(tag.name);
     });
     const existingTagsList = [];
     for(const tag in existingTags) existingTagsList.push({title: tag});
-    
-    const toggleTag = (tag) => {
+
+    const addTagToSelectedList = (card) => {
         setSelectedTags((prevTags) => {
-            if (prevTags.includes(tag)) {
-                return prevTags.filter((selectedTag) => selectedTag !== tag);
-            } else {
-                return [...prevTags, tag];
+            if(prevTags.includes(card.title)) return [...prevTags];
+            else {
+                return [...prevTags, card.title]
             }
-        });
-    };
+        })
+    }
 
     const handleSave = async () => {
         const existingTagsName = existingTagsList.map(tag => tag.title);
@@ -35,29 +36,32 @@ const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTa
         onCloseModal();
     }
 
+    const removeSelectedTag = (card) => {
+        setSelectedTags((prevTags) => [...prevTags.filter((selectedTag) => selectedTag !== card.title)]);
+    }
+
     useEffect(() => {
         if(clickCount > 0) handleSave();
     }, [clickCount])
 
     return (
-        <div className="select-tags-modal-content">
-            <div className="selectable-tags-container">
+        <div className="model-details-select-tags-modal-content">
+            <div className="model-details-selectable-tags-container">
                 <div className="model-details-header-container">
                     <div className="model-details-header-container-text">{modelName} - v{version}</div>
-                    {/* <img className={"saveIcon"} src={"/assets/icons/saveIcon.svg"} onClick={handleSave}></img> */}
                 </div>
-                <div className="selectable-tags-list">
-                    <Search list={remainingTagsList} handleItemClick={toggleTag}/>
-                </div>
+                <Search searchList={remainingTagsList.map(tag => { return {searchText: tag, selected: false}})} handleItemClick={addTagToSelectedList}/>
             </div>
             {selectedTags.length > 0 &&
-                <div className="selected-tags-container">
-                    <div className="selected-tags-list-header">Selected Tags</div>
-                    <CardsList cards={selectedTags.map(tag => {return {title: tag}})} customStyle={{box: {backgroundColor: '#6565FF1A'}}} />
+                <div className="model-details-selected-tags-container">
+                    <div className="model-details-selected-tags-list-header">Selected Tags</div>
+                    <div className="model-details-selected-tags-list">
+                        {selectedTags.map((tag) => <RectCard  card={{title: tag}} customStyle={{box: {backgroundColor: '#6565FF1A'}}} hasRemoveButton={true} handleRemove={removeSelectedTag} />)}
+                    </div>
                 </div>
             }
-            <div className="existing-tags-container">
-                <div className="existing-tags-list-header">Previously attached deployment tags</div>
+            <div className="model-details-existing-tags-container">
+                <div className="model-details-existing-tags-list-header">Previously attached deployment tags</div>
                 <CardsList cards={existingTagsList} customStyle={{box: {backgroundColor: '#6565FF1A'}}} />
             </div>
         </div>
@@ -98,8 +102,9 @@ const VersionColumnComponent = ({version, existingTags, allTagsList, modelName, 
 const ActionColComponent = ({modelName, modelVersion}) => {
     return (
         <div className="actionColCell">
-            <img className={"download-model-icon"} src={"/assets/icons/download.svg"} onClick={() => downloadModel({modelName: modelName, modelVersion: modelVersion})}></img>
-            {/* <button className="download-model-button" onClick={() => downloadModel({modelName: modelName, modelVersion: modelVersion})}>Download</button> */}
+            <HoverText onHoverText={"Download"}>
+                <img className={"download-model-icon"} src={"/assets/icons/download.svg"} onClick={() => downloadModel({modelName: modelName, modelVersion: modelVersion})}></img>
+            </HoverText>
         </div>
     )
 }
@@ -108,9 +113,9 @@ const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList
     const [modelDetailsView, updateModelDetailsView] = useState({
         headers: [
             {text: 'Versions'}, 
-            {text: 'Actions'}, 
             {text: 'Compatability Tags'}, 
-            {text: 'Active Users ( last 7 days )'}
+            {text: 'Active Users ( last 7 days )'},
+            {text: 'Actions'},
         ],
         body: []
     });
@@ -144,9 +149,10 @@ const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList
                 existingTags[tag] = true;
             }
             modelDetailsView.body.push([
-                {Component: VersionColumnComponent, data: {version: version, existingTags: existingTags, allTagsList: allTagsList, modelName: modelName, updateTagsList: updateTagsList}}, 
-                {Component: ActionColComponent, data: {modelName: modelName, modelVersion: version}}, 
-                {Component: TagsListComponent, data: {tags: [...tagsList]}}, {Component: TextOnlyComponent, data:{text: activeUsers[version]}}
+                {Component: VersionColumnComponent, data: {version: version, existingTags: existingTags, allTagsList: allTagsList, modelName: modelName, updateTagsList: updateTagsList, highlightOnHover: true}}, 
+                {Component: TagsListComponent, data: {tags: [...tagsList], highlightOnHover: true}}, 
+                {Component: TextOnlyComponent, data:{text: activeUsers[version], highlightOnHover: true}},
+                {Component: ActionColComponent, data: {modelName: modelName, modelVersion: version}}
             ]);
         }
         updateModelDetailsView({...modelDetailsView});

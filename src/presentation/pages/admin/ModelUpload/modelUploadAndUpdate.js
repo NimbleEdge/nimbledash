@@ -21,13 +21,15 @@ import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
 import Modal from "presentation/components/modal/modal";
 import "./modelUpload.css";
 import { SelectableCardsList } from "presentation/components/RectangularCards/rectangularCards";
+import Search from "presentation/components/Search/searchComponent";
+import { RectCard } from "presentation/components/RectangularCards/card";
 
 const uploadModelView = {
     UPLOAD_MODEL_VIEW: 0,
     CT_SELECTION_VIEW: 1
 }
 
-const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateModelsList, closeModal}) => {
+const ModelUploadAndUpdate = ({isNewModel, allTagsList, existingModelName = "", updateModelsList, closeModal}) => {
   const dispatch = useDispatch();
   var modelContentBase64 = "";
   var modelType = "";
@@ -43,12 +45,12 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
   const [selectedTags, setSelectedTags] = useState([]);
   const [newModelName, setNewModelName] = useState(null);
 
-  const handleTagSelection = (tag) => {
+  const handleTagSelection = (card) => {
     setSelectedTags(prevSelectedTags => {
-        if (prevSelectedTags.includes(tag)) {
-            return prevSelectedTags.filter(selectedTag => selectedTag !== tag);
+        if (prevSelectedTags.includes(card.title)) {
+            return prevSelectedTags.filter(selectedTag => selectedTag !== card.title);
         } else {
-            return [...prevSelectedTags, tag];
+            return [...prevSelectedTags, card.title];
         }
     });
   }
@@ -241,7 +243,7 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
     <>
             {currentView == uploadModelView.UPLOAD_MODEL_VIEW && 
             <div className="modelUploadModal">
-                <p className="heading4">{isNewModel ? 'Upload' : 'Update'} Model</p>
+                <p className="heading4">{isNewModel ? 'Upload Model' : `Update > ${existingModelName}`}</p>
                 <div className="model-upload-update-card-grid">
                     <div
                       className="upload-card-new-flow clickable"
@@ -313,23 +315,69 @@ const ModelUpload = ({isNewModel, allTagsList, existingModelName = "", updateMod
             {
                 currentView == uploadModelView.CT_SELECTION_VIEW && 
                 <div>
-                    <UploadModelCTSelection allTagsDetailsList={allTagsList} preSelectedTagsList={selectedTags} handleTagSelection={handleTagSelection} setCurrentView={setCurrentView} />
+                    <TagSelection allTagsDetailsList={allTagsList} preSelectedTagsList={selectedTags} saveSelectedTags={setSelectedTags} setCurrentView={setCurrentView} />
                 </div>
             }
     </>
   );
 }
 
-export default ModelUpload;
+export default ModelUploadAndUpdate;
 
-
-const UploadModelCTSelection = ({allTagsDetailsList, preSelectedTagsList = [], handleTagSelection, setCurrentView}) => {
-    const allTagsList = allTagsDetailsList.map(tag => {return {title: tag.name}});
-    
-    return (
-        <div>
-            <img className={"backArrow-modelUpload-tagSelection"} src={"/assets/icons/backArrow.svg"} onClick={() => setCurrentView(uploadModelView.UPLOAD_MODEL_VIEW)}></img>
-            <SelectableCardsList cards={allTagsList} selectedCards={preSelectedTagsList} handleCardClick={handleTagSelection} />
-        </div>
-    )
+const TagSelection = ({allTagsDetailsList, preSelectedTagsList = [], saveSelectedTags, setCurrentView}) => {
+  const [selectedTags, setSelectedTags] = useState(preSelectedTagsList);
+    const tagsSearchList = [];
+    allTagsDetailsList.forEach(tag => {
+        if(!selectedTags.includes(tag.name)) {
+            tagsSearchList.push({searchText: tag.name});
+        }
+    })
+    const handleItemClick = (card) => {
+        setSelectedTags(prevTags => {
+            if(!prevTags.includes(card.title)) return [...prevTags, card.title];
+            return prevTags;
+        })
+    }
+    const handleTagRemoval = (card) => {
+        setSelectedTags(prevTags => {
+            return prevTags.filter(tag => tag != card.title);
+        })
+    }
+    const handleSave = () => {
+        saveSelectedTags(selectedTags);
+        setCurrentView(uploadModelView.UPLOAD_MODEL_VIEW);
+    }
+  return (
+      <div className={'tag-selection-container'}>
+          <div className={"modal-save-icon"} onClick={handleSave}>
+              <img className={"saveTick"} src={"/assets/icons/saveTick.svg"}></img>
+          </div>
+          <img className={"backArrow-modelUpload-tagSelection"} src={"/assets/icons/backArrow.svg"} onClick={() => setCurrentView(uploadModelView.UPLOAD_MODEL_VIEW)}></img>
+          <Search searchList={tagsSearchList} handleItemClick={handleItemClick} placeholder="Search Tags" />
+          <div className="selected-tags-list-container">
+              <div className="selected-tags-list-header">Selected Tags</div>
+              <div className="selected-tags-list">
+                  {selectedTags.map(tag =>
+                      <RectCard card={{title: tag}} hasRemoveButton handleRemove={handleTagRemoval} customStyle={{box: {marginRight: '15px'}}}/>
+                  )}
+              </div>
+          </div>
+      </div>
+  )
 }
+
+// const UploadModelCTSelection = ({allTagsDetailsList, selectedTagsList = [], handleTagSelection, setCurrentView}) => {
+//     const allTagsList = allTagsDetailsList.map(tag => {return {title: tag.name}});
+//     const tagsSearchList = [];
+//     allTagsDetailsList.forEach(tag => {
+//         if(!selectedTagsList.includes(tag.name)) {
+//             tagsSearchList.push({searchText: tag.name, selected: selectedTagsList.includes(tag.name)});
+//         }
+//     })
+//     return (
+//         <div>
+//             <img className={"backArrow-modelUpload-tagSelection"} src={"/assets/icons/backArrow.svg"} onClick={() => setCurrentView(uploadModelView.UPLOAD_MODEL_VIEW)}></img>
+//             {/* <SelectableCardsList cards={allTagsList} selectedCards={preSelectedTagsList} handleCardClick={handleTagSelection} /> */}
+//         </div>
+//     )
+// }

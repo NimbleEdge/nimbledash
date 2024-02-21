@@ -18,7 +18,7 @@ const CreateNewTagModal = ({modelsDetails, updateTagsList, isModalOpen = false, 
         <>
             {
                 isModalOpen && 
-                <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={{overflow: 'auto'}} hasSaveButton={true}>
+                <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={{maxHeight: '90%', height: '654px'}} hasSaveButton={true}>
                     {
                         ({clickCount}) => {
                             return (
