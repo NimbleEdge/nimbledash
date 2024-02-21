@@ -35,16 +35,6 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
         });
     }
 
-    const addTags = (tags) => {
-        setSelectedDeploymentTags(prevTags => {
-            const updatedTags = [...prevTags];
-            tags.forEach(tag => {
-                if(!prevTags.includes(tag)) updatedTags.push(tag);
-            })
-            return updatedTags;
-        })
-    }
-
 
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
