@@ -30,6 +30,7 @@
 body {
   /* padding: 0px 8.5%; */
   background-color: var(--clr-bg);
+  scrollbar-width: thin;
 }
 
 .Terminal-code {

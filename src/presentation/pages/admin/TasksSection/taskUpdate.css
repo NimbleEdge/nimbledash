@@ -65,3 +65,26 @@
     color: black;
     width: 100%;
   }
+
+  .selected-tags-list-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+  }
+
+  .selected-tags-list-header {
+    color: #000000;
+    font-weight: 300;
+    font-size: 16px;
+  }
+
+  .selected-tags-list {
+    display: flex;
+    overflow: auto;
+    scrollbar-width: none;
+  }
+
+  .tag-selection-container {
+    display: flex;
+    flex-direction: column;
+  }

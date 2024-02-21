@@ -1,6 +1,3 @@
-.search-component {
-    width: 100%;
-}
 .input-box-search-list {
     margin-top: 10px;
     border-radius: 8px;
@@ -23,16 +20,25 @@
     padding: 5px 16px;
 }
 
-.filtered-items-list {
+.filtered-items-list-single-row {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
     white-space: nowrap;
+    scrollbar-width: none;
+}
+
+.filtered-items-list-multiple-row {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+    justify-content: space-between;
+    height: 350px;
+    scrollbar-width: none;
 }
 
 .filtered-items-table {
     display: flex;
-    overflow-y: auto;
 }
 
 .item-box {

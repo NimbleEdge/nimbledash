@@ -12,10 +12,16 @@ const Modal = ({ isOpen, onClose, children, customStyle = {}, closeButtonDisable
     }
   
     useEffect(() => {
+      if(isOpen) {
+        document.body.style.overflow = 'hidden';
+        document.body.style.height = '100%';
+      }
       setIsModalOpen(isOpen);
     }, [isOpen]);
   
     const closeModal = () => {
+      document.body.style.overflow = 'auto';
+      document.body.style.height = 'auto';
       setIsModalOpen(false);
       onClose && onClose();
     };
@@ -25,7 +31,7 @@ const Modal = ({ isOpen, onClose, children, customStyle = {}, closeButtonDisable
         closeModal();
       }
     };
-  
+
     return (
       <>
         {isModalOpen && (

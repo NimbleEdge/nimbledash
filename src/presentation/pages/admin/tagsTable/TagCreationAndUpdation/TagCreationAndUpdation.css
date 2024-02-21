@@ -1,5 +1,5 @@
 .create-new-tag-modal-content {
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 .create-new-tag-title {
@@ -160,7 +160,7 @@ input:focus {
     font-size: 11px;
     font-weight: 400;
     padding-top: 5px;
-    padding-left: 7px;
+    height: 90px;
 }
 
 .newTag-saveButton {

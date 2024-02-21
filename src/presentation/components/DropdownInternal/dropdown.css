@@ -28,11 +28,11 @@
 }
 
 .dropdown-list {
-    margin-top: 12px;
     background-color: #F5F5FF;
     border-radius: 8px;
     position: absolute;
     width: 100%;
+    z-index: 1;
 }
 
 .dropdown-list-item {
@@ -46,4 +46,8 @@
 
 .arrow.open {
     transform: rotate(180deg);
+}
+
+.dropdown-gap {
+    height: 12px;
 }

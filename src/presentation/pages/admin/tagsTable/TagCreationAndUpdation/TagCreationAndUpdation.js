@@ -51,8 +51,8 @@ export const CreateOrUpdateTagModal = ({modelsDetails, updateTagsList, onClose, 
         return preAttachedModels;
     });
     
-    const handleModelSelection = (model) => {
-        setSelectedModel(model);
+    const handleModelSelection = (modelCard) => {
+        setSelectedModel(modelCard.title);
         setCurrentView(Views.MODEL_VERSION_SELECTION_VIEW);
     }
 
@@ -149,7 +149,7 @@ export const CreateOrUpdateTagModal = ({modelsDetails, updateTagsList, onClose, 
                         </div>
                         <div className="create-new-tag-model-mapping subsection">
                             <div className="create-new-tag-model-mapping-header subsection-header">Map CT with the pre-existing models (optional)</div>
-                            <Search list={modelNameList} handleItemClick={handleModelSelection} placeholder={"Search Models"}/>
+                            <Search searchList={modelNameList.map(name => {return {searchText: name, selected: false}})} handleItemClick={handleModelSelection} placeholder={"Search Models"}/>
                         </div>
                     </div>
                 </>

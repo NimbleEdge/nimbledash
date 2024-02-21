@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import HoverText from '../HoverText/hoverText';
 
 const FileDownloadComponent = ({ fileName = 'downloaded_file', fetchFunction, fetchFuncData}) => {
   const handleDownload = async () => {
@@ -23,10 +24,9 @@ const FileDownloadComponent = ({ fileName = 'downloaded_file', fetchFunction, fe
   };
 
   return (
-      <>
+      <HoverText onHoverText={"Download"}>
         <img className={"download-model-icon"} src={"/assets/icons/download.svg"} onClick={handleDownload}></img>
-        {/* <button className={'download-btn'} onClick={handleDownload}>Download</button> */}
-      </>
+      </HoverText>  
   );
 };
 

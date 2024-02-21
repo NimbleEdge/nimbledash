@@ -6,6 +6,8 @@ import "./taskUpdate.css";
 import { SelectableCardsList } from "presentation/components/RectangularCards/rectangularCards";
 import { DEFAULT_TASK_NAME } from "../new_admin_page";
 import { useDispatch } from "react-redux";
+import { RectCard } from "presentation/components/RectangularCards/card";
+import Search, { ITEMS_LAYOUT } from "presentation/components/Search/searchComponent";
 
 const upadteTaskView = {
     UPDATE_TASK_VIEW: 0,
@@ -23,14 +25,24 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
     const [selectedDeploymentTags, setSelectedDeploymentTags] = useState(preSelectedTagsList);
     const [currentView, setCurrentView] = useState(upadteTaskView.UPDATE_TASK_VIEW);
 
-    const handleTagSelection = (tag) => {
+    const tagSelectionToggle = (card) => {
         setSelectedDeploymentTags(prevSelectedTags => {
-            if (prevSelectedTags.includes(tag)) {
-                return prevSelectedTags.filter(selectedTag => selectedTag !== tag);
+            if (prevSelectedTags.includes(card.title)) {
+                 return prevSelectedTags.filter(selectedTag => selectedTag !== card.title);
             } else {
-                return [...prevSelectedTags, tag];
+                return [...prevSelectedTags, card.title];
             }
         });
+    }
+
+    const addTags = (tags) => {
+        setSelectedDeploymentTags(prevTags => {
+            const updatedTags = [...prevTags];
+            tags.forEach(tag => {
+                if(!prevTags.includes(tag)) updatedTags.push(tag);
+            })
+            return updatedTags;
+        })
     }
 
 
@@ -86,7 +98,7 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
                             }
                         </div>
                     </div>
-                    <input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} />
+                    <input type="file" accept=".py" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} />
                     {
                         // !isNewTask &&
                         // <DropdownComponent
@@ -98,7 +110,7 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
                         //     customClass={"model-upload-custom-dropdown"}
                         // ></DropdownComponent>
                     }
-                    {
+                    {/* {
                         isNewTask &&
                         <input
                             type="text"
@@ -107,7 +119,7 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
                             value={DEFAULT_TASK_NAME}
                             readOnly
                         />
-                    }
+                    } */}
                     <input
                         type="text"
                         className="task-update-description"
@@ -129,7 +141,7 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
             {
                 currentView == upadteTaskView.CT_SELECTION_VIEW && 
                 <div>
-                    <UploadModelCTSelection allTagsDetailsList={allTagsList} preSelectedTagsList={selectedDeploymentTags} handleTagSelection={handleTagSelection} setCurrentView={setCurrentView} />
+                    <TagSelection allTagsDetailsList={allTagsList} preSelectedTagsList={selectedDeploymentTags} saveSelectedTags={setSelectedDeploymentTags} setCurrentView={setCurrentView} />
                 </div>
             }
     </>
@@ -138,13 +150,44 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
 
 export default TaskUpdate;
 
-const UploadModelCTSelection = ({allTagsDetailsList, preSelectedTagsList = [], handleTagSelection, setCurrentView}) => {
-    const allTagsList = allTagsDetailsList.map(tag => {return {title: tag.name}});
-    
+const TagSelection = ({allTagsDetailsList, preSelectedTagsList = [], saveSelectedTags, setCurrentView}) => {
+    const [selectedTags, setSelectedTags] = useState(preSelectedTagsList);
+    const tagsSearchList = [];
+    allTagsDetailsList.forEach(tag => {
+        if(!selectedTags.includes(tag.name)) {
+            tagsSearchList.push({searchText: tag.name});
+        }
+    })
+    const handleItemClick = (card) => {
+        setSelectedTags(prevTags => {
+            if(!prevTags.includes(card.title)) return [...prevTags, card.title];
+            return prevTags;
+        })
+    }
+    const handleTagRemoval = (card) => {
+        setSelectedTags(prevTags => {
+            return prevTags.filter(tag => tag != card.title);
+        })
+    }
+    const handleSave = () => {
+        saveSelectedTags(selectedTags);
+        setCurrentView(upadteTaskView.UPDATE_TASK_VIEW);
+    }
     return (
-        <div>
+        <div className={'tag-selection-container'}>
+            <div className={"modal-save-icon"} onClick={handleSave}>
+                  <img className={"saveTick"} src={"/assets/icons/saveTick.svg"}></img>
+            </div>
             <img className={"backArrow-modelUpload-tagSelection"} src={"/assets/icons/backArrow.svg"} onClick={() => setCurrentView(upadteTaskView.UPDATE_TASK_VIEW)}></img>
-            <SelectableCardsList cards={allTagsList} selectedCards={preSelectedTagsList} handleCardClick={handleTagSelection} />
+            <Search searchList={tagsSearchList} handleItemClick={handleItemClick} placeholder="Search Tags" />
+            <div className="selected-tags-list-container">
+                <div className="selected-tags-list-header">Selected Tags</div>
+                <div className="selected-tags-list">
+                    {selectedTags.map(tag =>
+                        <RectCard card={{title: tag}} hasRemoveButton handleRemove={handleTagRemoval} customStyle={{box: {marginRight: '15px'}}}/>
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

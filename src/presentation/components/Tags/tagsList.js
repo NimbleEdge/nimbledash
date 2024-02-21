@@ -50,7 +50,7 @@ export const TagsListComponent = ({tags, tableData = {}, truncationLimit = 5, ta
             </div>
             {
                 isModalOpen &&
-                <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={modelCustomStyle} closeButtonDisabled={true}>
+                <Modal isOpen={isModalOpen} onClose={closeModal} customStyle={modelCustomStyle} closeButtonDisabled={false}>
                     <div className='tagsListModalContent'>
                         <div className='tagsListModalHeader'>{tableTitle}</div>
                         <SearchTable tableData={tableData} />

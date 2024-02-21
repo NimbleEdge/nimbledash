@@ -2,7 +2,6 @@ import { fetchDeploymentTagDetails, fetchDeploymentTags, fetchModelList, fetchTa
 import '../../../common.css';
 import './admin_page.css';
 import React, { useEffect, useState } from "react";
-import MultipleOptionsButton from "presentation/components/MultipleOptionsButton/multipleOptionsButton";
 import ModelsTable from "./modelsTable/modelsTable";
 import TagsTable from "./tagsTable/tagsTable";
 import ModelDetailsTable from "./modelDetailsTable/modelDetailsTable";

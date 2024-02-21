@@ -54,7 +54,6 @@
 .download-model-icon {
     width: 16px;
     height: 20px;
-    margin-right: 16px;
     cursor: pointer;
 }
 
@@ -67,4 +66,5 @@
 .actionColCell {
     display: flex;
     padding: 16px 24px 16px 24px;
+    justify-content: space-between;
 }

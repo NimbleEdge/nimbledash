@@ -18,7 +18,7 @@ tr.style1 {
     height: 64px;
     border-bottom: 1px solid #DBDBDB;
 }
-tr.style1 td.style1:hover {
+tr.style1 td.highlightOnHover:hover {
     background-color: #6565FF1A;
 }
 tfoot.style1 tr.style1 {

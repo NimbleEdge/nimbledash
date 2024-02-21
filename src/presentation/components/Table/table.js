@@ -69,8 +69,9 @@ const Table = ({ data, customStyles= {}, STYLE = TABLE_STYLE_TYPE.STYLE1 }) => {
     const bodyCell = (cellData, colIndex) => {
         let cellStyle = styles.bodyCell;
         const CellComponent = cellData.Component;
+        const highlightOnHover = cellData.data.hasOwnProperty('highlightOnHover');
         return (
-            <td key={colIndex} style={cellStyle} className={STYLE}>
+            <td key={colIndex} style={cellStyle} className={STYLE + (highlightOnHover ? ' highlightOnHover' : '')}>
                 <CellComponent {...cellData.data} />
             </td>
         );
