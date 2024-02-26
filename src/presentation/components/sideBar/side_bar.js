@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 function SideBar() {
   const navigateTo = useNavigate();
-  const [currentTab, setCurrentTab] = useState(1);
+  const [currentTab, setCurrentTab] = useState(0);
 
   useEffect(() => {
     if (window.location.href.includes(ADMIN_PAGE_ROUTE)) {

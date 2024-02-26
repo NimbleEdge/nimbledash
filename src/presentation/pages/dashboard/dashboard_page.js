@@ -230,11 +230,6 @@ function OldDashboardPage() {
     let startDateTimeRange = new Date(intervalObject["startDate"]);
     let endDateTimeRange = new Date(intervalObject["endDate"]);
 
-    // startDateTimeRange.setHours(0);
-    // startDateTimeRange.setMinutes(0);
-    // endDateTimeRange.setHours(23);
-    // endDateTimeRange.setMinutes(59);
-
     startDateTimeRange.setSeconds(0);
     startDateTimeRange.setMinutes(0);
     startDateTimeRange.setSeconds(0);
