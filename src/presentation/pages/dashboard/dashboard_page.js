@@ -229,11 +229,9 @@ function DashboardPage() {
     let startDateTimeRange = new Date(intervalObject["startDate"]);
     let endDateTimeRange = new Date(intervalObject["endDate"]);
 
-    startDateTimeRange.setSeconds(0);
     startDateTimeRange.setMinutes(0);
     startDateTimeRange.setSeconds(0);
     startDateTimeRange.setMilliseconds(0);
-    endDateTimeRange.setSeconds(0);
     endDateTimeRange.setMinutes(0);
     endDateTimeRange.setSeconds(0);
     endDateTimeRange.setMilliseconds(0);
