@@ -8,8 +8,6 @@ import {
 } from "./route-paths";
 import React, { useEffect, useState } from "react";
 import LoginPage from "presentation/pages/login/login_page";
-import DashboardPage from "presentation/pages/dashboard/dashboard_page";
-import InputModal from "presentation/components/inputModal/inputModal";
 import AdminPage from "presentation/pages/admin/admin_page";
 import {
   ACCESS_TOKEN,
@@ -27,6 +25,7 @@ import jwt_decode from "jwt-decode";
 import RBACPage from "presentation/pages/rbac/rbac_page";
 import ContactPage from "presentation/pages/contact/contact_page";
 import { getAuthMethod } from "core/utils";
+import DashboardPage from "presentation/pages/dashboard/dashboard";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
