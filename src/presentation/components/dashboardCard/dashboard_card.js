@@ -1,9 +1,7 @@
 import React from "react";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Dropdown from "react-bootstrap/Dropdown";
-import { useState } from "react";
 import "./dashboard_card.css";
+import { InfinitySpin } from "react-loader-spinner";
+import { ACCENT_COLOR } from "core/constants";
 
 function DashboardCard(props) {
   var cardIconAddress = props.cardIconAddress;
@@ -13,8 +11,14 @@ function DashboardCard(props) {
   var cardSubText = props.cardSubText;
 
   return (
-    <>
-      <div className="number-card">
+    <div className="number-card">
+      {
+        props.loading ? 
+        <div className="loader">
+          <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
+        </div>
+        :
+        <div>
         <div className="heading-row">
           <img className="card-icon" src={cardIconAddress}></img>
           <div className="card-info">
@@ -24,8 +28,9 @@ function DashboardCard(props) {
         </div>
         <p className="headline card-number">{cardText}</p>
         <p className="subHeading2 card-subtext">{cardSubText}</p>
-      </div>
-    </>
+        </div>
+      }
+    </div>
   );
 }
 
