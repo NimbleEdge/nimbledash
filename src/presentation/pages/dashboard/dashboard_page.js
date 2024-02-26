@@ -63,13 +63,18 @@ function OldDashboardPage() {
     return date;
   };
 
+  const subtractHours = (date, hours) => {
+    date.setHours(date.getHours() - hours);
+    return date;
+  };
+
   var [intervalObject, setIntervalObject] = useState({
-    startDate: subtractDays(new Date(), 2),
+    startDate: subtractHours(new Date(), 2),
     endDate: new Date(),
     key: "selection",
   });
   var [intervalObjectPrev, setIntervalObjectPrev] = useState({
-    startDate: subtractDays(new Date(), 2),
+    startDate: subtractHours(new Date(), 2),
     endDate: new Date(),
     key: "selection",
   });
@@ -225,10 +230,12 @@ function OldDashboardPage() {
     let startDateTimeRange = new Date(intervalObject["startDate"]);
     let endDateTimeRange = new Date(intervalObject["endDate"]);
 
-    startDateTimeRange.setHours(0);
     startDateTimeRange.setMinutes(0);
-    endDateTimeRange.setHours(23);
-    endDateTimeRange.setMinutes(59);
+    startDateTimeRange.setSeconds(0);
+    startDateTimeRange.setMilliseconds(0);
+    endDateTimeRange.setMinutes(0);
+    endDateTimeRange.setSeconds(0);
+    endDateTimeRange.setMilliseconds(0);
 
     console.log(
       "request uri is",
