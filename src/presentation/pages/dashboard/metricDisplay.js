@@ -14,13 +14,11 @@ const fetchDmsMetric = async (clientID, modelName, modelVersion, metricPath, int
     const uri = `${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/${metricPath}`;
         let startDateTimeRange = new Date(intervalObject["startDate"]);
         let endDateTimeRange = new Date(intervalObject["endDate"]);
-
-        startDateTimeRange.setMinutes(0);
-        startDateTimeRange.setSeconds(0);
-        startDateTimeRange.setMilliseconds(0);
-        endDateTimeRange.setMinutes(0);
-        endDateTimeRange.setSeconds(0);
-        endDateTimeRange.setMilliseconds(0);
+        
+        startDateTimeRange.setHours(0, 0, 0, 0);
+        endDateTimeRange.setHours(23, 59, 59, 0);
+        console.log('start', startDateTimeRange)
+        console.log('end', endDateTimeRange)
 
         const apiCalledAt = new Date()
         await axios
@@ -42,7 +40,7 @@ const fetchDmsMetric = async (clientID, modelName, modelVersion, metricPath, int
         .then((res) => {
             const currTime = new Date();
             const elapsedTime = currTime - apiCalledAt;
-            console.log(metricPath, elapsedTime);
+            //console.log(metricPath, elapsedTime);
             if(successCallback) successCallback(res.data);
         })
         .catch((e) => {
