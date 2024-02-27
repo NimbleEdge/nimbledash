@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ACCENT_COLOR, ACCESS_TOKEN, APP_BASE_DMS_URL, AUTH_METHOD, COGNITO_USERNAME, DEFAULT_ANALYTICS, USER_EMAIL } from "core/constants";
+import { ACCENT_COLOR, ACCESS_TOKEN, APP_BASE_DMS_URL, COGNITO_USERNAME, USER_EMAIL } from "core/constants";
 import { getAuthMethod } from "core/utils";
 import AnalyticsLineChart from "presentation/components/charts/line_chart";
 import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
@@ -40,7 +40,7 @@ const fetchDmsMetric = async (clientID, modelName, modelVersion, metricPath, int
         .then((res) => {
             const currTime = new Date();
             const elapsedTime = currTime - apiCalledAt;
-            //console.log(metricPath, elapsedTime);
+            console.log(metricPath, elapsedTime);
             if(successCallback) successCallback(res.data);
         })
         .catch((e) => {
