@@ -58,15 +58,31 @@ const DashboardPage = () => {
     const [isModalVisible, setModalVisiblity] = useState(true);
     const [clientID, setClientID] = useState("");
     const [clientIDList, setClientIDList] = useState([]);
-    const [internalInterval, setInternalInterval] = useState({
-        startDate: subtractHours(new Date(), 2),
-        endDate: new Date(),
-        key: "selection",
-    });
-    const [interval, setInterval] = useState({
-        startDate: subtractHours(new Date(), 2),
-        endDate: new Date(),
-        key: "selection",
+    const [internalInterval, setInternalInterval] = useState(() => 
+        {
+            let todaysStart = new Date();
+            todaysStart.setHours(0 ,0 ,0 ,0);
+            let todaysEnd = new Date();
+            todaysEnd.setHours(23, 59, 59, 99);
+            return {
+                startDate: todaysStart,
+                endDate: todaysEnd,
+                key: "selection",
+            }
+
+        });
+    const [interval, setInterval] = useState(() => 
+    {
+        let todaysStart = new Date();
+        todaysStart.setHours(0 ,0 ,0 ,0);
+        let todaysEnd = new Date();
+        todaysEnd.setHours(23, 59, 59, 0);
+        return {
+            startDate: todaysStart,
+            endDate: todaysEnd,
+            key: "selection",
+        }
+
     });
     const [isDatePickerVisible, toggleDatePicker] = useState(false);
     const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ACCENT_COLOR, ACCESS_TOKEN, APP_BASE_DMS_URL, AUTH_METHOD, COGNITO_USERNAME, DEFAULT_ANALYTICS, USER_EMAIL } from "core/constants";
+import { ACCENT_COLOR, ACCESS_TOKEN, APP_BASE_DMS_URL, COGNITO_USERNAME, USER_EMAIL } from "core/constants";
 import { getAuthMethod } from "core/utils";
 import AnalyticsLineChart from "presentation/components/charts/line_chart";
 import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
@@ -14,13 +14,11 @@ const fetchDmsMetric = async (clientID, modelName, modelVersion, metricPath, int
     const uri = `${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/${metricPath}`;
         let startDateTimeRange = new Date(intervalObject["startDate"]);
         let endDateTimeRange = new Date(intervalObject["endDate"]);
-
-        startDateTimeRange.setMinutes(0);
-        startDateTimeRange.setSeconds(0);
-        startDateTimeRange.setMilliseconds(0);
-        endDateTimeRange.setMinutes(0);
-        endDateTimeRange.setSeconds(0);
-        endDateTimeRange.setMilliseconds(0);
+        
+        startDateTimeRange.setHours(0, 0, 0, 0);
+        endDateTimeRange.setHours(23, 59, 59, 0);
+        console.log('start', startDateTimeRange)
+        console.log('end', endDateTimeRange)
 
         const apiCalledAt = new Date()
         await axios
