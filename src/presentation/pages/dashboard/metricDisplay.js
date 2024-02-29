@@ -17,10 +17,20 @@ const fetchDmsMetric = async (clientID, modelName, modelVersion, metricPath, int
         
         startDateTimeRange.setHours(0, 0, 0, 0);
         endDateTimeRange.setHours(23, 59, 59, 0);
-        console.log('start', startDateTimeRange)
-        console.log('end', endDateTimeRange)
 
-        const apiCalledAt = new Date()
+        const params = {
+            startTime: startDateTimeRange.toISOString(),
+            endTime: endDateTimeRange.toISOString(),
+        };
+
+        if(modelName.length > 0) {
+            params['modelName'] = modelName;
+        }
+
+        if(modelVersion.length > 0) {
+            params['modelVersion'] = modelVersion;
+        }
+
         await axios
         .get(uri, {
             headers: {
@@ -30,17 +40,9 @@ const fetchDmsMetric = async (clientID, modelName, modelVersion, metricPath, int
                 TokenId: localStorage.getItem(USER_EMAIL),
                 CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
             },
-            params: {
-                startTime: startDateTimeRange.toISOString(),
-                endTime: endDateTimeRange.toISOString(),
-                modelName: modelName,
-                modelVersion: modelVersion
-            },
+            params: params,
         })
         .then((res) => {
-            const currTime = new Date();
-            const elapsedTime = currTime - apiCalledAt;
-            console.log(metricPath, elapsedTime);
             if(successCallback) successCallback(res.data);
         })
         .catch((e) => {
