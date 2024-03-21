@@ -52,6 +52,7 @@ export const TABLE_STYLE_TYPE = {
 const defaultStyle = {};
 
 const Table = ({ data, customStyles= {}, STYLE = TABLE_STYLE_TYPE.STYLE1 }) => {
+    console.log("NEXA",data);
     
     const styles = {}; //= STYLE == TABLE_STYLE_TYPE.STYLE1 ? { ...defaultStyles1, ...customStyles } : { ...defaultStyles2, ...customStyles };
 

@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './modal.css';
 
-const Modal = ({ isOpen, onClose, children, customStyle = {}, closeButtonDisabled = false, hasSaveButton = false }) => {
+const Modal = ({ isOpen, onClose, children, customStyle = {}, closeButtonDisabled = false, hasSaveButton = false, seriesInfo = {
+  isSeries: false,
+  hasNext:false,
+  hasPrev:false,
+  onNext:()=>{},
+  onPrev:()=>{}
+} }) => {
     const [isModalOpen, setIsModalOpen] = useState(isOpen);
     const [clickCount, setClickCount] = useState(0);
     const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false);
@@ -41,6 +47,24 @@ const Modal = ({ isOpen, onClose, children, customStyle = {}, closeButtonDisable
               {hasSaveButton &&  
                 <div className={"modal-save-icon"} onClick={handleSave}>
                   <img className={"saveTick"} src={"/assets/icons/saveTick.svg"}></img>
+                </div>
+              }
+               {seriesInfo.isSeries &&  
+                <div className={`modal-next-icon`} onClick={()=>{
+                  if(seriesInfo.hasNext){
+                    seriesInfo.onNext();
+                  }
+                }}>
+                  <img className={"saveTick"} src={seriesInfo.hasNext?"/assets/icons/next.svg":"/assets/icons/saveTick.svg"}></img>
+                </div>
+              }
+                {seriesInfo.isSeries &&  
+                <div className={`modal-prev-icon ${seriesInfo.hasPrev?"":"disableButton"}`} onClick={()=>{
+                  if(seriesInfo.hasPrev){
+                    seriesInfo.onPrev();
+                  }
+                }}>
+                  <img className={"saveTick"} src={"/assets/icons/previous.svg"}></img>
                 </div>
               }
               {hasSaveButton && children({clickCount: clickCount})}

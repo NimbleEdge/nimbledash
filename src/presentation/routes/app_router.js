@@ -25,6 +25,7 @@ import RBACPage from "presentation/pages/rbac/rbac_page";
 import ContactPage from "presentation/pages/contact/contact_page";
 import AdminPage from "presentation/pages/admin/admin_page";
 import DashboardPage from "presentation/pages/dashboard/dashboard";
+import DeploymentPage from "presentation/pages/deployment/deployment_page";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -32,6 +33,8 @@ function AppRouter(props) {
   const canRender = useState(false);
 
   useEffect(() => {
+    dispatch(loaderActions.toggleLoader(false));
+    return;
     dispatch(loaderActions.toggleLoader(true));
     var currentBrowserUrl = window.location.href;
 
@@ -105,6 +108,7 @@ function AppRouter(props) {
       <Route path={ADMIN_PAGE_ROUTE} element={<AdminPage />} />
       <Route path={CONTACT_PAGE_ROUTE} element={<ContactPage />} />
       <Route path={RBAC_PAGE_ROUTE} element={<RBACPage />} />
+      <Route path="/deployments" element={<DeploymentPage />} />
       {localStorage.getItem(ACCESS_TOKEN) != null && (
         <Route path="/" element={<DashboardPage />} />
       )}
