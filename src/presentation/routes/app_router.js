@@ -33,8 +33,8 @@ function AppRouter(props) {
   const canRender = useState(false);
 
   useEffect(() => {
-    dispatch(loaderActions.toggleLoader(false));
-    return;
+    // dispatch(loaderActions.toggleLoader(false));
+    // return;
     dispatch(loaderActions.toggleLoader(true));
     var currentBrowserUrl = window.location.href;
 

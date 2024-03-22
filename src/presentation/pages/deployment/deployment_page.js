@@ -9,6 +9,11 @@ import '../admin/admin_page.css';
 import '../admin/TasksSection/tasksTable.css';
 import './deployment_page.css';
 import Modal from "presentation/components/modal/modal";
+import axios from "axios";
+import { AUTH_METHOD, ACCESS_TOKEN, CLIENT_ID, USER_EMAIL, COGNITO_USERNAME } from "core/constants";
+import { useDispatch } from "react-redux";
+import { loaderActions } from "presentation/redux/stores/store";
+import  { SelectionModal,MultiSelectionModal } from "./selection_modal";
 
 
 const deploymentActions = () => {
@@ -30,33 +35,26 @@ const deploymentActions = () => {
   )
 }
 
-const generateClickableCard = (title, subtitle) => {
-  return (
-    <div className="selectableCard clickableItem">
-      <img src={"/assets/icons/red_close.svg"} className='selectableCardCloseIcon' />
-      <div className="selectableCardContent">
-        <p className="selectableCardTitle">{title}</p>
-        <p className="selectableCardSubTitle">{subtitle}</p>
-      </div>
-    </div>
-  )
-}
 
-const generateClickableCardSelected = (title, subtitle, renderCloseButton = true) => {
-  return (
-    <div className="selectableCard clickableItem">
-      <img src={"/assets/icons/red_close.svg"} className={`selectableCardCloseIcon ${renderCloseButton ? "cardCanBeDeleted" : ""}`} />
-      <div className="selectableCardContent cardIsSelected">
-        <p className="selectableCardTitle">{title}</p>
-        <p className="selectableCardSubTitle">{subtitle}</p>
-      </div>
-    </div>
-  )
+
+const getModelNameWithVersionList = (dict) => {
+  var temp = [];
+  for (let modelName in dict) {
+    temp.push(`${modelName}(${dict[modelName]})`)
+  }
+
+  return temp;
 }
 
 const DeploymentPage = () => {
+  const [virginDeploymentApiData, setVirginDeploymentApiData] = useState([]);
+  const [virginCTList, setVirginCTList] = useState([]);
+  const [virginScriptList, setVirginScriptList] = useState([]);
+  const [virginModelList, setVirginModelList] = useState([]);
+
   const [seriesIndex, setSeriesIndex] = useState(0);
-  const [isCreateNewModelOpen, setIsCreateNewModelOpen] = useState(true);
+  const [isCreateNewModelOpen, setIsCreateNewModelOpen] = useState(false);
+  const dispatch = useDispatch();
   const closeModal = () => {
     setIsCreateNewModelOpen(false);
   };
@@ -77,39 +75,7 @@ const DeploymentPage = () => {
       { text: 'Actions' }
     ],
     body: [
-      [{ Component: TextOnlyComponent, data: { text: "State 1", customStyle: { fontWeight: 500, color: '#494949', fontSize: '14px' }, highlightOnHover: true } },
-      { Component: TextOnlyComponent, data: { text: "This is a sample mfking description", customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
-      {
-        Component: TagsListComponent, data: {
-          tags: ["ct-1-only"], tableData: {
-            headers: [{ text: 'Name' }, { text: 'Description' }],
-            body: [
-              [{ Component: TextOnlyComponent, data: { text: 'v' + "34.0.0", customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]
-            ]
-          }, tableTitle: "Linked Compatiblity Tag Details", truncationLimit: 2, expandable: true, highlightOnHover: true
-        }
-      },
-      {
-        Component: TagsListComponent, data: {
-          tags: ["v34.0.0"], tableData: {
-            headers: [{ text: 'Name' }, { text: 'Description' }],
-            body: [
-              [{ Component: TextOnlyComponent, data: { text: 'v' + "34.0.0", customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]
-            ]
-          }, tableTitle: "Linked Script Details", truncationLimit: 2, expandable: true, highlightOnHover: true
-        }
-      },
-      {
-        Component: TagsListComponent, data: {
-          tags: ["model-name-1", "model-name-2", "model-name-1", "model-name-2"], tableData: {
-            headers: [{ text: 'Name' }, { text: 'Version' }, { text: 'Description' }],
-            body: [
-              [{ Component: TextOnlyComponent, data: { text: 'v' + "34.0.0", customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "v1.4.3", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]
-            ]
-          }, tableTitle: "Linked Models Detail", truncationLimit: 2, expandable: true, highlightOnHover: true
-        }
-      },
-      { Component: deploymentActions, data: { taskVersion: "v34.0.0" } }]
+
     ],
   });
 
@@ -138,65 +104,12 @@ const DeploymentPage = () => {
       />
     </form>),
 
-    (<form className="expanded">
-      <p className="modalSubHeading">Select Script</p>
-      <input
-        id="searchScript"
-        type="text"
-        name="searchScript"
-        className="model-upload-custom-dropdown itemsPaddingVerySmall"
-        placeholder={"Search scripts"}
-      />
-      <div className="selectableCardsRow itemsPadding">
-        {generateClickableCardSelected("v65.0.0", "84883 users", false)}
-        {generateClickableCard("v12.0.0", "183736 users")}
-        {generateClickableCard("v43.0.0", "849 users")}
-      </div>
-    </form>),
+    SelectionModal(virginScriptList),
+    MultiSelectionModal(virginModelList)
+    ,
 
-    (<form className="expanded">
-      <p className="modalSubHeading">Selected Models</p>
-      <input
-        id="searchSelectedModel"
-        type="text"
-        name="searchSelectedModel"
-        className="model-upload-custom-dropdown itemsPaddingVerySmall"
-        placeholder={"Search models"}
-      />
-
-      <div className="selectableCardsRow itemsPadding">
-        {generateClickableCardSelected("nude_net (v2.7.1)", "84883 users")}
-      </div>
-
-      <p className="modalSubHeading">Select more</p>
-      <input
-        id="searchUnselectedModel"
-        type="text"
-        name="searchUnselectedModel"
-        className="model-upload-custom-dropdown itemsPaddingVerySmall fadedBackground"
-        placeholder={"Search models"}
-      />
-      <div className="selectableCardsRow itemsPadding">
-        {generateClickableCard("res_med", "183736 users")}
-        {generateClickableCard("eff_lite", "849 users")}
-      </div>
-    </form>),
-
-    (<form className="expanded">
-      <p className="modalSubHeading">Select Compatability Tag</p>
-      <input
-        id="searchCompatiblityTag"
-        type="text"
-        name="searchCompatiblityTag"
-        className="model-upload-custom-dropdown itemsPaddingVerySmall"
-        placeholder={"Search compatiblity tags"}
-      />
-      <div className="selectableCardsRow itemsPadding">
-        {generateClickableCardSelected("frontend-no-inputs", "84883 users", false)}
-        {generateClickableCard("broken-model", "183736 users")}
-        {generateClickableCard("old-legacy", "849 users")}
-      </div>
-    </form>),
+    SelectionModal(virginCTList),
+    ,
 
     (
       <div>
@@ -230,6 +143,181 @@ const DeploymentPage = () => {
     )
 
   ];
+
+  const preprocessDeploymentData = async (data) => {
+    var processedData = [];
+
+    for (let deployment of data) {
+      processedData.push(
+        [
+          { Component: TextOnlyComponent, data: { text: deployment.name, customStyle: { fontWeight: 500, color: '#494949', fontSize: '14px' }, highlightOnHover: true } },
+          { Component: TextOnlyComponent, data: { text: deployment.description, customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
+          {
+            Component: TagsListComponent, data: {
+              tags: [deployment.compatibilityTag], tableData: {
+                headers: [{ text: 'Name' }, { text: 'Description' }],
+                body: [
+                  [{ Component: TextOnlyComponent, data: { text: deployment.compatibilityTag, customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]
+                ]
+              }, tableTitle: "Linked Compatiblity Tag Details", truncationLimit: 2, expandable: true, highlightOnHover: true
+            }
+          },
+          {
+            Component: TagsListComponent, data: {
+              tags: [deployment.tasks.DEFAULT_SCRIPT], tableData: {
+                headers: [{ text: 'Name' }, { text: 'Description' }],
+                body: [
+                  [{ Component: TextOnlyComponent, data: { text: deployment.tasks.DEFAULT_SCRIPT, customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]
+                ]
+              }, tableTitle: "Linked Script Details", truncationLimit: 2, expandable: true, highlightOnHover: true
+            }
+          },
+          {
+            Component: TagsListComponent, data: {
+              tags: Object.keys(deployment.models), tableData: {
+                headers: [{ text: 'Name' }, { text: 'Version' }, { text: 'Description' }],
+                body: ((n) => Array.from({ length: Object.keys(deployment.models).length }, (_, i) => [{ Component: TextOnlyComponent, data: { text: Object.keys(deployment.models)[i], customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: deployment.models[Object.keys(deployment.models)[i]], customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]))(Object.keys(deployment.models))
+              }, tableTitle: "Linked Models Detail", truncationLimit: 2, expandable: true, highlightOnHover: true
+            }
+          },
+          { Component: deploymentActions, data: { taskVersion: "xxx" } }
+        ]
+      );
+    }
+
+    const newData = { ...deploymentViewData, body: processedData };
+    updateDeploymentViewData(newData);
+    dispatch(loaderActions.toggleLoader(false));
+  }
+
+  const getDeploymentData = async () => {
+    axios
+      .get("http://52.172.217.133:8081/mds/api/v2/admin/deployments",
+        {
+          headers: {
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
+            Token: localStorage.getItem(ACCESS_TOKEN),
+            ClientId: localStorage.getItem(CLIENT_ID),
+            TokenId: localStorage.getItem(USER_EMAIL),
+            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          },
+        })
+      .then((res) => {
+        setVirginDeploymentApiData(res.data.deployments);
+        preprocessDeploymentData(res.data.deployments);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+  }
+
+  const getModelsData = async () => {
+    axios
+      .get("http://52.172.217.133:8081/mds/api/v2/admin/models",
+        {
+          headers: {
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
+            Token: localStorage.getItem(ACCESS_TOKEN),
+            ClientId: localStorage.getItem(CLIENT_ID),
+            TokenId: localStorage.getItem(USER_EMAIL),
+            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          },
+        })
+      .then((res) => {
+        setVirginModelList(res.data.models);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+  }
+
+
+  const getCTData = async () => {
+    axios
+      .get("http://52.172.217.133:8081/mds/api/v2/admin/compatibilityTags",
+        {
+          headers: {
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
+            Token: localStorage.getItem(ACCESS_TOKEN),
+            ClientId: localStorage.getItem(CLIENT_ID),
+            TokenId: localStorage.getItem(USER_EMAIL),
+            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          },
+        })
+      .then((res) => {
+        setVirginCTList(res.data.tags);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+  }
+
+
+  const getScriptData = async () => {
+    axios
+      .get("http://52.172.217.133:8081/mds/api/v2/admin/tasks",
+        {
+          headers: {
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
+            Token: localStorage.getItem(ACCESS_TOKEN),
+            ClientId: localStorage.getItem(CLIENT_ID),
+            TokenId: localStorage.getItem(USER_EMAIL),
+            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          },
+        })
+      .then((res) => {
+        setVirginScriptList(res.data.tasks);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+  }
+
+
+  const searchFilter = (keyword) => {
+    const keywords = keyword.split(" ");
+    var temp = []
+
+    for (let deployment of virginDeploymentApiData) {
+      var isValid = true;
+      var modelSearchString = "";
+      for (let modelName in deployment.models) {
+        modelSearchString += modelName + deployment.models[modelName];
+      }
+
+      var candidateString = deployment.compatibilityTag + deployment.tasks.DEFAULT_SCRIPT + deployment.name + deployment.description + modelSearchString;
+
+      for (let singleKeyword of keywords) {
+        if (!candidateString.includes(singleKeyword)) {
+          isValid = false;
+          break;
+        }
+      }
+
+      if (isValid) {
+        temp.push(deployment);
+      }
+    }
+
+    if (keyword == "") {
+      temp = virginDeploymentApiData;
+    }
+    console.log(temp);
+    preprocessDeploymentData(temp);
+
+  }
+
+  useEffect(() => {
+    dispatch(loaderActions.toggleLoader(true));
+    getDeploymentData();
+    getModelsData();
+    getCTData();
+    getScriptData();
+  }, []);
 
   return (
     <>
@@ -278,6 +366,9 @@ const DeploymentPage = () => {
                     name="searchSelectedModel"
                     className="model-upload-custom-dropdown itemsPaddingVerySmall"
                     placeholder={"Search"}
+                    onChange={(res) => {
+                      searchFilter(res.target.value);
+                    }}
                   />
                 </form>
 
