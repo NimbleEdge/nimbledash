@@ -89,10 +89,25 @@
     max-height: 368px; 
 }
 
+.selectableCardsRowHalf {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+    overflow-y: auto; 
+    max-height: 160px; 
+}
+
+.selectableCardsRowVertical {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+}
+
 .selectableCard {
     position: relative;
     height: 90px;
     width: 100%; 
+    min-width: 240px;
     padding-right: 8px; 
     padding-top: 8px;
 }

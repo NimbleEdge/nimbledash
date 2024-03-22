@@ -13,7 +13,7 @@ import axios from "axios";
 import { AUTH_METHOD, ACCESS_TOKEN, CLIENT_ID, USER_EMAIL, COGNITO_USERNAME } from "core/constants";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
-import  { SelectionModal,MultiSelectionModal } from "./selection_modal";
+import { SelectionModal, MultiSelectionModal } from "./selection_modal";
 
 
 const deploymentActions = () => {
@@ -51,6 +51,13 @@ const DeploymentPage = () => {
   const [virginCTList, setVirginCTList] = useState([]);
   const [virginScriptList, setVirginScriptList] = useState([]);
   const [virginModelList, setVirginModelList] = useState([]);
+  const [deploymentSelections, setDeploymentSelections] = useState({
+    name: "",
+    description: "",
+    scriptIndex: -1,
+    modelIndexes: [],
+    ctIndex: -1
+  });
 
   const [seriesIndex, setSeriesIndex] = useState(0);
   const [isCreateNewModelOpen, setIsCreateNewModelOpen] = useState(false);
@@ -104,40 +111,47 @@ const DeploymentPage = () => {
       />
     </form>),
 
-    SelectionModal(virginScriptList),
-    MultiSelectionModal(virginModelList)
-    ,
-
-    SelectionModal(virginCTList),
-    ,
+    SelectionModal(virginScriptList, deploymentSelections.scriptIndex, (selectedIndex) => {
+      setDeploymentSelections({ ...deploymentSelections, scriptIndex: selectedIndex });
+    }),
+    MultiSelectionModal(virginModelList, deploymentSelections.modelIndexes, (selectedIndexList) => {
+      setDeploymentSelections({ ...deploymentSelections, modelIndexes: selectedIndexList });
+    }),
+    SelectionModal(virginCTList, deploymentSelections.ctIndex, (selectedIndex) => {
+      setDeploymentSelections({ ...deploymentSelections, ctIndex: selectedIndex });
+    }),
 
     (
       <div>
         <p className="modalSubHeading">Please review changes. You won’t be able to edit the values afterwards.</p>
         <div className="reviewRow" onClick={() => { setSeriesIndex(0) }}>
           <p className="reviewRowKey">Deployment Name</p>
-          <p className="reviewRowValue">2.5.0</p>
+          <p className="reviewRowValue">{deploymentSelections.name}</p>
         </div>
 
         <div className="reviewRow" onClick={() => { setSeriesIndex(0) }}>
           <p className="reviewRowKey">Deployment Description</p>
-          <p className="reviewRowValue">This is an extremelty long description of the model, isse zyada badi description ki zaroorat nhi!</p>
+          <p className="reviewRowValue">{deploymentSelections.description}</p>
         </div>
 
 
         <div className="reviewRow" onClick={() => { setSeriesIndex(1) }}>
           <p className="reviewRowKey">Workflow Script</p>
-          <p className="reviewRowValue">v52.0.0</p>
+          <p className="reviewRowValue">{deploymentSelections.scriptIndex != -1 && virginScriptList[deploymentSelections.scriptIndex].version}</p>
         </div>
 
         <div className="reviewRow" onClick={() => { setSeriesIndex(2) }}>
           <p className="reviewRowKey">Models</p>
-          <p className="reviewRowValue">efficient-lite-quant0(v2.3.4), efficient-lite-quant0(v2.3.4), efficient-lite-quant0(v2.3.4), efficient-lite-quant0(v2.3.4)</p>
+          <p className="reviewRowValue">
+            {deploymentSelections.modelIndexes.map((selectedModelIndex) => (
+              `${virginModelList[selectedModelIndex].modelName}(${virginModelList[selectedModelIndex].modelVersion})`
+            )).join(', ')}
+          </p>
         </div>
 
         <div className="reviewRow" onClick={() => { setSeriesIndex(3) }}>
           <p className="reviewRowKey">Compatiblity Tag</p>
-          <p className="reviewRowValue">no-user-input-v3</p>
+          <p className="reviewRowValue">{deploymentSelections.ctIndex != -1 && virginCTList[deploymentSelections.ctIndex].name}</p>
         </div>
       </div>
     )
