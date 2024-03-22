@@ -78,10 +78,22 @@ export function SelectionModal(data, preselectedIndex, onSelectionChange) {
     );
 }
 
+const checkIfModelIsAlreadySelected = (data, selectedIndexes, currentModelName) => {
+    for (let index of selectedIndexes) {
+        if (data[index].modelName == currentModelName) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 export function MultiSelectionModal(data, preselected, onSelectionChange) {
     const [selected, setSelected] = useState(preselected);
     const [currentClickIndex, setCurrentClickIndex] = useState(-1);
     const [searchKeyword, setSearchKeyword] = useState("");
+    var modelsRendered = [];
+
 
     return (
         <form className="expanded">
@@ -114,7 +126,8 @@ export function MultiSelectionModal(data, preselected, onSelectionChange) {
                 />
                 <div className="selectableCardsRowHalf itemsPadding">
                     {data.map((obj, index) => {
-                        if (obj.modelName.includes(searchKeyword)) {
+                        if (obj.modelName.includes(searchKeyword) && !checkIfModelIsAlreadySelected(data, selected, obj.modelName) && !modelsRendered.includes(obj.modelName)) {
+                            modelsRendered.push(obj.modelName);
                             return <ClickableCard onSelect={() => {
                                 setCurrentClickIndex(index);
                             }} key={index} title={obj.modelName} subtitle={`N/A users`} isModelSelection={false} isAlreadySelected={undefined} />;
