@@ -14,6 +14,7 @@ import { AUTH_METHOD, ACCESS_TOKEN, CLIENT_ID, USER_EMAIL, COGNITO_USERNAME } fr
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { SelectionModal, MultiSelectionModal } from "./selection_modal";
+import { toast } from "react-toastify";
 
 
 const deploymentActions = () => {
@@ -95,6 +96,10 @@ const DeploymentPage = () => {
         name="deploymentName"
         className="model-upload-custom-dropdown itemsPadding"
         placeholder={"Enter name here"}
+        value={deploymentSelections.name}
+        onChange={(res) => {
+          setDeploymentSelections({ ...deploymentSelections, name: res.target.value });
+        }}
       />
 
       <p className="modalSubHeading">Description</p>
@@ -103,10 +108,14 @@ const DeploymentPage = () => {
         name="deploymentDescription"
         className="model-upload-custom-dropdown"
         placeholder={"Enter description here"}
+        value={deploymentSelections.description}
         style={{
           height: "300px",
           paddingTop: "16px",
           outline: "none"
+        }}
+        onChange={(res) => {
+          setDeploymentSelections({ ...deploymentSelections, description: res.target.value });
         }}
       />
     </form>),
@@ -288,7 +297,37 @@ const DeploymentPage = () => {
       .catch((e) => {
         console.log(e);
       });
+  }
 
+  const createDeployment = async () => {
+    axios
+      .post("http://52.172.217.133:8081/mds/api/v2/admin/deployment",
+        {
+          "compatibilityTag": virginCTList[deploymentSelections.ctIndex].name,
+          "models": deploymentSelections.modelIndexes.reduce((acc, modelIndex) => (acc[virginModelList[modelIndex].modelName] = virginModelList[modelIndex].modelVersion, acc), {}),
+          "tasks": {
+            "DEFAULT_SCRIPT": virginScriptList[deploymentSelections.scriptIndex].version
+          },
+          "name": deploymentSelections.name,
+          "decsription": deploymentSelections.description,
+        },
+        {
+          headers: {
+            AuthMethod: localStorage.getItem(AUTH_METHOD),
+            Token: localStorage.getItem(ACCESS_TOKEN),
+            ClientId: localStorage.getItem(CLIENT_ID),
+            TokenId: localStorage.getItem(USER_EMAIL),
+            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          },
+        })
+      .then((res) => {
+        console.log(res.data);
+        window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(e.message);
+      });
   }
 
 
@@ -345,6 +384,10 @@ const DeploymentPage = () => {
           },
           onPrev: () => {
             setSeriesIndex(seriesIndex - 1);
+          },
+          onDone: () => {
+            createDeployment();
+            setIsCreateNewModelOpen(false);
           }
         }}
           isOpen={isCreateNewModelOpen} onClose={closeModal} closeButtonDisabled={false} customStyle={{ maxHeight: '90%', height: '654px' }} >

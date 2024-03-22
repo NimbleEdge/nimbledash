@@ -41,6 +41,7 @@ const SelectedCard = ({ title, subtitle, renderCloseButton = true }) => {
 
 export function SelectionModal(data, preselectedIndex, onSelectionChange) {
     const [selectedIndex, setSelectedIndex] = useState(preselectedIndex);
+    const [searchKeyword, setSearchKeyword] = useState("");
 
     return (
         <form className="expanded">
@@ -51,6 +52,10 @@ export function SelectionModal(data, preselectedIndex, onSelectionChange) {
                 name="searchScript"
                 className="model-upload-custom-dropdown itemsPaddingVerySmall"
                 placeholder="Search scripts"
+                value={searchKeyword}
+                onChange={(res) => {
+                    setSearchKeyword(res.target.value);
+                }}
             />
             <div className="selectableCardsRow itemsPadding">
 
@@ -61,7 +66,7 @@ export function SelectionModal(data, preselectedIndex, onSelectionChange) {
 
                 {data.map((obj, index) => {
                     let title = obj.version || obj.name;
-                    if (index != selectedIndex) {
+                    if (index != selectedIndex && title.includes(searchKeyword)) {
                         return <ClickableCard onSelect={() => {
                             setSelectedIndex(index);
                             onSelectionChange(index);
@@ -76,17 +81,11 @@ export function SelectionModal(data, preselectedIndex, onSelectionChange) {
 export function MultiSelectionModal(data, preselected, onSelectionChange) {
     const [selected, setSelected] = useState(preselected);
     const [currentClickIndex, setCurrentClickIndex] = useState(-1);
+    const [searchKeyword, setSearchKeyword] = useState("");
 
     return (
         <form className="expanded">
             <p className="modalSubHeading">Selected Models</p>
-            <input
-                id="searchSelectedModel"
-                type="text"
-                name="searchSelectedModel"
-                className="model-upload-custom-dropdown itemsPaddingVerySmall"
-                placeholder="Search models"
-            />
 
             {currentClickIndex == -1 && (<div>
                 <div className="selectableCardsRowVertical itemsPadding">
@@ -108,12 +107,18 @@ export function MultiSelectionModal(data, preselected, onSelectionChange) {
                     name="searchUnselectedModel"
                     className="model-upload-custom-dropdown itemsPaddingVerySmall fadedBackground"
                     placeholder="Search models"
+                    value={searchKeyword}
+                    onChange={(res) => {
+                        setSearchKeyword(res.target.value);
+                    }}
                 />
                 <div className="selectableCardsRowHalf itemsPadding">
                     {data.map((obj, index) => {
-                        return <ClickableCard onSelect={() => {
-                            setCurrentClickIndex(index);
-                        }} key={index} title={obj.modelName} subtitle={`N/A users`} isModelSelection={false} isAlreadySelected={undefined} />;
+                        if (obj.modelName.includes(searchKeyword)) {
+                            return <ClickableCard onSelect={() => {
+                                setCurrentClickIndex(index);
+                            }} key={index} title={obj.modelName} subtitle={`N/A users`} isModelSelection={false} isAlreadySelected={undefined} />;
+                        }
                     })}
                 </div>
             </div>)}
@@ -121,7 +126,6 @@ export function MultiSelectionModal(data, preselected, onSelectionChange) {
             {currentClickIndex != -1 && (
                 <div className="selectableCardsRow itemsPadding">
                     {data.map((obj, index) => {
-                        console.log(obj);
                         if (obj.modelName == data[currentClickIndex].modelName) {
                             return <ClickableCard onSelect={() => {
                                 if (!selected.includes(index)) {
