@@ -14,9 +14,7 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
     const [tagsViewData, updateTagsViewData] = useState({
         headers: [
             {text: 'Compatibility Tags'}, 
-            {text: 'Description'}, 
-            {text: 'Task Versions'}, 
-            {text: 'Models'}
+            {text: 'Description'}
         ],
         body: [],
     });
@@ -53,8 +51,6 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
             tagsViewData.body.push([
                 {Component: TagNameColumnComponent, data: {tagName: tag, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag], highlightOnHover: true}}, 
                 {Component: TruncatedDescription, data: {message: tagsDetails[tag]['description'], maxLength: 400, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag], tagName: tag, highlightOnHover: true}}, 
-                {Component: TagsListComponent, data: {tags: tasksArray, tableData: taskTableData, tableTitle: "Linked Task Versions",truncationLimit: 2, expandable: true, highlightOnHover: true}}, 
-                {Component: TagsListComponent, data: {tags: modelsArray, truncationLimit: 2, tableData: modelTableData, tableTitle: "Linked Models", expandable: true, highlightOnHover: true}}
             ]);
         }
         updateTagsViewData({...tagsViewData});

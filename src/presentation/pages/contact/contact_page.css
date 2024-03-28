@@ -1,6 +1,9 @@
-.adminPage {
-    display: flex;
-  }
+.contactPage {
+  /* padding-left: 152px; */
+  padding-top: 50px;
+  /* padding-right: 50px; */
+  /* padding-bottom: 50px; */
+}
   
   .admin-page-left-pane {
     margin: 72px 80px;

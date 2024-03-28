@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { SelectionModal, MultiSelectionModal } from "./selection_modal";
 import { toast } from "react-toastify";
+import { Toast } from "react-bootstrap";
 
 
 const deploymentActions = () => {
@@ -345,7 +346,7 @@ const DeploymentPage = () => {
       var candidateString = deployment.compatibilityTag + deployment.tasks.DEFAULT_SCRIPT + deployment.name + deployment.description + modelSearchString;
 
       for (let singleKeyword of keywords) {
-        if (!candidateString.includes(singleKeyword)) {
+        if (!candidateString.toLowerCase().includes(singleKeyword.toLowerCase())) {
           isValid = false;
           break;
         }
@@ -380,7 +381,16 @@ const DeploymentPage = () => {
           hasNext: seriesIndex != 4,
           hasPrev: seriesIndex != 0,
           onNext: () => {
-            setSeriesIndex(seriesIndex + 1);
+            if ((seriesIndex == 0 && (deploymentSelections.name == "" || deploymentSelections.description == "")) ||
+              (seriesIndex == 1 && deploymentSelections.scriptIndex == -1) ||
+              (seriesIndex == 2 && deploymentSelections.modelIndexes.length == 0) ||
+              (seriesIndex == 3 && deploymentSelections.ctIndex == -1)
+            ) {
+              toast.error("Invalid values");
+            }
+            else {
+              setSeriesIndex(seriesIndex + 1);
+            }
           },
           onPrev: () => {
             setSeriesIndex(seriesIndex - 1);
@@ -395,10 +405,18 @@ const DeploymentPage = () => {
             <div className='tagsListModalHeader'>{seriesTitles[seriesIndex]}</div>
 
             <div className="progressIndicator">
-              <div onClick={() => { setSeriesIndex(0) }} className={`singleIndicator ${seriesIndex == 0 ? "inProgress" : "finished"}`}></div>
-              <div onClick={() => { setSeriesIndex(1) }} className={`singleIndicator ${seriesIndex < 1 ? "" : seriesIndex == 1 ? "inProgress" : "finished"}`}></div>
-              <div onClick={() => { setSeriesIndex(2) }} className={`singleIndicator ${seriesIndex < 2 ? "" : seriesIndex == 2 ? "inProgress" : "finished"}`}></div>
-              <div onClick={() => { setSeriesIndex(3) }} className={`singleIndicator ${seriesIndex < 3 ? "" : seriesIndex == 3 ? "inProgress" : "finished"}`}></div>
+              <div onClick={() => {
+                setSeriesIndex(0)
+              }} className={`singleIndicator ${seriesIndex == 0 ? "inProgress" : "finished"}`}></div>
+              <div onClick={() => {
+                if (seriesIndex > 1 || !(deploymentSelections.name == "" || deploymentSelections.description == "")) { setSeriesIndex(1) } else { toast.error("Invalid values"); }
+              }} className={`singleIndicator ${seriesIndex < 1 ? "" : seriesIndex == 1 ? "inProgress" : "finished"}`}></div>
+              <div onClick={() => {
+                if (seriesIndex > 2 || !(deploymentSelections.scriptIndex == -1)) { setSeriesIndex(2) } else { toast.error("Invalid values"); }
+              }} className={`singleIndicator ${seriesIndex < 2 ? "" : seriesIndex == 2 ? "inProgress" : "finished"}`}></div>
+              <div onClick={() => {
+                if (seriesIndex > 3 || !(deploymentSelections.modelIndexes.length == 0)) { setSeriesIndex(3) } else { toast.error("Invalid values"); }
+              }} className={`singleIndicator ${seriesIndex < 3 ? "" : seriesIndex == 3 ? "inProgress" : "finished"}`}></div>
             </div>
 
             {seriesPages[seriesIndex]}

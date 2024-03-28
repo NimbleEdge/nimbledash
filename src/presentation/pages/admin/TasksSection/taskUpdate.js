@@ -14,7 +14,7 @@ const upadteTaskView = {
     CT_SELECTION_VIEW: 1
 }
 
-const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, onCompletion, updateTasksList }) => {
+const TaskUpdate = ({ preSelectedTagsList = [], allTagsList, isNewTask = false, onCompletion, updateTasksList }) => {
     const dispatch = useDispatch();
     const updateTypes = ["Build", "Update", "Fix"];
     const [selectedUpdateTypeIndex, setSelectedUpdateTypeIndex] = useState(0);
@@ -28,7 +28,7 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
     const tagSelectionToggle = (card) => {
         setSelectedDeploymentTags(prevSelectedTags => {
             if (prevSelectedTags.includes(card.title)) {
-                 return prevSelectedTags.filter(selectedTag => selectedTag !== card.title);
+                return prevSelectedTags.filter(selectedTag => selectedTag !== card.title);
             } else {
                 return [...prevSelectedTags, card.title];
             }
@@ -55,102 +55,75 @@ const TaskUpdate = ({preSelectedTagsList = [], allTagsList, isNewTask = false, o
             };
             reader.readAsText(file);
         } else {
-        toast.error("Upload a .py file", {
-            toastId: "errorToast",
-        });
+            toast.error("Upload a .py file", {
+                toastId: "errorToast",
+            });
         }
     };
 
     const handleSubmit = () => {
-        if(isNewTask) {
-            createNewTask({taskName: DEFAULT_TASK_NAME, deploymentTags: selectedDeploymentTags, taskCode: fileContent, description: description, onCompletion, updateTasksList: updateTasksList, dispatch: dispatch})
+        if (isNewTask) {
+            createNewTask({ taskName: DEFAULT_TASK_NAME, deploymentTags: selectedDeploymentTags, taskCode: fileContent, description: description, onCompletion, updateTasksList: updateTasksList, dispatch: dispatch })
 
         } else {
-            updateTask({taskName: DEFAULT_TASK_NAME, deploymentTags: selectedDeploymentTags, taskCode: fileContent, updateType: selectedUpdateTypeIndex + 1, description: description, onCompletion, updateTasksList: updateTasksList});
+            updateTask({ taskName: DEFAULT_TASK_NAME, deploymentTags: selectedDeploymentTags, taskCode: fileContent, updateType: selectedUpdateTypeIndex + 1, description: description, onCompletion, updateTasksList: updateTasksList });
         }
     };
 
-  return (
-    <>
-        {currentView == upadteTaskView.UPDATE_TASK_VIEW &&
-        <div className="modelUploadModal">
-                <p className="heading4">{isNewTask ? 'Upload' : 'Update'} {'Workflow Script'}</p>
-                <div className="upload-card-grid">
-                    <div className="upload-card clickable" onClick={handleDivClick}>
-                        <div className="upload-card-content">
-                            <img src="/assets/icons/upload.svg"></img>
-                            <p className="heading6 margin-top-8">Upload Workflow Script</p>
-                            {fileContent != '' &&
-                                <>
-                                    <p className="subHeading2 selected-files">File: {fileInfo.name}</p>
-                                    <p className="subHeading2 selected-files">Size: {fileInfo.size}</p>
-                                </>
-                            }
+    return (
+        <>
+            {currentView == upadteTaskView.UPDATE_TASK_VIEW &&
+                <div className="modelUploadModal">
+                    <p className="heading4">{isNewTask ? 'Upload' : 'Update'} {'Workflow Script'}</p>
+                    <div className="model-upload-update-card-grid">
+                        <div className="upload-card-new-flow clickable" onClick={handleDivClick}>
+                            <div className="upload-card-content">
+                                <img src="/assets/icons/upload.svg"></img>
+                                <p className="heading6 margin-top-8">Upload Workflow Script</p>
+                                {fileContent != '' &&
+                                    <>
+                                        <p className="subHeading2 selected-files">File: {fileInfo.name}</p>
+                                        <p className="subHeading2 selected-files">Size: {fileInfo.size}</p>
+                                    </>
+                                }
+                            </div>
                         </div>
-                    </div>
-                    <input type="file" accept=".py" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} />
-                    {
-                        // !isNewTask &&
-                        // <DropdownComponent
-                        //     selectedItemIndex={selectedUpdateTypeIndex}
-                        //     onChangeCallback={(selectedIndex) => {
-                        //         setSelectedUpdateTypeIndex(selectedIndex)
-                        //     }}
-                        //     itemList={updateTypes}
-                        //     customClass={"model-upload-custom-dropdown"}
-                        // ></DropdownComponent>
-                    }
-                    {/* {
-                        isNewTask &&
+                        <input type="file" accept=".py" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} />
                         <input
                             type="text"
-                            className="model-upload-custom-dropdown"
-                            placeholder={"Name"}
-                            value={DEFAULT_TASK_NAME}
-                            readOnly
+                            className="model-upload-name-input-new-flow"
+                            placeholder={"Description"}
+                            value={description}
+                            onChange={handleDescriptionChange}
+                            maxLength={100}
                         />
-                    } */}
-                    <input
-                        type="text"
-                        className="task-update-description"
-                        placeholder={"Description"}
-                        value={description}
-                        onChange={handleDescriptionChange}
-                        maxLength={100}
-                    />
-                    <div className="tagsBtn" onClick={() => setCurrentView(upadteTaskView.CT_SELECTION_VIEW)}>
-                        {selectedDeploymentTags.length == 0 ? "Configure Compatability Tags" : selectedDeploymentTags.map((tag, index) => {
-                            if(index == selectedDeploymentTags.length - 1) return tag;
-                            else return tag + ", ";
-                         })}
                     </div>
+                    <button className={`uploadBtn ${description == '' || fileContent == '' ? 'disabledBtn' : ''}`} onClick={handleSubmit}>Update</button>
                 </div>
-                <button className={`uploadBtn ${description == '' || fileContent == '' ? 'disabledBtn' : ''}`} onClick={handleSubmit}>Update</button>
-            </div>
             }
             {
-                currentView == upadteTaskView.CT_SELECTION_VIEW && 
+                currentView == upadteTaskView.CT_SELECTION_VIEW &&
                 <div>
                     <TagSelection allTagsDetailsList={allTagsList} preSelectedTagsList={selectedDeploymentTags} saveSelectedTags={setSelectedDeploymentTags} setCurrentView={setCurrentView} />
                 </div>
             }
-    </>
-  );
+        </>
+    );
 }
 
 export default TaskUpdate;
 
-const TagSelection = ({allTagsDetailsList, preSelectedTagsList = [], saveSelectedTags, setCurrentView}) => {
+const TagSelection = ({ allTagsDetailsList, preSelectedTagsList = [], saveSelectedTags, setCurrentView }) => {
     const [selectedTags, setSelectedTags] = useState(preSelectedTagsList);
     const tagsSearchList = [];
     allTagsDetailsList.forEach(tag => {
-        if(!selectedTags.includes(tag.name)) {
-            tagsSearchList.push({searchText: tag.name});
+        if (!selectedTags.includes(tag.name)) {
+            tagsSearchList.push({ searchText: tag.name });
         }
     })
     const handleItemClick = (card) => {
         setSelectedTags(prevTags => {
-            if(!prevTags.includes(card.title)) return [...prevTags, card.title];
+            if (!prevTags.includes(card.title)) return [...prevTags, card.title];
             return prevTags;
         })
     }
@@ -166,7 +139,7 @@ const TagSelection = ({allTagsDetailsList, preSelectedTagsList = [], saveSelecte
     return (
         <div className={'tag-selection-container'}>
             <div className={"modal-save-icon"} onClick={handleSave}>
-                  <img className={"saveTick"} src={"/assets/icons/saveTick.svg"}></img>
+                <img className={"saveTick"} src={"/assets/icons/saveTick.svg"}></img>
             </div>
             <img className={"backArrow-modelUpload-tagSelection"} src={"/assets/icons/backArrow.svg"} onClick={() => setCurrentView(upadteTaskView.UPDATE_TASK_VIEW)}></img>
             <Search searchList={tagsSearchList} handleItemClick={handleItemClick} placeholder="Search Tags" />
@@ -174,7 +147,7 @@ const TagSelection = ({allTagsDetailsList, preSelectedTagsList = [], saveSelecte
                 <div className="selected-tags-list-header">Selected Tags</div>
                 <div className="selected-tags-list">
                     {selectedTags.map(tag =>
-                        <RectCard card={{title: tag}} hasRemoveButton handleRemove={handleTagRemoval} customStyle={{box: {marginRight: '15px'}}}/>
+                        <RectCard card={{ title: tag }} hasRemoveButton handleRemove={handleTagRemoval} customStyle={{ box: { marginRight: '15px' } }} />
                     )}
                 </div>
             </div>

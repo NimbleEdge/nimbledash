@@ -113,7 +113,6 @@ const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList
     const [modelDetailsView, updateModelDetailsView] = useState({
         headers: [
             {text: 'Versions'}, 
-            {text: 'Compatability Tags'}, 
             {text: 'Active Users ( last 7 days )'},
             {text: 'Actions'},
         ],
@@ -142,16 +141,9 @@ const ModelDetailsTable = ({modelDetails, modelName, allTagsList, updateTagsList
     useEffect(() => {
         modelDetailsView.body = [];
         for(const version in modelDetails['versionToTags']) {
-            let tagsList = [];
-            let existingTags = {};
-            for(const tag in  modelDetails['versionToTags'][version]) {
-                tagsList.push(tag);
-                existingTags[tag] = true;
-            }
             modelDetailsView.body.push([
-                {Component: VersionColumnComponent, data: {version: version, existingTags: existingTags, allTagsList: allTagsList, modelName: modelName, updateTagsList: updateTagsList, highlightOnHover: true}}, 
-                {Component: TagsListComponent, data: {tags: [...tagsList], highlightOnHover: true}}, 
-                {Component: TextOnlyComponent, data:{text: activeUsers[version], highlightOnHover: true}},
+                {Component: TextOnlyComponent, data: {text: version}}, 
+                {Component: TextOnlyComponent, data:{text: activeUsers[version]}},
                 {Component: ActionColComponent, data: {modelName: modelName, modelVersion: version}}
             ]);
         }

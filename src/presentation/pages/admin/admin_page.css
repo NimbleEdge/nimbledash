@@ -183,3 +183,7 @@
   align-items: center;
   background-color: #F5F5FF;
 }
+
+.custom-height{
+  height: 380px;
+}

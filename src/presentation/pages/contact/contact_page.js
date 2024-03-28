@@ -56,7 +56,7 @@ function ContactPage() {
   };
 
   return (
-    <div className="adminPage">
+    <div className="contactPage">
       <div className="admin-page-left-pane">
         <div className="page-title">
           <p className="heading3">Contact Us</p>

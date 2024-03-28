@@ -71,5 +71,7 @@
     background: rgba(101, 101, 255, 0.1);
     border-radius: 8px;
     position: relative;
-    height: 336px;
+    /* flex-grow: 1; */
+    height: 380px;
   }
+
