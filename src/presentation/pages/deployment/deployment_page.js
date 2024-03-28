@@ -76,7 +76,7 @@ const DeploymentPage = () => {
   ]
   const [deploymentViewData, updateDeploymentViewData] = useState({
     headers: [
-      { text: 'State Name' },
+      { text: 'Name' },
       { text: 'Description' },
       { text: 'Compatability Tag' },
       { text: 'WorkflowScript' },
@@ -426,8 +426,8 @@ const DeploymentPage = () => {
       }
       <div className={`flexColumn adminPage`}>
         <div className={`flexColumn adminPageHeader`}>
-          <div className={`adminPageTitle`}>Deployment Management</div>
-          <div className={`adminPageSubtitle`}>Create New Deployments</div>
+          <div className={`adminPageTitle`}>Edge Deployment Management</div>
+          <div className={`adminPageSubtitle`}>Manage Deployments</div>
         </div>
         <div className={`adminPageContent`}>
           {

@@ -92,7 +92,7 @@ function SideBar() {
               (currentTab == 1 ? "selected-desc " : "") + "sidebar-item-desc"
             }
           >
-            {'Model Management'}
+            {'Admin Panel'}
           </p>
         </div>
 

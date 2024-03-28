@@ -1,119 +1,122 @@
+.adminPage {
+  display: flex;
+}
+
 .contactPage {
   /* padding-left: 152px; */
-  padding-top: 50px;
+  padding-top:4px;
   /* padding-right: 50px; */
   /* padding-bottom: 50px; */
 }
-  
-  .admin-page-left-pane {
-    margin: 72px 80px;
-    margin-left: 152px;
-    flex: 1.5;
-  }
-  
-  .admin-page-right-pane {
-    margin: 72px 80px;
-    flex: 4;
-  }
-  
-  .model-holder-card {
-    padding: 12px 20px;
-    background: rgba(101, 101, 255, 0.8);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 4px;
-  }
-  
-  .pane-title {
-    margin-bottom: 24px;
-  }
-  
-  .upload-card-grid {
-    margin-top: 32px;
-    display: grid;
-    grid-template-rows: 7fr 1fr;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 12px;
-  }
-  
-  .upload-card {
-    background: rgba(101, 101, 255, 0.1);
-    border-radius: 8px;
-    grid-column: 1/3;
-    position: relative;
-  }
-  
-  .upload-card-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-  }
-  
-  .upload-spinner {
-    height: 48px;
-    background: rgba(101, 101, 255, 0.1);
-    border-radius: 8px;
-  }
-  
-  .invisible {
-    color: white;
-  }
-  
-  .upload-spinner {
-    padding: 0 24px;
-  }
-  
-  .admin-spinner-text {
-    margin: auto 0;
-  }
-  
-  .model-upload-custom-dropdown {
-    flex: 1;
-    height: 48px;
-    background: rgba(101, 101, 255, 0.1);
-    border-radius: 8px;
-    position: relative;
-    border: none;
-    text-align: start;
-    padding: 0 24px;
-    color: black;
-    width: 100%;
-  }
-  
-  .upload-button {
-    width: 180px;
-    height: 48px;
-    color: white;
-    background: #222222;
-    border-radius: 8px;
-    font-weight: 600;
-    position: relative;
-    margin: 0 auto;
-    margin-top: 52px;
-  }
-  
-  .center-text{
-      position: absolute;
-      text-align: center;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-  }
-  
-  .textfield-placeholder{
-      border: 0;
-      background-color: transparent;
-      margin: auto 0;
-  
-  }
-  
-  .flex-vertical{
-  }
-  
-  .selected-files{
-      /* margin-top: 4px; */
-  }
+
+.admin-page-left-pane {
+  margin: 72px 80px;
+  margin-left: 152px;
+  flex: 1.5;
+}
+
+.admin-page-right-pane {
+  margin: 72px 80px;
+  flex: 4;
+}
+
+.model-holder-card {
+  padding: 12px 20px;
+  background: rgba(101, 101, 255, 0.8);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.pane-title {
+  margin-bottom: 24px;
+}
+
+.upload-card-grid {
+  margin-top: 32px;
+  display: grid;
+  grid-template-rows: 7fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 12px;
+}
+
+.upload-card {
+  background: rgba(101, 101, 255, 0.1);
+  border-radius: 8px;
+  grid-column: 1/3;
+  position: relative;
+}
+
+.upload-card-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.upload-spinner {
+  height: 48px;
+  background: rgba(101, 101, 255, 0.1);
+  border-radius: 8px;
+}
+
+.invisible {
+  color: white;
+}
+
+.upload-spinner {
+  padding: 0 24px;
+}
+
+.admin-spinner-text {
+  margin: auto 0;
+}
+
+.model-upload-custom-dropdown {
+  flex: 1;
+  height: 48px;
+  background: rgba(101, 101, 255, 0.1);
+  border-radius: 8px;
+  position: relative;
+  border: none;
+  text-align: start;
+  padding: 0 24px;
+  color: black;
+  width: 100%;
+}
+
+.upload-button {
+  width: 180px;
+  height: 48px;
+  color: white;
+  background: #222222;
+  border-radius: 8px;
+  font-weight: 600;
+  position: relative;
+  margin: 0 auto;
+  margin-top: 52px;
+}
+
+.center-text {
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.textfield-placeholder {
+  border: 0;
+  background-color: transparent;
+  margin: auto 0;
+
+}
+
+.flex-vertical {}
+
+.selected-files {
+  /* margin-top: 4px; */
+}
