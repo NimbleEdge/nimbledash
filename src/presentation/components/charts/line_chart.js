@@ -58,8 +58,8 @@ function AnalyticsLineChart(props) {
         }}
       >
         {/* <CartesianGrid strokeDasharray="3 3" /> */}
-        <XAxis dataKey="name" dy={20} />
-        <YAxis unit=" ms" width={100} />
+        <XAxis dataKey="name" dy={20} tick={{ fontSize: 12 }} />
+        <YAxis unit=" ms" width={100} tick={{ fontSize: 12 }}  />
         <Tooltip />
         {/* <Legend dy={20}/> */}
         {Object.keys(trends).map((key, index) => (
