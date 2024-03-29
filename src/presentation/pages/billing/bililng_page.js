@@ -106,19 +106,19 @@ function BillingPage() {
             <div className={`adminPageContent`}>
                 <p className="pageHeaders">Usage At A Glance</p>
                 <div className="glanceCardsRow">
-                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("9") }}>
+                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("7").background }}>
                         <p className="glanceCardTitle">105</p>
                         <p className="glanceCardSubTitle">Total ACU incurred this month till date</p>
                     </div>
-                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("9") }}>
+                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("7").background }}>
                         <p className="glanceCardTitle">783</p>
                         <p className="glanceCardSubTitle">Previous month ACU usage</p>
                     </div>
-                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("9") }}>
+                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("7").background }}>
                         <p className="glanceCardTitle">231</p>
                         <p className="glanceCardSubTitle">ACU usage till date previous month</p>
                     </div>
-                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("9") }}>
+                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("7").background }}>
                         <p className="glanceCardTitle">598</p>
                         <p className="glanceCardSubTitle">Projected ACU by the end of this month</p>
                     </div>

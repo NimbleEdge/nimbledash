@@ -12,13 +12,17 @@ export const AUTH_METHOD = "auth_method";
 export const ACCENT_COLOR = "#6565FF"
 export const STROKE_COLORS_LIST = ["#F3AD84", "#DD8E8E", "#B57994", "#826A8D", "#515A78", "#2F4858", "#5F8F43", "#FFBEC1"];
 export const GRAPH_COLORS = ["#0D2535", "#5388D8", "#F4BE37", "#FF9F40"];
-export const TAG_COLORS = ['#F8D3D3', '#F8F4D3', '#EAD3F8', '#D3E8F8', '#D4F8D3', '#F8E3D3', '#D3F8EB', '#D6D3F8', '#ECD3F8','#FFC1C1'];
+export const TAG_COLORS = ['#FFC1C1', '#F8E3D3', '#F8F4D3', '#D3E8F8', '#D3F8EB', '#ECD3F8', '#D6D3F8'];
+export const TAG_FONT_COLORS = ['#CF0000', '#903D00', '#9A8A00', '#0091FF', '#00A569', '#AD00FF', '#1400FF'];
 
 export function getColorFromSeed(seed) {
     if (seed == null) seed = "randim";
     const seedNumber = Array.from(seed).reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const index = seedNumber % TAG_COLORS.length;
-    return TAG_COLORS[index];
+    return {
+        background: TAG_COLORS[index],
+        fontColor: TAG_FONT_COLORS[index]
+    };
 }
 
 //APP GLOBAL CONFIG
