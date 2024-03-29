@@ -5,9 +5,9 @@ import './tags.css';
 import { TagComponent } from './tag';
 import Table, { TABLE_STYLE_TYPE } from '../Table/table';
 import Search, { SearchTable } from '../Search/searchComponent';
+import { getColorFromSeed } from 'core/constants';
 
 export const TagsListComponent = ({tags, tableData = {}, truncationLimit = 5, tableTitle = "", expandable = false}) => {
-    const colors = ['#F8D3D3', '#F8F4D3', '#EAD3F8', '#D3E8F8', '#D4F8D3'];
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => {
@@ -32,18 +32,16 @@ export const TagsListComponent = ({tags, tableData = {}, truncationLimit = 5, ta
                     truncated &&
                     <div className={`tagsList flexRow` + (expandable ?  `cursorPointer` : '')} onClick={openModal}>
                         {tagsReducedList.map((tag, index) => {
-                            const cIdx = index%(colors.length); //Math.floor((Math.random()*5));
-                            return (<TagComponent key={tag} text={tag} color={colors[cIdx]} />);
+                            return (<TagComponent key={tag} text={tag} color={getColorFromSeed(tag)} />);
                         })}
-                        {truncated && <TagComponent text={"..."} color={colors[0]} customStyle={dotCustomStyle} />}
+                        {truncated && <TagComponent text={"..."} color={getColorFromSeed("...")} customStyle={dotCustomStyle} />}
                     </div>
                 }
                 {
                     !truncated &&
                     <div className={`tagsList flexRow` + (expandable ?  `cursorPointer` : '')} onClick={openModal}>
                         {tags.map((tag, index) => {
-                            const cIdx = index%(colors.length); //Math.floor((Math.random()*truncationLimit));
-                            return (<TagComponent key={tag} text={tag} color={colors[cIdx]} />);
+                            return (<TagComponent key={tag} text={tag} color={getColorFromSeed(tag)} />);
                         })}
                     </div>
                 }

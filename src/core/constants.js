@@ -10,9 +10,16 @@ export const AUTH_METHOD = "auth_method";
 
 // COLORS
 export const ACCENT_COLOR = "#6565FF"
-export const STROKE_COLORS_LIST = ["#F3AD84","#DD8E8E","#B57994","#826A8D","#515A78","#2F4858","#5F8F43","#FFBEC1"];
+export const STROKE_COLORS_LIST = ["#F3AD84", "#DD8E8E", "#B57994", "#826A8D", "#515A78", "#2F4858", "#5F8F43", "#FFBEC1"];
 export const GRAPH_COLORS = ["#0D2535", "#5388D8", "#F4BE37", "#FF9F40"];
+export const TAG_COLORS = ['#F8D3D3', '#F8F4D3', '#EAD3F8', '#D3E8F8', '#D4F8D3', '#F8E3D3', '#D3F8EB', '#D6D3F8', '#ECD3F8','#FFC1C1'];
 
+export function getColorFromSeed(seed) {
+    if (seed == null) seed = "randim";
+    const seedNumber = Array.from(seed).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const index = seedNumber % TAG_COLORS.length;
+    return TAG_COLORS[index];
+}
 
 //APP GLOBAL CONFIG
 export const APP_BASE_DMS_URL = process.env.REACT_APP_API_DMS_URL;
@@ -20,13 +27,13 @@ export const APP_BASE_MDS_URL = process.env.REACT_APP_API_MDS_URL;
 
 //APP ENUMS
 export const PermissionEnum = {
-    READ_WRITE : "read_write",
-    READ : "read_only",
-    ADMIN : "admin"
+    READ_WRITE: "read_write",
+    READ: "read_only",
+    ADMIN: "admin"
 }
 
 //Defaults
-export const DEFAULT_ANALYTICS={
+export const DEFAULT_ANALYTICS = {
     "status": 200,
     "error": null,
     "totalInferences": 0,
@@ -38,7 +45,7 @@ export const DEFAULT_ANALYTICS={
     },
     "LatencyTrends": {
         "DummyAnalytics": [
-            1,2,3,4,5,6,7,8,9,10
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10
         ]
     },
     "totalInferenceTrends": {

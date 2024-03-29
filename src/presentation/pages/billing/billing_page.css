@@ -11,6 +11,13 @@
     font-weight: 500;
 }
 
+.legendPickerFont{
+    font-size: 12px;
+    font-weight: 500;
+    align-self: center;
+    margin: 0 auto;
+}
+
 .glanceCardsRow{
     display: flex;
     gap: 8px;
@@ -84,4 +91,31 @@
 .usageTrendsGraph{
     height: 500px;
     width: 1400px;
+}
+
+.monthPicker{
+    display: flex;
+    justify-content: start;
+    /* width: 100px; */
+}
+
+.graphInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 32px;
+}
+
+.centerVertically{
+    align-self: center;
+}
+
+.externalLink{
+    padding-top: 52px;
+    padding-right: 150px;
+    margin-top: 52px;
+    font-size: 14px;
+    color: blue;
+    /* background-color: red; */
+    margin: 0 auto;
 }

@@ -45,13 +45,13 @@ export function SelectionModal(data, preselectedIndex, onSelectionChange) {
 
     return (
         <form className="expanded">
-            <p className="modalSubHeading">Select Script</p>
+            <p className="modalSubHeading">Select To Proceed</p>
             <input
                 id="searchScript"
                 type="text"
-                name="searchScript"
+                name="search"
                 className="model-upload-custom-dropdown itemsPaddingVerySmall"
-                placeholder="Search scripts"
+                placeholder="Search Items"
                 value={searchKeyword}
                 onChange={(res) => {
                     setSearchKeyword(res.target.value);
