@@ -101,11 +101,10 @@ export const fetchActiveUsers = async (modelName, version) => {
 
 export const updateDeploymentTag = async ({tagName, tagDescription, models, updateTagsList}) => {
   await axios
-    .post(`${APP_BASE_MDS_URL}api/v2/admin/deployment`,
+    .post(`${APP_BASE_MDS_URL}api/v2/admin/compatibilityTag`,
     {
       name: tagName,
       description: tagDescription,
-      modelVersions: models
     },
     {
       headers: {
@@ -127,11 +126,10 @@ export const updateDeploymentTag = async ({tagName, tagDescription, models, upda
 
 export const createDeploymentTag = async ({tagName, tagDescription, models, updateTagsList}) => {
   await axios
-    .post(`${APP_BASE_MDS_URL}api/v2/admin/deployment`,
+    .post(`${APP_BASE_MDS_URL}api/v2/admin/compatibilityTag`,
     {
       name: tagName,
       description: tagDescription,
-      modelVersions: models
     },
     {
       headers: {
@@ -332,7 +330,7 @@ export const createNewTask = async ({taskName, deploymentTags, taskCode, descrip
         `${APP_BASE_MDS_URL}api/v2/admin/task`,
         {
           taskName: taskName,
-          deploymentTags: deploymentTags,
+          // deploymentTags: deploymentTags,
           taskCode: taskCode,
           description: description
         },

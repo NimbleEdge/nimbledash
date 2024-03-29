@@ -31,12 +31,12 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
                 body: []
             }
             const tasksArray = [];
-            if(DEFAULT_TASK_NAME in tagsDetails[tag]['tasks'] && DEFAULT_TASK_NAME in tasksDetails){
-                tagsDetails[tag]['tasks'][DEFAULT_TASK_NAME].forEach(version => {
-                    tasksArray.push('v' + version);
-                    taskTableData.body.push([{Component: TextOnlyComponent, data: {text: 'v' + version, customStyle: {fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins'}}}, {Component: TextOnlyComponent, data: {text: tasksDetails[DEFAULT_TASK_NAME]['versions'][version]['description'], customStyle: {fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins'}}}])
-                })
-            }
+            // if(DEFAULT_TASK_NAME in tagsDetails[tag]['tasks'] && DEFAULT_TASK_NAME in tasksDetails){
+            //     tagsDetails[tag]['tasks'][DEFAULT_TASK_NAME].forEach(version => {
+            //         tasksArray.push('v' + version);
+            //         taskTableData.body.push([{Component: TextOnlyComponent, data: {text: 'v' + version, customStyle: {fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins'}}}, {Component: TextOnlyComponent, data: {text: tasksDetails[DEFAULT_TASK_NAME]['versions'][version]['description'], customStyle: {fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins'}}}])
+            //     })
+            // }
             const modelsArray = [];
             const modelTableData = {
                 headers: [{text: 'Model Name'}, {text: 'Version'}],

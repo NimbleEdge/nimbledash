@@ -53,6 +53,7 @@ const DeploymentPage = () => {
   const [virginCTList, setVirginCTList] = useState([]);
   const [virginScriptList, setVirginScriptList] = useState([]);
   const [virginModelList, setVirginModelList] = useState([]);
+  const [reload, setReload] = useState(true);
   const [deploymentSelections, setDeploymentSelections] = useState({
     name: "",
     description: "",
@@ -323,7 +324,8 @@ const DeploymentPage = () => {
         })
       .then((res) => {
         console.log(res.data);
-        window.location.reload();
+        toast.success("Deployment Creation Successful!")
+        setReload(!reload);
       })
       .catch((e) => {
         console.log(e);
@@ -371,7 +373,7 @@ const DeploymentPage = () => {
     getModelsData();
     getCTData();
     getScriptData();
-  }, []);
+  }, [reload]);
 
   return (
     <>
