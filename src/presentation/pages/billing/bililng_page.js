@@ -196,7 +196,7 @@ function BillingPage() {
                     <Table data={usageTrendsBreakdownData} />
                 </div>
             </div>
-            <a className="externalLink" href="https://codeclock.in">Please click here to perform advance queries.</a>
+            <a className="externalLink" target="_blank" href="https://codeclock.in">Please click here to perform advance queries.</a>
         </div>
     );
 }
