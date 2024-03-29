@@ -216,7 +216,7 @@ const DeploymentPage = () => {
 
   const getDeploymentData = async () => {
     axios
-      .get(`${APP_BASE_MDS_URL}/api/v2/admin/deployments`,
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/deployments`,
         {
           headers: {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
@@ -238,7 +238,7 @@ const DeploymentPage = () => {
 
   const getModelsData = async () => {
     axios
-      .get(`${APP_BASE_MDS_URL}/api/v2/admin/models`,
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/models`,
         {
           headers: {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
@@ -260,7 +260,7 @@ const DeploymentPage = () => {
 
   const getCTData = async () => {
     axios
-      .get(`${APP_BASE_MDS_URL}/api/v2/admin/compatibilityTags`,
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/compatibilityTags`,
         {
           headers: {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
@@ -282,7 +282,7 @@ const DeploymentPage = () => {
 
   const getScriptData = async () => {
     axios
-      .get(`${APP_BASE_MDS_URL}/api/v2/admin/tasks`,
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/tasks`,
         {
           headers: {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
@@ -302,7 +302,7 @@ const DeploymentPage = () => {
 
   const createDeployment = async () => {
     axios
-      .post(`${APP_BASE_MDS_URL}/api/v2/admin/deployment`,
+      .post(`${APP_BASE_MDS_URL}api/v2/admin/deployment`,
         {
           "compatibilityTag": virginCTList[deploymentSelections.ctIndex].name,
           "models": deploymentSelections.modelIndexes.reduce((acc, modelIndex) => (acc[virginModelList[modelIndex].modelName] = virginModelList[modelIndex].modelVersion, acc), {}),
