@@ -29,7 +29,6 @@ const TasksTable = ({tasksDetails, allTagsList, updateTasksList, isUpdateTaskMod
         headers: [
             {text: 'Version'}, 
             {text: 'Description'}, 
-            {text: 'Compatability Tags'}, 
             {text: 'Actions'}
         ],
         body: [],
@@ -72,7 +71,6 @@ const TasksTable = ({tasksDetails, allTagsList, updateTasksList, isUpdateTaskMod
                 tasksViewData.body.push([
                     {Component: TextOnlyComponent, data: {text: taskVersion, customStyle: {fontWeight: 500, color: '#494949', fontSize: '14px'}, highlightOnHover: true}}, 
                     {Component: TextOnlyComponent, data: {text: tasksDetails[taskName]['versions'][taskVersion]['description'], customStyle: {color: '#74828F', fontWeight: 400, fontSize: '14px'}, highlightOnHover: true}},
-                    {Component: TagsListComponent, data: {tags: tagsArray, highlightOnHover: true}}, 
                     {Component: taskActionColComponent, data: {taskVersion: taskVersion}}
                 ]);
             }

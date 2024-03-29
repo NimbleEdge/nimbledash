@@ -14,9 +14,7 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
     const [tagsViewData, updateTagsViewData] = useState({
         headers: [
             {text: 'Compatibility Tags'}, 
-            {text: 'Description'}, 
-            {text: 'Task Versions'}, 
-            {text: 'Models'}
+            {text: 'Description'}
         ],
         body: [],
     });
@@ -33,12 +31,12 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
                 body: []
             }
             const tasksArray = [];
-            if(DEFAULT_TASK_NAME in tagsDetails[tag]['tasks'] && DEFAULT_TASK_NAME in tasksDetails){
-                tagsDetails[tag]['tasks'][DEFAULT_TASK_NAME].forEach(version => {
-                    tasksArray.push('v' + version);
-                    taskTableData.body.push([{Component: TextOnlyComponent, data: {text: 'v' + version, customStyle: {fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins'}}}, {Component: TextOnlyComponent, data: {text: tasksDetails[DEFAULT_TASK_NAME]['versions'][version]['description'], customStyle: {fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins'}}}])
-                })
-            }
+            // if(DEFAULT_TASK_NAME in tagsDetails[tag]['tasks'] && DEFAULT_TASK_NAME in tasksDetails){
+            //     tagsDetails[tag]['tasks'][DEFAULT_TASK_NAME].forEach(version => {
+            //         tasksArray.push('v' + version);
+            //         taskTableData.body.push([{Component: TextOnlyComponent, data: {text: 'v' + version, customStyle: {fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins'}}}, {Component: TextOnlyComponent, data: {text: tasksDetails[DEFAULT_TASK_NAME]['versions'][version]['description'], customStyle: {fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins'}}}])
+            //     })
+            // }
             const modelsArray = [];
             const modelTableData = {
                 headers: [{text: 'Model Name'}, {text: 'Version'}],
@@ -53,8 +51,6 @@ const TagsTable = ({tagsDetails, modelsDetails, tasksDetails, updateTagsList, is
             tagsViewData.body.push([
                 {Component: TagNameColumnComponent, data: {tagName: tag, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag], highlightOnHover: true}}, 
                 {Component: TruncatedDescription, data: {message: tagsDetails[tag]['description'], maxLength: 400, modelsDetails: modelsDetails, updateTagsList: updateTagsList, tagDetails: tagsDetails[tag], tagName: tag, highlightOnHover: true}}, 
-                {Component: TagsListComponent, data: {tags: tasksArray, tableData: taskTableData, tableTitle: "Linked Task Versions",truncationLimit: 2, expandable: true, highlightOnHover: true}}, 
-                {Component: TagsListComponent, data: {tags: modelsArray, truncationLimit: 2, tableData: modelTableData, tableTitle: "Linked Models", expandable: true, highlightOnHover: true}}
             ]);
         }
         updateTagsViewData({...tagsViewData});

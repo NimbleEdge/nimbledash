@@ -1,6 +1,6 @@
 .adminPage {
   padding-left: 152px;
-  padding-top: 50px;
+  padding-top: 72px;
   padding-right: 50px;
   padding-bottom: 50px;
 }
@@ -182,4 +182,8 @@
   justify-content: center;
   align-items: center;
   background-color: #F5F5FF;
+}
+
+.custom-height{
+  height: 380px;
 }

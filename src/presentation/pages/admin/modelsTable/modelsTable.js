@@ -14,7 +14,6 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList
         headers: [
             {text: 'Models'}, 
             {text: 'Latest Version'}, 
-            {text: 'Compatability Tags [ Latest Version ]'}, 
             {text: 'Actions'}
         ],
         body: [],
@@ -76,7 +75,6 @@ const ModelsTable = ({modelsDetails, onModelClick, allTagsList, updateModelsList
             modelsViewData.body.push([
                 {Component: ModelNameColumnComponent, data: {text: modelName, onClick: onModelClick, highlightOnHover: true}}, 
                 {Component: TextOnlyComponent, data: {text: modelsDetails[modelName].latestVersion, highlightOnHover: true}}, 
-                {Component: TagsListComponent, data: {tags: tagsArray, highlightOnHover: true}},
                 {Component: ActionColComponent, data: {modelName: modelName, modelVersion: modelsDetails[modelName].latestVersion}}
             ]);
         }

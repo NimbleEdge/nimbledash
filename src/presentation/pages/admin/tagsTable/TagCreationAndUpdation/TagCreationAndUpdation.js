@@ -142,7 +142,7 @@ export const CreateOrUpdateTagModal = ({modelsDetails, updateTagsList, onClose, 
                             <div className="create-new-tag-description-header subsection-header">Enter compatability tag description</div>
                             <input className="input-box create-new-tag-description-input-box" type="text" value={tagDescription} onChange={(e) => setTagDescription(e.target.value)} placeholder="Enter a description" />
                         </div>
-                        <div className="selected-model-versions subsection">
+                        {/* <div className="selected-model-versions subsection">
                                 <div className="selected-model-versions-header subsection-header">Selected Model & Versions</div>
                                 {Object.keys(selectedModels).length > 0 && <DisplayCards selectedModels={{...selectedModels}} handleModelVersionRemoval={handleModelVersionRemoval}/>}
                                 {Object.keys(selectedModels).length == 0 && <div className="create-new-tag-no-model-selected">No Model Selected</div>}
@@ -150,7 +150,7 @@ export const CreateOrUpdateTagModal = ({modelsDetails, updateTagsList, onClose, 
                         <div className="create-new-tag-model-mapping subsection">
                             <div className="create-new-tag-model-mapping-header subsection-header">Map CT with the pre-existing models (optional)</div>
                             <Search searchList={modelNameList.map(name => {return {searchText: name, selected: false}})} handleItemClick={handleModelSelection} placeholder={"Search Models"}/>
-                        </div>
+                        </div> */}
                     </div>
                 </>
             }

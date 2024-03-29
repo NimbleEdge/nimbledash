@@ -101,11 +101,10 @@ export const fetchActiveUsers = async (modelName, version) => {
 
 export const updateDeploymentTag = async ({tagName, tagDescription, models, updateTagsList}) => {
   await axios
-    .post(`${APP_BASE_MDS_URL}api/v2/admin/deployment`,
+    .post(`${APP_BASE_MDS_URL}api/v2/admin/compatibilityTag`,
     {
       name: tagName,
       description: tagDescription,
-      modelVersions: models
     },
     {
       headers: {
@@ -127,11 +126,10 @@ export const updateDeploymentTag = async ({tagName, tagDescription, models, upda
 
 export const createDeploymentTag = async ({tagName, tagDescription, models, updateTagsList}) => {
   await axios
-    .post(`${APP_BASE_MDS_URL}api/v2/admin/deployment`,
+    .post(`${APP_BASE_MDS_URL}api/v2/admin/compatibilityTag`,
     {
       name: tagName,
       description: tagDescription,
-      modelVersions: models
     },
     {
       headers: {
@@ -153,7 +151,7 @@ export const createDeploymentTag = async ({tagName, tagDescription, models, upda
 
 export const fetchDeploymentTags = async (updateTagsList) => {
     await axios
-      .get(`${APP_BASE_MDS_URL}api/v2/admin/deployments`, {
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/compatibilityTags`, {
         headers: {
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
@@ -163,6 +161,7 @@ export const fetchDeploymentTags = async (updateTagsList) => {
         },
       })
       .then((res) => {
+        console.log("NEXA",res);
         const tags = res.data.tags;
         updateTagsList([...tags]);
       })
@@ -174,7 +173,7 @@ export const fetchDeploymentTags = async (updateTagsList) => {
 export const fetchDeploymentTagDetails = async (tag) => {
     try{
       const response  = await axios
-        .get(`${APP_BASE_MDS_URL}api/v2/admin/deployments/${tag.name}`, {
+        .get(`${APP_BASE_MDS_URL}api/v2/admin/compatibilityTags/${tag.name}`, {
           headers: {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
@@ -331,7 +330,7 @@ export const createNewTask = async ({taskName, deploymentTags, taskCode, descrip
         `${APP_BASE_MDS_URL}api/v2/admin/task`,
         {
           taskName: taskName,
-          deploymentTags: deploymentTags,
+          // deploymentTags: deploymentTags,
           taskCode: taskCode,
           description: description
         },

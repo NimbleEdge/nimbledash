@@ -118,16 +118,16 @@ const NewAdminPage = () => {
                 })
             }
             //console.log(tagsDetails);
-            for(const taskName in tagsDetails[tag]['tasks']) {
-                if(updatedTasksDetails[taskName] == undefined) continue;
-                updatedTasksDetails[taskName]['tags'][tag] = true;
-                tagsDetails[tag]['tasks'][taskName].forEach(version => {
-                    if(!(version in updatedTasksDetails[taskName]['versionToTags'])) {
-                        updatedTasksDetails[taskName]['versionToTags'][version] = {};
-                    }
-                    updatedTasksDetails[taskName]['versionToTags'][version][tag] = true;
-                })
-            }
+            // for(const taskName in tagsDetails[tag]['tasks']) {
+            //     if(updatedTasksDetails[taskName] == undefined) continue;
+            //     updatedTasksDetails[taskName]['tags'][tag] = true;
+            //     tagsDetails[tag]['tasks'][taskName].forEach(version => {
+            //         if(!(version in updatedTasksDetails[taskName]['versionToTags'])) {
+            //             updatedTasksDetails[taskName]['versionToTags'][version] = {};
+            //         }
+            //         updatedTasksDetails[taskName]['versionToTags'][version][tag] = true;
+            //     })
+            // }
         }
         updateModelsDetails({...updatedModelsDetails});
         updateTasksDetails({...updatedTasksDetails});
