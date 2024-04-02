@@ -9,8 +9,6 @@ import './billing_page.css';
 import AnalyticsLineChart from "presentation/components/charts/line_chart";
 import { DEFAULT_ANALYTICS, getColorFromSeed } from "core/constants";
 import StackedBarChart from "presentation/components/charts/stacked_bar_chart";
-import moment from "moment";
-import MonthPicker from "simple-react-month-picker";
 
 function BillingPage() {
     const dispatch = useDispatch();
