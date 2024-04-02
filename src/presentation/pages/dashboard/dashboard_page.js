@@ -43,7 +43,6 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
 import ShapeBarChart from "presentation/components/charts/shape_bar_chart";
-import { getAuthMethod } from "core/utils";
 
 
 function OldDashboardPage() {

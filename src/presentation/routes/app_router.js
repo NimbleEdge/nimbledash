@@ -1,8 +1,10 @@
 import { Route, Routes } from "react-router";
 import {
   ADMIN_PAGE_ROUTE,
+  BILLING_PAGE_ROUTE,
   CONTACT_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
+  DEPLOYMENTS_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
   RBAC_PAGE_ROUTE,
 } from "./route-paths";
@@ -26,6 +28,7 @@ import ContactPage from "presentation/pages/contact/contact_page";
 import AdminPage from "presentation/pages/admin/admin_page";
 import DashboardPage from "presentation/pages/dashboard/dashboard";
 import DeploymentPage from "presentation/pages/deployment/deployment_page";
+import BillingPage from "presentation/pages/billing/bililng_page";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -106,7 +109,8 @@ function AppRouter(props) {
       <Route path={ADMIN_PAGE_ROUTE} element={<AdminPage />} />
       <Route path={CONTACT_PAGE_ROUTE} element={<ContactPage />} />
       <Route path={RBAC_PAGE_ROUTE} element={<RBACPage />} />
-      <Route path="/deployments" element={<DeploymentPage />} />
+      <Route path={DEPLOYMENTS_PAGE_ROUTE} element={<DeploymentPage />} />
+      <Route path={BILLING_PAGE_ROUTE} element={<BillingPage />} />
       {localStorage.getItem(ACCESS_TOKEN) != null && (
         <Route path="/" element={<DashboardPage />} />
       )}

@@ -54,14 +54,14 @@ const DeploymentPage = () => {
   const [virginScriptList, setVirginScriptList] = useState([]);
   const [virginModelList, setVirginModelList] = useState([]);
   const [reload, setReload] = useState(true);
-  const [deploymentSelections, setDeploymentSelections] = useState({
+  const defaultDeploymentSelections = {
     name: "",
     description: "",
     scriptIndex: -1,
     modelIndexes: [],
     ctIndex: -1
-  });
-
+  };
+  const [deploymentSelections, setDeploymentSelections] = useState(defaultDeploymentSelections);
   const [seriesIndex, setSeriesIndex] = useState(0);
   const [isCreateNewModelOpen, setIsCreateNewModelOpen] = useState(false);
   const dispatch = useDispatch();
@@ -177,26 +177,8 @@ const DeploymentPage = () => {
         [
           { Component: TextOnlyComponent, data: { text: deployment.name, customStyle: { fontWeight: 500, color: '#494949', fontSize: '14px' }, highlightOnHover: true } },
           { Component: TextOnlyComponent, data: { text: deployment.description, customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
-          {
-            Component: TagsListComponent, data: {
-              tags: [deployment.compatibilityTag], tableData: {
-                headers: [{ text: 'Name' }, { text: 'Description' }],
-                body: [
-                  [{ Component: TextOnlyComponent, data: { text: deployment.compatibilityTag, customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]
-                ]
-              }, tableTitle: "Linked Compatiblity Tag Details", truncationLimit: 2, expandable: true, highlightOnHover: true
-            }
-          },
-          {
-            Component: TagsListComponent, data: {
-              tags: [deployment.tasks.DEFAULT_SCRIPT], tableData: {
-                headers: [{ text: 'Name' }, { text: 'Description' }],
-                body: [
-                  [{ Component: TextOnlyComponent, data: { text: deployment.tasks.DEFAULT_SCRIPT, customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]
-                ]
-              }, tableTitle: "Linked Script Details", truncationLimit: 2, expandable: true, highlightOnHover: true
-            }
-          },
+          { Component: TextOnlyComponent, data: { text: deployment.compatibilityTag, customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
+          { Component: TextOnlyComponent, data: { text: deployment.tasks.DEFAULT_SCRIPT, customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
           {
             Component: TagsListComponent, data: {
               tags: Object.keys(deployment.models), tableData: {
@@ -326,6 +308,7 @@ const DeploymentPage = () => {
         console.log(res.data);
         toast.success("Deployment Creation Successful!")
         setReload(!reload);
+        setDeploymentSelections(defaultDeploymentSelections);
       })
       .catch((e) => {
         console.log(e);
