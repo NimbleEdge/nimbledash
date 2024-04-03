@@ -1,25 +1,26 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './style1.css';
-import './style2.css';
-import './table.css';
-import '../../../common.css';
+import React from "react";
+import PropTypes from "prop-types";
+import "./style1.css";
+import "./style2.css";
+import "./table.css";
+import "../../../common.css";
 
-
-export const TextOnlyComponent = ({text, customStyle}) => {
-    return (
-        <div className={`textOnlyComponent`} style={customStyle}>{text}</div>
-    )
-}
+export const TextOnlyComponent = ({ text, customStyle, onClick }) => {
+  return (
+    <div onClick={onClick} className={`textOnlyComponent`} style={customStyle}>
+      {text}
+    </div>
+  );
+};
 
 TextOnlyComponent.propTypes = {
-    text: PropTypes.string.isRequired
-}
+  text: PropTypes.string.isRequired,
+};
 
 export const TABLE_STYLE_TYPE = {
-    STYLE1: 'style1',
-    STYLE2: 'style2'
-}
+  STYLE1: "style1",
+  STYLE2: "style2",
+};
 
 // const defaultStyles1 = {
 //     table: {width: '100%'},
@@ -51,59 +52,69 @@ export const TABLE_STYLE_TYPE = {
 
 const defaultStyle = {};
 
-const Table = ({ data, customStyles= {}, STYLE = TABLE_STYLE_TYPE.STYLE1 }) => {    
-    const styles = {}; //= STYLE == TABLE_STYLE_TYPE.STYLE1 ? { ...defaultStyles1, ...customStyles } : { ...defaultStyles2, ...customStyles };
+const Table = ({
+  data,
+  customStyles = {},
+  STYLE = TABLE_STYLE_TYPE.STYLE1,
+}) => {
+  const styles = {}; //= STYLE == TABLE_STYLE_TYPE.STYLE1 ? { ...defaultStyles1, ...customStyles } : { ...defaultStyles2, ...customStyles };
 
-    const headerCell = (cellData, index) => {
-        let cellStyle = styles.headerCell;
-        if(index == 0) cellStyle = {...cellStyle, ...styles.leftMostHeaderCell};
-        if(index == data.headers.length - 1) cellStyle = {...cellStyle, ...styles.rightMostHeaderCell};
-        return (
-            <th key={index} style={cellStyle} className={STYLE}>
-                <div style={styles.headerText} className={STYLE}>{cellData.text}</div>
-            </th>
-        )
-    }
-
-    const bodyCell = (cellData, colIndex) => {
-        let cellStyle = styles.bodyCell;
-        const CellComponent = cellData.Component;
-        const highlightOnHover = cellData.data.hasOwnProperty('highlightOnHover');
-        return (
-            <td key={colIndex} style={cellStyle} className={STYLE + (highlightOnHover ? ' highlightOnHover' : '')}>
-                <CellComponent {...cellData.data} />
-            </td>
-        );
-    }
-
-    const getBodyRow = (row, rowIndex) => {
-        return (
-            <tr key={rowIndex} style={styles.tr} className={STYLE}>
-                {row.map((cellData, colIndex) => bodyCell(cellData, colIndex))}
-            </tr>
-        )
-    }
-
-    const body = data.body.map((row, rowIndex) => getBodyRow(row, rowIndex));
-
+  const headerCell = (cellData, index) => {
+    let cellStyle = styles.headerCell;
+    if (index == 0) cellStyle = { ...cellStyle, ...styles.leftMostHeaderCell };
+    if (index == data.headers.length - 1)
+      cellStyle = { ...cellStyle, ...styles.rightMostHeaderCell };
     return (
-        <table style={styles.table} className={STYLE}>
-            <thead style={styles.thead} className={STYLE}>
-                {data.headers.map((header, index) => headerCell(header, index))}
-            </thead>
-            <tbody style={styles.tbody} className={STYLE}>
-                {data.body.map((row, rowIndex) => getBodyRow(row, rowIndex))}
-            </tbody>
-            {
-                data.footer && 
-                (<tfoot className={STYLE}>
-                    <tr style={styles.footerRow} className={STYLE}>
-                        <data.footer.Component {...data.footer.data} />
-                    </tr>
-                </tfoot>)
-            }
-        </table>
+      <th key={index} style={cellStyle} className={STYLE}>
+        <div style={styles.headerText} className={STYLE}>
+          {cellData.text}
+        </div>
+      </th>
     );
+  };
+
+  const bodyCell = (cellData, colIndex) => {
+    let cellStyle = styles.bodyCell;
+    const CellComponent = cellData.Component;
+    const highlightOnHover = cellData.data.hasOwnProperty("highlightOnHover");
+    return (
+      <td
+        key={colIndex}
+        style={cellStyle}
+        className={STYLE + (highlightOnHover ? " highlightOnHover" : "")}
+      >
+        <CellComponent {...cellData.data} />
+      </td>
+    );
+  };
+
+  const getBodyRow = (row, rowIndex) => {
+    return (
+      <tr key={rowIndex} style={styles.tr} className={STYLE}>
+        {row.map((cellData, colIndex) => bodyCell(cellData, colIndex))}
+      </tr>
+    );
+  };
+
+  const body = data.body.map((row, rowIndex) => getBodyRow(row, rowIndex));
+
+  return (
+    <table style={styles.table} className={STYLE}>
+      <thead style={styles.thead} className={STYLE}>
+        {data.headers.map((header, index) => headerCell(header, index))}
+      </thead>
+      <tbody style={styles.tbody} className={STYLE}>
+        {data.body.map((row, rowIndex) => getBodyRow(row, rowIndex))}
+      </tbody>
+      {data.footer && (
+        <tfoot className={STYLE}>
+          <tr style={styles.footerRow} className={STYLE}>
+            <data.footer.Component {...data.footer.data} />
+          </tr>
+        </tfoot>
+      )}
+    </table>
+  );
 };
 
 export default Table;

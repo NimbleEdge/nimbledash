@@ -1,162 +1,101 @@
-.progressIndicator{
-    display: flex;
-    margin-bottom: 32px;
+.approvalPage {
 }
 
-.singleIndicator {
-    height: 4px;
-    width: 60px;
-    background-color: #F0F0FF;
-    border-radius: 2px;
-    margin-right: 4px;
-    cursor: pointer;
+.relative {
+  position: relative;
 }
 
-.inProgress {
-    background-color: #B2B2FF;
+.approvalPageContent {
+  display: flex;
 }
 
-.finished {
-    background-color: #6565FF;
+.lineDivider {
+  height: 100vh;
+  width: 1px;
+  position: absolute;
+  left: 52.5%;
+  top: 0;
+  transform: translate(-50%, 0);
+  background: rgba(0, 0, 0, 0.2);
 }
 
-.modalSubHeading{
-    font-size: 14px;
-    font-weight: 500;
-    color: #555;
-    margin-bottom: 8px;
+.deploymentDetailsLine {
+  font-size: 14px;
+  color: #656565;
 }
 
-.itemsPadding{
-    margin-bottom: 32px;
+.bold {
+  font-weight: 600;
+  color: black;
 }
 
-.itemsPaddingMedium{
-    margin-bottom: 24px;
+.reviewHistorySubtitile {
+  font-size: 12px;
+  color: #666666;
 }
 
-.itemsPaddingSmall{
-    margin-bottom: 12px;
+.commentSection {
+  flex-grow: 1;
+  max-width: 50%;
+  padding-left: 52px;
 }
 
-.itemsPaddingVerySmall{
-    margin-bottom: 6px;
+.leftPane {
+  flex-grow: 1;
+  max-width: 50%;
+  padding-right: 52px;
 }
 
-.fadedBackground{
-    background-color: #f5f5f5;
+.commentBox {
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 16px;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
 }
 
-.reviewRow{
-    height: 52px;
-    width: 100%;
-    display: flex;
-    position: relative;
-    margin-bottom: 8px;
-    padding-left: 16px;
-    padding-right: 16px;
-    background-color: #F0F0FF;
-    align-items: center;
-    border-radius: 8px;
-    cursor: pointer;
+.commentTitle {
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.reviewRowKey{
-    font-size: 14px;
-    font-weight: 600;
-    color: #494949;
-    position: absolute;
-    top: 50%;
-    transform: translate(0,-50%);
+.commentBody {
+  font-size: 12px;
+  color: #222222;
 }
 
-.reviewRowValue{
-    position: absolute;
-    font-size: 14px;
-    font-weight: 400;
-    color: #74828F;
-    top: 50%;
-    left: 300px;
-    transform: translate(0,-50%);
+.commentFooter {
+  display: flex;
+  justify-content: space-between;
 }
 
-/* CARDS */
-.selectableCardsRow {
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-    overflow-y: auto; 
-    max-height: 368px; 
+.commentTime {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
 }
 
-.selectableCardsRowHalf {
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-    overflow-y: auto; 
-    max-height: 160px; 
+.commentStatus {
+  font-size: 10px;
+  font-weight: 600;
 }
 
-.selectableCardsRowVertical {
-    display: flex;
-    width: 100%;
-    overflow-x: auto;
+.rejectBox {
+  background-color: #ffc4c4;
+  border-radius: 8px;
+  border: 2px solid #df8989;
 }
 
-.selectableCard {
-    position: relative;
-    height: 90px;
-    width: 100%; 
-    min-width: 240px;
-    padding-right: 8px; 
-    padding-top: 8px;
+.approvedBox {
+  background-color: #b3e4b8;
+  border-radius: 8px;
+  border: 2px solid #4e7452;
 }
 
-.selectableCardContent{
-    height: 80px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    position: relative;
-    margin-top: auto;
-    margin-right: auto;
+.acceptedText {
+  color: #4e7452;
 }
 
-.selectableCardCloseIcon{
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 5;
-    opacity: 0;
-}
-
-.selectableCardTitle{
-    position: absolute;
-    top: 14px;
-    left: 16px;
-    font-size: 16px;
-    font-weight: 500;
-    color: #222;
-}
-
-.selectableCardSubTitle{
-    position: absolute;
-    bottom: 0px;
-    left: 16px;
-    font-size: 12px;
-    color: #888;
-    font-weight: 600;
-}
-
-.cardIsSelected{
-    border: 2px solid #6565FF;
-    background-color: #F0F0FF;
-}
-
-.cardCanBeDeleted{
-    opacity: 1;
-}
-
-.clickableItem{
-    cursor: pointer;
+.rejectedText {
+  color: #a95050;
 }
