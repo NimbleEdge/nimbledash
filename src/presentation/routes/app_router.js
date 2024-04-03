@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router";
 import {
   ADMIN_PAGE_ROUTE,
+  APPROVAL_PAGE_ROUTE,
   BILLING_PAGE_ROUTE,
   CONTACT_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
@@ -29,6 +30,7 @@ import AdminPage from "presentation/pages/admin/admin_page";
 import DashboardPage from "presentation/pages/dashboard/dashboard";
 import DeploymentPage from "presentation/pages/deployment/deployment_page";
 import BillingPage from "presentation/pages/billing/bililng_page";
+import ApprovalPage from "presentation/pages/approval/approval_page";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -111,6 +113,7 @@ function AppRouter(props) {
       <Route path={RBAC_PAGE_ROUTE} element={<RBACPage />} />
       <Route path={DEPLOYMENTS_PAGE_ROUTE} element={<DeploymentPage />} />
       <Route path={BILLING_PAGE_ROUTE} element={<BillingPage />} />
+      <Route path={APPROVAL_PAGE_ROUTE} element={<ApprovalPage />} />
       {localStorage.getItem(ACCESS_TOKEN) != null && (
         <Route path="/" element={<DashboardPage />} />
       )}
