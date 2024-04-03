@@ -1,21 +1,19 @@
-.approvalPage {
-}
-
 .relative {
   position: relative;
 }
 
 .approvalPageContent {
   display: flex;
+  height: 74vh;
 }
 
 .lineDivider {
   height: 100vh;
   width: 1px;
   position: absolute;
-  left: 52.5%;
+  left: calc(50% + 40px);
   top: 0;
-  transform: translate(-50%, 0);
+  transform: translate(-calc(50% + 40px), 0);
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -38,12 +36,17 @@
   flex-grow: 1;
   max-width: 50%;
   padding-left: 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .leftPane {
   flex-grow: 1;
   max-width: 50%;
   padding-right: 52px;
+  height: 100%;
 }
 
 .commentBox {
@@ -98,4 +101,30 @@
 
 .rejectedText {
   color: #a95050;
+}
+
+.inputCommentBox {
+  display: flex;
+  height: 48px;
+}
+
+.submitCommentButton {
+  background-color: #f5f5ff;
+  width: 32px;
+  border-radius: 0 8px 8px 0;
+  position: relative;
+  cursor: pointer;
+}
+
+.commentInput {
+  background-color: #f5f5ff;
+  margin-left: 8px;
+  flex-grow: 1;
+}
+
+.submitIcon {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
 }

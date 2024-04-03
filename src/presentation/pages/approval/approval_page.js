@@ -25,7 +25,7 @@ import { Toast } from "react-bootstrap";
 import Dropdown from "presentation/components/DropdownInternal/dropdown";
 
 const ApprovalPage = () => {
-  const [selectedRowIndex, setSelectedRowIndex] = useState(1);
+  const [selectedRowIndex, setSelectedRowIndex] = useState(-1);
   const [reload, setReload] = useState(true);
   const defaultDeploymentSelections = {
     name: "",
@@ -185,33 +185,37 @@ const ApprovalPage = () => {
           <div className={`adminPageTitle`}>Edge Deployment Management</div>
           <div className={`adminPageSubtitle`}>Manage Deployments</div>
         </div>
-        <div className="lineDivider"></div>
-        <div className={`approvalPageContent`}>
-          {/* {selectedRowIndex == -1 && (
-            <div>
-              <div className={`subHeader flexRow`}>
-                <div className={`subHeaderText`}>Correlations</div>
-                {
-                  <div className="subHeaderActions">
-                    <Dropdown
-                      options={["Raised Requests", "My Requests"]}
-                      handleSelection={(_view) => {}}
-                      defaultSelectedOption={"Raised Requests"}
-                    />
-                  </div>
-                }
-              </div>
-
-              <div className={`tasksTableView flexColumn overflowAuto`}>
-                <Table data={deploymentViewData} />
-              </div>
+        {selectedRowIndex != -1 && <div className="lineDivider"></div>}
+        {selectedRowIndex == -1 && (
+          <div>
+            <div className={`subHeader flexRow`}>
+              <div className={`subHeaderText`}>Correlations</div>
+              {
+                <div className="subHeaderActions">
+                  <Dropdown
+                    options={["Raised Requests", "My Requests"]}
+                    handleSelection={(_view) => {}}
+                    defaultSelectedOption={"Raised Requests"}
+                  />
+                </div>
+              }
             </div>
-          )} */}
 
+            <div className={`tasksTableView flexColumn overflowAuto`}>
+              <Table data={deploymentViewData} />
+            </div>
+          </div>
+        )}
+        <div className={`approvalPageContent`}>
           {selectedRowIndex != -1 && (
             <div className="leftPane">
               <div className={`subHeader flexRow`}>
-                <div style={{ display: "flex" }}>
+                <div
+                  onClick={() => {
+                    setSelectedRowIndex(-1);
+                  }}
+                  style={{ display: "flex" }}
+                >
                   <img
                     src={"/assets/icons/backArrow.svg"}
                     onClick={() => {}}
@@ -255,40 +259,71 @@ const ApprovalPage = () => {
             </div>
           )}
 
-          <div className="commentSection">
-            <div className={`subHeader`}>
-              <div className={`subHeaderText`}>Review History</div>
-              <p className="reviewHistorySubtitile">
-                2 more approvals required for the promotion.
-              </p>
-            </div>
+          {selectedRowIndex != -1 && (
+            <div className="commentSection">
+              <div>
+                <div className={`subHeader`}>
+                  <div className={`subHeaderText`}>Review History</div>
+                  <p className="reviewHistorySubtitile">
+                    2 more approvals required for the promotion.
+                  </p>
+                </div>
 
-            <div className="commentBox rejectBox">
-              <p className="commentTitle">d11-poc-prod</p>
-              <p className="commentBody">
-                Contrary to popular belief, Lorem Ipsum is not simply random
-                text. It has roots in a piece of classical Latin literature from
-                45 BC, making it over 2000 years old.
-              </p>
-              <div className="commentFooter">
-                <p className="commentTime">24th December, 2024 | 20:45 IST</p>
-                <p className="commentStatus rejectedText">REJECTED</p>
+                <div className="commentBox rejectBox">
+                  <p className="commentTitle">d11-poc-prod</p>
+                  <p className="commentBody">
+                    Contrary to popular belief, Lorem Ipsum is not simply random
+                    text. It has roots in a piece of classical Latin literature
+                    from 45 BC, making it over 2000 years old.
+                  </p>
+                  <div className="commentFooter">
+                    <p className="commentTime">
+                      24th December, 2024 | 20:45 IST
+                    </p>
+                    <p className="commentStatus rejectedText">REJECTED</p>
+                  </div>
+                </div>
+
+                <div className="commentBox approvedBox">
+                  <p className="commentTitle">d11-poc-prod</p>
+                  <p className="commentBody">
+                    Contrary to popular belief, Lorem Ipsum is not simply random
+                    text. It has roots in a piece of classical Latin literature
+                    from 45 BC, making it over 2000 years old.
+                  </p>
+                  <div className="commentFooter">
+                    <p className="commentTime">
+                      24th December, 2024 | 20:45 IST
+                    </p>
+                    <p className="commentStatus acceptedText">APPROVED</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="inputCommentBox">
+                <div className="subHeaderActions">
+                  <Dropdown
+                    options={["Approve", "Reject"]}
+                    handleSelection={(_view) => {}}
+                    defaultSelectedOption={"Raised Requests"}
+                  />
+                </div>
+                <input
+                  type="text"
+                  name="clientID"
+                  className="inputModal-textfield commentInput"
+                  placeholder={"Write comment to support your verdict"}
+                />
+                <div className="submitCommentButton">
+                  <img
+                    src="/assets/icons/minimal_submit.svg"
+                    style={{ height: "16px" }}
+                    className="submitIcon"
+                  ></img>
+                </div>
               </div>
             </div>
-
-            <div className="commentBox approvedBox">
-              <p className="commentTitle">d11-poc-prod</p>
-              <p className="commentBody">
-                Contrary to popular belief, Lorem Ipsum is not simply random
-                text. It has roots in a piece of classical Latin literature from
-                45 BC, making it over 2000 years old.
-              </p>
-              <div className="commentFooter">
-                <p className="commentTime">24th December, 2024 | 20:45 IST</p>
-                <p className="commentStatus acceptedText">APPROVED</p>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </>
