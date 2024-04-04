@@ -70,8 +70,11 @@
 
 .legendTitle {
   align-self: center;
-  font-size: 10px;
+  font-size: 12px;
   margin: 0;
+  width: 100px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .legendSolidLine {

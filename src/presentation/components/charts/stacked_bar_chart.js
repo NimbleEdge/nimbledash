@@ -47,7 +47,7 @@ export default function StackedBarChart(props) {
         margin={{
           top: 64,
           right: 72,
-          left: 20,
+          left: 60,
           bottom: 64,
         }}
       >
