@@ -1,121 +1,121 @@
-.pageHeaders{
-    font-size: 16px;
-    color: #222222;
-    font-weight: 600;
-    margin-bottom: 24px;
+.pageHeaders {
+  font-size: 16px;
+  color: #222222;
+  font-weight: 600;
+  margin-bottom: 24px;
 }
 
-.pageSubHeaders{
-    margin-top: 32px;
-    font-size: 12px;
-    font-weight: 500;
+.pageSubHeaders {
+  margin-top: 32px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.legendPickerFont{
-    font-size: 12px;
-    font-weight: 500;
-    align-self: center;
-    margin: 0 auto;
+.legendPickerFont {
+  font-size: 12px;
+  font-weight: 500;
+  align-self: center;
+  margin: 0 auto;
 }
 
-.glanceCardsRow{
-    display: flex;
-    gap: 8px;
-    margin-bottom: 52px;
+.glanceCardsRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 52px;
 }
 
-.glanceCard{
-    position: relative;
-    background-color: #E5E5FF;
-    border-radius: 12px;
-    height: 200px;
-    flex-grow: 1;
+.glanceCard {
+  position: relative;
+  background-color: #e5e5ff;
+  border-radius: 12px;
+  height: 200px;
+  flex-grow: 1;
 }
 
-.glanceCardTitle{
-    position: absolute;
-    font-size: 64px;
-    font-weight: 200;
+.glanceCardTitle {
+  position: absolute;
+  font-size: 52px;
+  font-weight: 200;
 
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%,-40%);
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -40%);
 }
 
-.glanceCardSubTitle{
-    position: absolute;
-    font-size: 14px;
-    font-weight: 300;
-    white-space: nowrap; 
+.glanceCardSubTitle {
+  position: absolute;
+  font-size: 14px;
+  font-weight: 300;
+  white-space: nowrap;
 
-    top: 65%;
-    left: 50%;
-    transform: translate(-50%,0);
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 
-.graphBox{
-    /* height: 334px; */
-    background-color: #F9F9FF;
-    padding:0 32px;
-    border-radius: 20px;
-    margin-bottom: 52px;
-    display: flex;
+.graphBox {
+  /* height: 334px; */
+  background-color: #f9f9ff;
+  padding: 0 32px;
+  border-radius: 20px;
+  margin-bottom: 52px;
+  display: flex;
 }
 
-.graphLegend{
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
+.graphLegend {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
-.legendTitle{
-    align-self: center;
-    font-size: 10px;
-    margin: 0; 
+.legendTitle {
+  align-self: center;
+  font-size: 10px;
+  margin: 0;
 }
 
-.legendSolidLine{
-    width: 32px;
-    height: 4px;
-    background-color: #DF9D90;
-    margin-right: 12px;
+.legendSolidLine {
+  width: 32px;
+  height: 4px;
+  background-color: #df9d90;
+  margin-right: 12px;
 }
 
-.legendDottedLine{
-    width: 32px;
-    height: 4px;
-    margin-right: 12px;
-    border: 2px dashed #DF9D90;
+.legendDottedLine {
+  width: 32px;
+  height: 4px;
+  margin-right: 12px;
+  border: 2px dashed #df9d90;
 }
 
-.usageTrendsGraph{
-    height: 500px;
-    width: 1400px;
+.usageTrendsGraph {
+  height: 500px;
+  width: 1400px;
 }
 
-.monthPicker{
-    display: flex;
-    justify-content: start;
-    /* width: 100px; */
+.monthPicker {
+  display: flex;
+  justify-content: start;
+  /* width: 100px; */
 }
 
-.graphInfo{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-bottom: 32px;
+.graphInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 32px;
 }
 
-.centerVertically{
-    align-self: center;
+.centerVertically {
+  align-self: center;
 }
 
-.externalLink{
-    padding-top: 52px;
-    padding-right: 150px;
-    margin-top: 52px;
-    font-size: 14px;
-    color: blue;
-    /* background-color: red; */
-    margin: 0 auto;
+.externalLink {
+  padding-top: 52px;
+  padding-right: 150px;
+  margin-top: 52px;
+  font-size: 14px;
+  color: blue;
+  /* background-color: red; */
+  margin: 0 auto;
 }
