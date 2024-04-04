@@ -33,9 +33,9 @@ function BillingPage() {
   const [usageTrendsBreakdownData, setUsageTrendsBreakdownData] = useState({
     headers: [
       { text: "Name" },
-      { text: "Description" },
-      { text: "Models" },
-      { text: "ACU Incurred" },
+      { text: "Version" },
+      { text: "Total Active Devices" },
+      { text: "ACU Incurred This Month" },
     ],
     body: [],
   });
@@ -51,16 +51,21 @@ function BillingPage() {
   const [trendsACU, setTrendsACU] = useState({});
   const [trendsTimeline, setTrendsTimeline] = useState({});
   const [trendsBreakdown, setTrendsBreakdown] = useState({});
+  const [allAssets, setAllAssets] = useState([]);
+  //   const [totalAssetActiveDevices, setTotalAssetActiveDevices] = useState({});
 
-  const proprocessTrendsBreakdownData = async (data) => {
+  const proprocessTrendsBreakdownData = async (
+    currentMonthModelWiseBreakdown,
+    totalAssetActiveDevices
+  ) => {
     var processedData = [];
 
-    for (let deployment of data) {
+    for (let assetName in currentMonthModelWiseBreakdown) {
       processedData.push([
         {
           Component: TextOnlyComponent,
           data: {
-            text: "v3.2.1",
+            text: assetName.split(" ")[0],
             customStyle: {
               fontWeight: 500,
               color: "#494949",
@@ -72,7 +77,7 @@ function BillingPage() {
         {
           Component: TextOnlyComponent,
           data: {
-            text: "This is a short description of the compatiblity tag",
+            text: assetName.split(" ")[1],
             customStyle: {
               color: "#74828F",
               fontWeight: 400,
@@ -84,51 +89,20 @@ function BillingPage() {
         {
           Component: TagsListComponent,
           data: {
-            tags: [
-              `model-name-${deployment}`,
-              "smol-model" + (deployment - 5 * 234),
-            ],
-            tableData: {
-              headers: [{ text: "Name" }, { text: "Description" }],
-              body: [
-                [
-                  {
-                    Component: TextOnlyComponent,
-                    data: {
-                      text: "model-name-1",
-                      customStyle: {
-                        fontWeight: "500",
-                        fontSize: "14px",
-                        color: "#494949",
-                        fontFamily: "Poppins",
-                      },
-                    },
-                  },
-                  {
-                    Component: TextOnlyComponent,
-                    data: {
-                      text: "This is a sample mfin description",
-                      customStyle: {
-                        fontWeight: "400",
-                        fontSize: "14px",
-                        color: "#74828F",
-                        fontFamily: "Poppins",
-                      },
-                    },
-                  },
-                ],
-              ],
-            },
-            tableTitle: "Linked Compatiblity Tag Details",
+            tags: [totalAssetActiveDevices[assetName].toString()],
+            tableData: {},
+            tableTitle: "Linked Models Detail",
             truncationLimit: 2,
-            expandable: true,
+            expandable: false,
             highlightOnHover: true,
           },
         },
         {
           Component: TextOnlyComponent,
           data: {
-            text: "341",
+            text: currentMonthModelWiseBreakdown[assetName]
+              .reduce((acc, currentValue) => acc + currentValue, 0)
+              .toFixed(2),
             customStyle: {
               color: "#74828F",
               fontWeight: 400,
@@ -150,6 +124,7 @@ function BillingPage() {
     var previousMonthTotalACUTemp = 0;
     var previousMonthTillDateACUTemp = 0;
     var trendsBreakdownDataTemp = {};
+    var breakdownTableDataTemp = {};
     const currentMonthDate = new Date();
     const tempMD = new Date();
     tempMD.setMonth(tempMD.getMonth() - 1);
@@ -199,10 +174,23 @@ function BillingPage() {
     for (let timeline in timelines) {
       timelines[timeline].reverse();
     }
-    var trendsACUTemp = {};
 
+    var trendsACUTemp = {};
+    var allAssetsTemp = [];
+    var totalActiveDevicesTemp = {};
     for (let obj of data) {
-      let assetName = obj.assetId;
+      let assetName = obj.assetId + " v" + obj.assetVersion;
+
+      if (!allAssetsTemp.includes(assetName)) {
+        allAssetsTemp.push(assetName);
+      }
+
+      if (!totalActiveDevicesTemp.hasOwnProperty(assetName)) {
+        totalActiveDevicesTemp[assetName] = obj.numDevices;
+      } else {
+        totalActiveDevicesTemp[assetName] += obj.numDevices;
+      }
+
       let readableDate =
         new Date(obj.timestamp).getMonth() +
         1 +
@@ -247,15 +235,24 @@ function BillingPage() {
       }
     }
 
+    setAllAssets(allAssetsTemp);
     setCurrentMonthTotalACU(currentMonthTotalACUTemp.toFixed(2).toString());
     setPreviousMonthTotalACU(previousMonthTotalACUTemp.toFixed(2).toString());
     setPreviousMonthTillDateACU(
       previousMonthTillDateACUTemp.toFixed(2).toString()
     );
     setTrendsACU(trendsACUTemp);
-    setSelectedMonth(Object.keys(trendsACUTemp)[0]);
+    setSelectedMonth(
+      Object.keys(trendsACUTemp)[Object.keys(trendsACUTemp).length - 1]
+    );
     setTrendsTimeline(timelines);
     setTrendsBreakdown(trendsBreakdownDataTemp);
+    proprocessTrendsBreakdownData(
+      trendsACUTemp[
+        Object.keys(trendsACUTemp)[Object.keys(trendsACUTemp).length - 1]
+      ],
+      totalActiveDevicesTemp
+    );
   };
 
   const fetchBillingData = async () => {
@@ -273,12 +270,12 @@ function BillingPage() {
       })
       .then((res) => {
         preprocessBackendData(res.data.acuMetrics);
+        console.log(res.data);
       })
       .catch((e) => {});
   };
 
   useEffect(() => {
-    proprocessTrendsBreakdownData([1, 2, 3, 4, 5]);
     fetchBillingData();
   }, []);
 
@@ -395,16 +392,19 @@ function BillingPage() {
               <div className="graphInfo">
                 <div className="graphLegends">
                   <p className="pageSubHeaders">Legend</p>
-                  <div className="graphLegend">
-                    <div className="legendSolidLine"></div>
-                    <p className="legendTitle">Model</p>
-                  </div>
-                  <div className="graphLegend">
-                    <div className="legendSolidLine"></div>
-                    <p className="legendTitle">Script</p>
-                  </div>
+                  {allAssets.map((key) => (
+                    <div className="graphLegend">
+                      <div
+                        className="legendSolidLine"
+                        style={{
+                          backgroundColor: getColorFromSeed(key).background,
+                        }}
+                      ></div>
+                      <p className="legendTitle">{key}</p>
+                    </div>
+                  ))}
                 </div>
-                <div
+                {/* <div
                   className="monthPicker"
                   onClick={() => {
                     setShowMonthPicker(true);
@@ -441,7 +441,7 @@ function BillingPage() {
                     className="centerVertically"
                     src={"/assets/icons/dropdownArrow.svg"}
                   ></img>
-                </div>
+                </div> */}
               </div>
               <div className="usageTrendsGraph">
                 <StackedBarChart data={trendsBreakdown}></StackedBarChart>
