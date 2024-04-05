@@ -8,17 +8,20 @@ import "../admin/admin_page.css";
 import "./billing_page.css";
 import AnalyticsLineChart from "presentation/components/charts/line_chart";
 import {
+  ACCENT_COLOR,
   ACCESS_TOKEN,
   APP_BASE_DMS_URL,
   AUTH_METHOD,
   CLIENT_ID,
   COGNITO_USERNAME,
   DEFAULT_ANALYTICS,
+  GRAPH_COLORS,
   USER_EMAIL,
   getColorFromSeed,
 } from "core/constants";
 import StackedBarChart from "presentation/components/charts/stacked_bar_chart";
 import axios from "axios";
+import { InfinitySpin } from "react-loader-spinner";
 
 function BillingPage() {
   const dispatch = useDispatch();
@@ -52,7 +55,6 @@ function BillingPage() {
   const [trendsTimeline, setTrendsTimeline] = useState({});
   const [trendsBreakdown, setTrendsBreakdown] = useState({});
   const [allAssets, setAllAssets] = useState([]);
-  //   const [totalAssetActiveDevices, setTotalAssetActiveDevices] = useState({});
 
   const proprocessTrendsBreakdownData = async (
     currentMonthModelWiseBreakdown,
@@ -281,6 +283,11 @@ function BillingPage() {
 
   return (
     <div className={`flexColumn adminPage`}>
+      {Object.keys(trendsACU).length == 0 && (
+        <div className="loader-wrapper">
+          <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
+        </div>
+      )}
       {Object.keys(trendsACU).length != 0 && (
         <div>
           <div className={`flexColumn adminPageHeader`}>
@@ -392,12 +399,12 @@ function BillingPage() {
               <div className="graphInfo">
                 <div className="graphLegends">
                   <p className="pageSubHeaders">Legend</p>
-                  {allAssets.map((key) => (
+                  {allAssets.map((key, index) => (
                     <div className="graphLegend">
                       <div
                         className="legendSolidLine"
                         style={{
-                          backgroundColor: getColorFromSeed(key).background,
+                          backgroundColor: GRAPH_COLORS[index % 10],
                         }}
                       ></div>
                       <p className="legendTitle">{key}</p>

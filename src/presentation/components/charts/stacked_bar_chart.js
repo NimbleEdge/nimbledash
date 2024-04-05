@@ -1,4 +1,4 @@
-import { getColorFromSeed } from "core/constants";
+import { GRAPH_COLORS, getColorFromSeed } from "core/constants";
 import React, { PureComponent, useEffect, useState } from "react";
 import {
   BarChart,
@@ -57,12 +57,12 @@ export default function StackedBarChart(props) {
         <Tooltip />
         {/* <Legend /> */}
 
-        {assetKeys.map((key) => (
+        {assetKeys.map((key, index) => (
           <Bar
             key={key}
             dataKey={key}
             stackId="a"
-            fill={getColorFromSeed(key).background}
+            fill={GRAPH_COLORS[index % 10]}
           />
         ))}
       </BarChart>
