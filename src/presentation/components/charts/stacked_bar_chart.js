@@ -19,7 +19,6 @@ export default function StackedBarChart(props) {
   useEffect(() => {
     var dataTemp = [];
     var assetKeysTemp = [];
-    console.log("gay", props.data);
     for (let name in props.data) {
       dataTemp.push({
         name: name,
@@ -37,8 +36,6 @@ export default function StackedBarChart(props) {
 
     setAssetKeys(assetKeysTemp);
     setData(dataTemp);
-
-    console.log(assetKeysTemp, dataTemp);
   }, []);
 
   return (

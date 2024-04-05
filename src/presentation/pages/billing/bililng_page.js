@@ -254,6 +254,19 @@ function BillingPage() {
       })
       .then((res) => {
         var metrics = res.data.acuMetrics;
+        if (metrics.length == 0) {
+          metrics = [
+            {
+              assetId: "none",
+              assetVersion: "1.0.0",
+              assetType: "model",
+              acuCount: 0,
+              numDevices: 0,
+              deploymentId: 0,
+              timestamp: "1970-01-01T00:00:00Z",
+            },
+          ];
+        }
         metrics.reverse();
         preprocessBackendData(metrics);
         console.log(metrics);

@@ -88,7 +88,6 @@ function AppRouter(props) {
         },
       })
       .then((res) => {
-        //console.log("NEXA",res);
         if (res.status == 200) {
           return true;
         } else {
