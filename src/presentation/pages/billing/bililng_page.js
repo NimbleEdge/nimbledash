@@ -47,10 +47,12 @@ function BillingPage() {
     setSelectedMonth(event.target.value);
   };
 
-  const [currentMonthTotalACU, setCurrentMonthTotalACU] = useState("N/A");
-  const [previousMonthTotalACU, setPreviousMonthTotalACU] = useState("N/A");
-  const [previousMonthTillDateACU, setPreviousMonthTillDateACU] =
-    useState("N/A");
+  const [glanceCardsData, setGlanceCardsData] = useState([
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+  ]);
   const [trendsACU, setTrendsACU] = useState({});
   const [trendsTimeline, setTrendsTimeline] = useState({});
   const [trendsBreakdown, setTrendsBreakdown] = useState({});
@@ -238,11 +240,12 @@ function BillingPage() {
     }
 
     setAllAssets(allAssetsTemp);
-    setCurrentMonthTotalACU(currentMonthTotalACUTemp.toFixed(2).toString());
-    setPreviousMonthTotalACU(previousMonthTotalACUTemp.toFixed(2).toString());
-    setPreviousMonthTillDateACU(
-      previousMonthTillDateACUTemp.toFixed(2).toString()
-    );
+    setGlanceCardsData([
+      currentMonthTotalACUTemp.toFixed(2).toString(),
+      previousMonthTotalACUTemp.toFixed(2).toString(),
+      previousMonthTillDateACUTemp.toFixed(2).toString(),
+      "N/A",
+    ]);
     setTrendsACU(trendsACUTemp);
     setSelectedMonth(
       Object.keys(trendsACUTemp)[Object.keys(trendsACUTemp).length - 1]
@@ -303,7 +306,7 @@ function BillingPage() {
                 className="glanceCard"
                 style={{ backgroundColor: getColorFromSeed("7").background }}
               >
-                <p className="glanceCardTitle">{currentMonthTotalACU}</p>
+                <p className="glanceCardTitle">{glanceCardsData[0]}</p>
                 <p className="glanceCardSubTitle">
                   Total ACU incurred this month till date
                 </p>
@@ -312,14 +315,14 @@ function BillingPage() {
                 className="glanceCard"
                 style={{ backgroundColor: getColorFromSeed("7").background }}
               >
-                <p className="glanceCardTitle">{previousMonthTotalACU}</p>
+                <p className="glanceCardTitle">{glanceCardsData[1]}</p>
                 <p className="glanceCardSubTitle">Previous month ACU usage</p>
               </div>
               <div
                 className="glanceCard"
                 style={{ backgroundColor: getColorFromSeed("7").background }}
               >
-                <p className="glanceCardTitle">{previousMonthTillDateACU}</p>
+                <p className="glanceCardTitle">{glanceCardsData[2]}</p>
                 <p className="glanceCardSubTitle">
                   ACU usage till date previous month
                 </p>
@@ -328,7 +331,7 @@ function BillingPage() {
                 className="glanceCard"
                 style={{ backgroundColor: getColorFromSeed("7").background }}
               >
-                <p className="glanceCardTitle">N/A</p>
+                <p className="glanceCardTitle">{glanceCardsData[3]}</p>
                 <p className="glanceCardSubTitle">
                   Projected ACU by the end of this month
                 </p>
