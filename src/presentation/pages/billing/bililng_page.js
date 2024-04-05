@@ -1,202 +1,334 @@
 import Table, { TextOnlyComponent } from "presentation/components/Table/table";
 import { TagsListComponent } from "presentation/components/Tags/tagsList";
 import { loaderActions } from "presentation/redux/stores/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, version } from "react";
 import { useDispatch } from "react-redux";
-import '../../../common.css';
-import '../admin/admin_page.css';
-import './billing_page.css';
+import "../../../common.css";
+import "../admin/admin_page.css";
+import "./billing_page.css";
 import AnalyticsLineChart from "presentation/components/charts/line_chart";
-import { DEFAULT_ANALYTICS, getColorFromSeed } from "core/constants";
+import {
+  ACCENT_COLOR,
+  ACCESS_TOKEN,
+  APP_BASE_DMS_URL,
+  AUTH_METHOD,
+  CLIENT_ID,
+  COGNITO_USERNAME,
+  DEFAULT_ANALYTICS,
+  GRAPH_COLORS,
+  USER_EMAIL,
+  getColorFromSeed,
+} from "core/constants";
 import StackedBarChart from "presentation/components/charts/stacked_bar_chart";
+import axios from "axios";
+import { InfinitySpin } from "react-loader-spinner";
+import { toast } from "react-toastify";
+import GlanceCards from "./glance_cards";
+import UsageTrendsGraph from "./usage_trends_graph";
+import UsageTrendsBreakDownGraph from "./usage_trends_breakdown_graph";
 
 function BillingPage() {
-    const dispatch = useDispatch();
-    const [showMonthPicker, setShowMonthPicker] = useState(false);
-    const [selectedMonthData, setSelectedMonthData] = useState({
-        month: 9,
-        year: 2023,
-    });
-    const [selectedMonth, setSelectedMonth] = useState('');
+  const dispatch = useDispatch();
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [trendsACU, setTrendsACU] = useState({});
+  const [trendsTimeline, setTrendsTimeline] = useState({});
+  const [trendsBreakdown, setTrendsBreakdown] = useState({});
+  const [allAssets, setAllAssets] = useState([]);
+  const [usageTrendsBreakdownData, setUsageTrendsBreakdownData] = useState({
+    headers: [
+      { text: "Name" },
+      { text: "Version" },
+      { text: "Avg Active Devices This Month" },
+      { text: "ACU Incurred This Month" },
+    ],
+    body: [],
+  });
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
 
-    const [isPickerOpen, setIsPickerOpen] = useState(false);
-    const [usageTrendsBreakdownData, setUsageTrendsBreakdownData] = useState({
-        headers: [
-            { text: 'Name' },
-            { text: 'Description' },
-            { text: 'Models' },
-            { text: 'ACU Incurred' }
-        ],
-        body: [
+  const [glanceCardsData, setGlanceCardsData] = useState([
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+  ]);
 
-        ],
-    });
+  const buildUsageTrendsBreakdownTable = async (
+    currentMonthModelWiseBreakdown,
+    totalAssetActiveDevices
+  ) => {
+    var processedData = [];
 
-
-    const handleMonthChange = (event) => {
-        setSelectedMonth(event.target.value);
-    };
-
-    const months = [
-        { value: '1', label: 'January' },
-        { value: '2', label: 'February' },
-        { value: '3', label: 'March' },
-        { value: '4', label: 'April' },
-        { value: '5', label: 'May' },
-        { value: '6', label: 'June' },
-        { value: '7', label: 'July' },
-        { value: '8', label: 'August' },
-        { value: '9', label: 'September' },
-        { value: '10', label: 'October' },
-        { value: '11', label: 'November' },
-        { value: '12', label: 'December' },
-    ];
-
-
-    const handleSelect = () => {
-        const month = parseInt(selectedMonth);
-
-        if (!isNaN(month)) {
-            const selectedDate = new Date(month - 1);
-            //   onMonthSelect(selectedDate);
-            //   onClose();
-        }
-    };
-
-    const proprocessTrendsBreakdownData = async (data) => {
-        var processedData = [];
-
-        for (let deployment of data) {
-            processedData.push(
-                [
-                    { Component: TextOnlyComponent, data: { text: "v3.2.1", customStyle: { fontWeight: 500, color: '#494949', fontSize: '14px' }, highlightOnHover: true } },
-                    { Component: TextOnlyComponent, data: { text: "This is a short description of the compatiblity tag", customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
-                    {
-                        Component: TagsListComponent, data: {
-                            tags: [`model-name-${deployment}`, "smol-model" + ((deployment-5*234))], tableData: {
-                                headers: [{ text: 'Name' }, { text: 'Description' }],
-                                body: [
-                                    [{ Component: TextOnlyComponent, data: { text: "model-name-1", customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]
-                                ]
-                            }, tableTitle: "Linked Compatiblity Tag Details", truncationLimit: 2, expandable: true, highlightOnHover: true
-                        }
-                    },
-                    { Component: TextOnlyComponent, data: { text: "341", customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
-                ]
-            );
-        }
-
-        const newData = { ...usageTrendsBreakdownData, body: processedData };
-        setUsageTrendsBreakdownData(newData);
-        dispatch(loaderActions.toggleLoader(false));
+    for (let assetName in currentMonthModelWiseBreakdown) {
+      processedData.push([
+        {
+          Component: TextOnlyComponent,
+          data: {
+            text: assetName.split(" ")[0],
+            customStyle: {
+              fontWeight: 500,
+              color: "#494949",
+              fontSize: "14px",
+            },
+            highlightOnHover: true,
+          },
+        },
+        {
+          Component: TextOnlyComponent,
+          data: {
+            text: assetName.split(" ")[1],
+            customStyle: {
+              color: "#74828F",
+              fontWeight: 400,
+              fontSize: "14px",
+            },
+            highlightOnHover: true,
+          },
+        },
+        {
+          Component: TagsListComponent,
+          data: {
+            tags: [totalAssetActiveDevices[assetName].toString()],
+            tableData: {},
+            tableTitle: "Linked Models Detail",
+            truncationLimit: 2,
+            expandable: false,
+            highlightOnHover: true,
+          },
+        },
+        {
+          Component: TextOnlyComponent,
+          data: {
+            text: currentMonthModelWiseBreakdown[assetName]
+              .reduce((acc, currentValue) => acc + currentValue, 0)
+              .toFixed(2),
+            customStyle: {
+              color: "#74828F",
+              fontWeight: 400,
+              fontSize: "14px",
+            },
+            highlightOnHover: true,
+          },
+        },
+      ]);
     }
 
-    useEffect(() => {
-        proprocessTrendsBreakdownData([1, 2, 3, 4, 5]);
-    });
+    const newData = { ...usageTrendsBreakdownData, body: processedData };
+    setUsageTrendsBreakdownData(newData);
+  };
 
-    return (
-        <div className={`flexColumn adminPage`}>
-            <div className={`flexColumn adminPageHeader`}>
-                <div className={`adminPageTitle`}>Billing Information</div>
-                <div className={`adminPageSubtitle`}>Monitor Active Compute Units In Realtime</div>
-            </div>
-            <div className={`adminPageContent`}>
-                <p className="pageHeaders">Usage At A Glance</p>
-                <div className="glanceCardsRow">
-                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("7").background }}>
-                        <p className="glanceCardTitle">105</p>
-                        <p className="glanceCardSubTitle">Total ACU incurred this month till date</p>
-                    </div>
-                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("7").background }}>
-                        <p className="glanceCardTitle">783</p>
-                        <p className="glanceCardSubTitle">Previous month ACU usage</p>
-                    </div>
-                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("7").background }}>
-                        <p className="glanceCardTitle">231</p>
-                        <p className="glanceCardSubTitle">ACU usage till date previous month</p>
-                    </div>
-                    <div className="glanceCard" style={{ backgroundColor: getColorFromSeed("7").background }}>
-                        <p className="glanceCardTitle">598</p>
-                        <p className="glanceCardSubTitle">Projected ACU by the end of this month</p>
-                    </div>
-                </div>
+  const preprocessBackendData = (data) => {
+    var currentMonthTotalACUTemp = 0;
+    var previousMonthTotalACUTemp = 0;
+    var previousMonthTillDateACUTemp = 0;
+    var trendsBreakdownDataTemp = {};
+    const currentMonthDateObject = new Date();
+    const tempMD = new Date();
+    tempMD.setMonth(tempMD.getMonth() - 1);
+    const previousMonthDateObject = tempMD;
 
-                <p className="pageHeaders">Usage Trends</p>
-                <div className="graphBox">
-                    <div className="graphInfo">
-                        <div className="graphLegends">
-                            <p className="pageSubHeaders">Legend</p>
-                            <div className="graphLegend">
-                                <div className="legendSolidLine"></div>
-                                <p className="legendTitle">Usage Till Date</p>
-                            </div>
-                            <div className="graphLegend">
-                                <div className="legendDottedLine"></div>
-                                <p className="legendTitle">Projected Usage</p>
-                            </div>
-                        </div>
-                        <div className="monthPicker" onClick={() => { setShowMonthPicker(true) }}>
-                            <img style={{ marginRight: "4px" }} src={"/assets/icons/calendar.svg"} ></img>
-                            <select value={selectedMonth} onChange={handleMonthChange} className="legendPickerFont" style={{ border: 'none', outline: 'none', background: 'none', appearance: 'none' }}>
-                                {months.map((month) => (
-                                    <option key={month.value} value={month.value}>
-                                        {month.label}
-                                    </option>
-                                ))}
-                            </select>
-                            <img style={{ height: "8px" }} className="centerVertically" src={"/assets/icons/dropdownArrow.svg"} ></img>
-                        </div>
-                    </div>
-                    <div className="usageTrendsGraph">
-                        <AnalyticsLineChart
-                            trends={DEFAULT_ANALYTICS["LatencyTrends"]}
-                            trendsTimeline={DEFAULT_ANALYTICS["latencyTrendsTimeline"]}
-                        ></AnalyticsLineChart>
-                    </div>
-                </div>
+    let timelines = {};
+    for (let obj of data) {
+      let readableDate =
+        new Date(obj.timestamp).getMonth() +
+        1 +
+        "/" +
+        new Date(obj.timestamp).getFullYear();
 
-                <p className="pageHeaders">Usage Trends Breakdown</p>
-                <div className="graphBox">
-                    <div className="graphInfo">
-                        <div className="graphLegends">
-                            <p className="pageSubHeaders">Legend</p>
-                            <div className="graphLegend">
-                                <div className="legendSolidLine"></div>
-                                <p className="legendTitle">Model</p>
-                            </div>
-                            <div className="graphLegend">
-                                <div className="legendSolidLine"></div>
-                                <p className="legendTitle">Script</p>
-                            </div>
-                        </div>
-                        <div className="monthPicker" onClick={() => { setShowMonthPicker(true) }}>
-                            <img style={{ marginRight: "4px" }} src={"/assets/icons/calendar.svg"} ></img>
-                            <select value={selectedMonth} onChange={handleMonthChange} className="legendPickerFont" style={{ border: 'none', outline: 'none', background: 'none', appearance: 'none' }}>
-                                {["Deployments", "Models", "Scripts", "Compatiblity Tags"].map((options) => (
-                                    <option key={options} value={options}>
-                                        {options}
-                                    </option>
-                                ))}
-                            </select>
-                            <img style={{ height: "8px" }} className="centerVertically" src={"/assets/icons/dropdownArrow.svg"} ></img>
-                        </div>
-                    </div>
-                    <div className="usageTrendsGraph">
-                        <StackedBarChart
-                            trends={DEFAULT_ANALYTICS["LatencyTrends"]}
-                            trendsTimeline={DEFAULT_ANALYTICS["latencyTrendsTimeline"]}
-                        ></StackedBarChart>
-                    </div>
-                </div>
+      timelines[readableDate] = timelines[readableDate] || [];
+      if (!timelines[readableDate].includes(obj.timestamp)) {
+        timelines[readableDate].push(obj.timestamp);
+      }
 
-                <div className={`tasksTableView flexColumn overflowAuto`}>
-                    <Table data={usageTrendsBreakdownData} />
-                </div>
-            </div>
-            <a className="externalLink" target="_blank" href="https://codeclock.in">Please click here to perform advance queries.</a>
-        </div>
+      let timestamp = new Date(obj.timestamp);
+
+      if (
+        timestamp.getMonth() === currentMonthDateObject.getMonth() &&
+        timestamp.getFullYear() === currentMonthDateObject.getFullYear()
+      ) {
+        currentMonthTotalACUTemp += obj.acuCount;
+      }
+
+      if (
+        timestamp.getMonth() === previousMonthDateObject.getMonth() &&
+        timestamp.getFullYear() === previousMonthDateObject.getFullYear()
+      ) {
+        previousMonthTotalACUTemp += obj.acuCount;
+
+        if (timestamp.getDate() <= currentMonthDateObject.getDate()) {
+          previousMonthTillDateACUTemp += obj.acuCount;
+        }
+      }
+    }
+
+    var trendsACUTemp = {};
+    var allAssetsTemp = [];
+    var totalActiveDevicesTemp = {};
+    for (let obj of data) {
+      let assetName = `${obj.assetId} v${obj.assetVersion}`;
+
+      if (!allAssetsTemp.includes(assetName)) {
+        allAssetsTemp.push(assetName);
+      }
+
+      if (
+        currentMonthDateObject.getMonth() ===
+          new Date(obj.timestamp).getMonth() &&
+        currentMonthDateObject.getFullYear() ===
+          new Date(obj.timestamp).getFullYear()
+      ) {
+        if (totalActiveDevicesTemp.hasOwnProperty(assetName)) {
+          totalActiveDevicesTemp[assetName] = [
+            ...totalActiveDevicesTemp[assetName],
+            obj.numDevices,
+          ];
+        } else {
+          totalActiveDevicesTemp = {
+            ...totalActiveDevicesTemp,
+            [assetName]: [obj.numDevices],
+          };
+        }
+      }
+
+      let readableDate = `${new Date(obj.timestamp).getMonth() + 1}/${new Date(
+        obj.timestamp
+      ).getFullYear()}`;
+
+      trendsACUTemp[readableDate] = trendsACUTemp[readableDate] || {};
+
+      trendsACUTemp[readableDate][assetName] =
+        trendsACUTemp[readableDate][assetName] ||
+        Array.from({ length: timelines[readableDate].length }, () => -1);
+
+      let timestampIndex = timelines[readableDate].findIndex(
+        (element) => element === obj.timestamp
+      );
+      trendsACUTemp[readableDate][assetName][timestampIndex] = obj.acuCount;
+
+      trendsBreakdownDataTemp[readableDate] =
+        trendsBreakdownDataTemp[readableDate] || {};
+      trendsBreakdownDataTemp[readableDate][assetName] =
+        (trendsBreakdownDataTemp[readableDate][assetName] || 0) + obj.acuCount;
+    }
+
+    setAllAssets(allAssetsTemp);
+    setGlanceCardsData([
+      currentMonthTotalACUTemp.toFixed(2).toString(),
+      previousMonthTotalACUTemp.toFixed(2).toString(),
+      previousMonthTillDateACUTemp.toFixed(2).toString(),
+      "N/A",
+    ]);
+    setTrendsACU(trendsACUTemp);
+    setSelectedMonth(Object.keys(trendsACUTemp)[0]);
+    setTrendsTimeline(timelines);
+    setTrendsBreakdown(trendsBreakdownDataTemp);
+
+    for (let assetName in totalActiveDevicesTemp) {
+      let arr = totalActiveDevicesTemp[assetName];
+      let average = Math.floor(
+        arr.reduce((acc, val) => acc + val, 0) / arr.length
+      );
+
+      totalActiveDevicesTemp[assetName] = average;
+    }
+
+    buildUsageTrendsBreakdownTable(
+      trendsACUTemp[Object.keys(trendsACUTemp)[0]],
+      totalActiveDevicesTemp
     );
+  };
+
+  const fetchBillingData = async () => {
+    const clientID = localStorage.getItem(CLIENT_ID);
+
+    await axios
+      .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
+        headers: {
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientId: clientID,
+          TokenId: localStorage.getItem(USER_EMAIL),
+          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+        },
+      })
+      .then((res) => {
+        var metrics = res.data.acuMetrics;
+        if (metrics.length == 0) {
+          metrics = [
+            {
+              assetId: "none",
+              assetVersion: "1.0.0",
+              assetType: "model",
+              acuCount: 0,
+              numDevices: 0,
+              deploymentId: 0,
+              timestamp: "1970-01-01T00:00:00Z",
+            },
+          ];
+        }
+        metrics.reverse();
+        preprocessBackendData(metrics);
+        console.log(metrics);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(e.message, {
+          toastId: "errorToast",
+        });
+      });
+  };
+
+  useEffect(() => {
+    fetchBillingData();
+  }, []);
+
+  return (
+    <div className={`flexColumn adminPage`}>
+      {Object.keys(trendsACU).length != 0 && (
+        <div>
+          <div className={`flexColumn adminPageHeader`}>
+            <div className={`adminPageTitle`}>Billing Information</div>
+            <div className={`adminPageSubtitle`}>
+              Monitor Active Compute Units In Realtime
+            </div>
+          </div>
+          <div className={`adminPageContent`}>
+            <p className="pageHeaders">Usage At A Glance</p>
+
+            <GlanceCards glanceCardsData={glanceCardsData}></GlanceCards>
+
+            <p className="pageHeaders">Usage Trends</p>
+
+            <UsageTrendsGraph
+              trendsACU={trendsACU}
+              selectedMonth={selectedMonth}
+              trendsTimeline={trendsTimeline}
+              handleMonthChange={handleMonthChange}
+            ></UsageTrendsGraph>
+
+            <p className="pageHeaders">Usage Trends Breakdown</p>
+            <UsageTrendsBreakDownGraph
+              trendsBreakdown={trendsBreakdown}
+              allAssets={allAssets}
+            ></UsageTrendsBreakDownGraph>
+
+            <div className={`tasksTableView flexColumn overflowAuto`}>
+              <Table data={usageTrendsBreakdownData} />
+            </div>
+          </div>
+
+          {/* <a
+            className="externalLink"
+            target="_blank"
+            href="https://codeclock.in"
+          >
+            Please click here to perform advance queries.
+          </a> */}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default BillingPage;
