@@ -22,27 +22,27 @@ import {
 import StackedBarChart from "presentation/components/charts/stacked_bar_chart";
 import axios from "axios";
 import { InfinitySpin } from "react-loader-spinner";
+import { toast } from "react-toastify";
+import GlanceCards from "./glance_cards";
+import UsageTrendsGraph from "./usage_trends_graph";
+import UsageTrendsBreakDownGraph from "./usage_trends_breakdown_graph";
 
 function BillingPage() {
   const dispatch = useDispatch();
-  const [showMonthPicker, setShowMonthPicker] = useState(false);
-  const [selectedMonthData, setSelectedMonthData] = useState({
-    month: 9,
-    year: 2023,
-  });
   const [selectedMonth, setSelectedMonth] = useState("");
-
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [trendsACU, setTrendsACU] = useState({});
+  const [trendsTimeline, setTrendsTimeline] = useState({});
+  const [trendsBreakdown, setTrendsBreakdown] = useState({});
+  const [allAssets, setAllAssets] = useState([]);
   const [usageTrendsBreakdownData, setUsageTrendsBreakdownData] = useState({
     headers: [
       { text: "Name" },
       { text: "Version" },
-      { text: "Total Active Devices" },
+      { text: "Avg Active Devices This Month" },
       { text: "ACU Incurred This Month" },
     ],
     body: [],
   });
-
   const handleMonthChange = (event) => {
     setSelectedMonth(event.target.value);
   };
@@ -53,12 +53,8 @@ function BillingPage() {
     "N/A",
     "N/A",
   ]);
-  const [trendsACU, setTrendsACU] = useState({});
-  const [trendsTimeline, setTrendsTimeline] = useState({});
-  const [trendsBreakdown, setTrendsBreakdown] = useState({});
-  const [allAssets, setAllAssets] = useState([]);
 
-  const proprocessTrendsBreakdownData = async (
+  const buildUsageTrendsBreakdownTable = async (
     currentMonthModelWiseBreakdown,
     totalAssetActiveDevices
   ) => {
@@ -120,7 +116,6 @@ function BillingPage() {
 
     const newData = { ...usageTrendsBreakdownData, body: processedData };
     setUsageTrendsBreakdownData(newData);
-    dispatch(loaderActions.toggleLoader(false));
   };
 
   const preprocessBackendData = (data) => {
@@ -128,11 +123,10 @@ function BillingPage() {
     var previousMonthTotalACUTemp = 0;
     var previousMonthTillDateACUTemp = 0;
     var trendsBreakdownDataTemp = {};
-    var breakdownTableDataTemp = {};
-    const currentMonthDate = new Date();
+    const currentMonthDateObject = new Date();
     const tempMD = new Date();
     tempMD.setMonth(tempMD.getMonth() - 1);
-    const previousMonthDate = tempMD;
+    const previousMonthDateObject = tempMD;
 
     let timelines = {};
     for (let obj of data) {
@@ -142,101 +136,80 @@ function BillingPage() {
         "/" +
         new Date(obj.timestamp).getFullYear();
 
-      if (!timelines.hasOwnProperty(readableDate)) {
-        timelines[readableDate] = [];
-      }
-
+      timelines[readableDate] = timelines[readableDate] || [];
       if (!timelines[readableDate].includes(obj.timestamp)) {
-        timelines[readableDate] = [...timelines[readableDate], obj.timestamp];
+        timelines[readableDate].push(obj.timestamp);
       }
 
       let timestamp = new Date(obj.timestamp);
 
       if (
-        timestamp.getMonth() == currentMonthDate.getMonth() &&
-        timestamp.getFullYear() == currentMonthDate.getFullYear()
+        timestamp.getMonth() === currentMonthDateObject.getMonth() &&
+        timestamp.getFullYear() === currentMonthDateObject.getFullYear()
       ) {
         currentMonthTotalACUTemp += obj.acuCount;
       }
 
       if (
-        timestamp.getMonth() == previousMonthDate.getMonth() &&
-        timestamp.getFullYear() == previousMonthDate.getFullYear()
+        timestamp.getMonth() === previousMonthDateObject.getMonth() &&
+        timestamp.getFullYear() === previousMonthDateObject.getFullYear()
       ) {
         previousMonthTotalACUTemp += obj.acuCount;
-      }
 
-      if (
-        timestamp.getMonth() == previousMonthDate.getMonth() &&
-        timestamp.getFullYear() == previousMonthDate.getFullYear() &&
-        timestamp.getDate() <= currentMonthDate.getDate()
-      ) {
-        previousMonthTillDateACUTemp += obj.acuCount;
+        if (timestamp.getDate() <= currentMonthDateObject.getDate()) {
+          previousMonthTillDateACUTemp += obj.acuCount;
+        }
       }
-    }
-
-    for (let timeline in timelines) {
-      timelines[timeline].reverse();
     }
 
     var trendsACUTemp = {};
     var allAssetsTemp = [];
     var totalActiveDevicesTemp = {};
     for (let obj of data) {
-      let assetName = obj.assetId + " v" + obj.assetVersion;
+      let assetName = `${obj.assetId} v${obj.assetVersion}`;
 
       if (!allAssetsTemp.includes(assetName)) {
         allAssetsTemp.push(assetName);
       }
 
-      if (!totalActiveDevicesTemp.hasOwnProperty(assetName)) {
-        totalActiveDevicesTemp[assetName] = obj.numDevices;
-      } else {
-        totalActiveDevicesTemp[assetName] += obj.numDevices;
+      if (
+        currentMonthDateObject.getMonth() ===
+          new Date(obj.timestamp).getMonth() &&
+        currentMonthDateObject.getFullYear() ===
+          new Date(obj.timestamp).getFullYear()
+      ) {
+        if (totalActiveDevicesTemp.hasOwnProperty(assetName)) {
+          totalActiveDevicesTemp[assetName] = [
+            ...totalActiveDevicesTemp[assetName],
+            obj.numDevices,
+          ];
+        } else {
+          totalActiveDevicesTemp = {
+            ...totalActiveDevicesTemp,
+            [assetName]: [obj.numDevices],
+          };
+        }
       }
 
-      let readableDate =
-        new Date(obj.timestamp).getMonth() +
-        1 +
-        "/" +
-        new Date(obj.timestamp).getFullYear();
+      let readableDate = `${new Date(obj.timestamp).getMonth() + 1}/${new Date(
+        obj.timestamp
+      ).getFullYear()}`;
 
-      let timestamp = obj.timestamp;
+      trendsACUTemp[readableDate] = trendsACUTemp[readableDate] || {};
 
-      if (!trendsACUTemp.hasOwnProperty(readableDate)) {
-        trendsACUTemp[readableDate] = {};
-      }
+      trendsACUTemp[readableDate][assetName] =
+        trendsACUTemp[readableDate][assetName] ||
+        Array.from({ length: timelines[readableDate].length }, () => -1);
 
-      if (!trendsACUTemp[readableDate].hasOwnProperty(assetName)) {
-        trendsACUTemp[readableDate] = {
-          ...trendsACUTemp[readableDate],
-          [assetName]: Array.from(
-            { length: timelines[readableDate].length },
-            () => -1
-          ),
-        };
-      }
       let timestampIndex = timelines[readableDate].findIndex(
-        (element) => element === timestamp
+        (element) => element === obj.timestamp
       );
+      trendsACUTemp[readableDate][assetName][timestampIndex] = obj.acuCount;
 
-      var valueArray = trendsACUTemp[readableDate][assetName];
-      valueArray[timestampIndex] = obj.acuCount;
-      trendsACUTemp[readableDate][assetName] = valueArray;
-
-      if (!trendsBreakdownDataTemp.hasOwnProperty(readableDate)) {
-        trendsBreakdownDataTemp[readableDate] = {};
-      }
-
-      if (!trendsBreakdownDataTemp[readableDate].hasOwnProperty(assetName)) {
-        trendsBreakdownDataTemp[readableDate] = {
-          ...trendsBreakdownDataTemp[readableDate],
-          [assetName]: obj.acuCount,
-        };
-      } else {
-        trendsBreakdownDataTemp[readableDate][assetName] =
-          trendsBreakdownDataTemp[readableDate][assetName] + obj.acuCount;
-      }
+      trendsBreakdownDataTemp[readableDate] =
+        trendsBreakdownDataTemp[readableDate] || {};
+      trendsBreakdownDataTemp[readableDate][assetName] =
+        (trendsBreakdownDataTemp[readableDate][assetName] || 0) + obj.acuCount;
     }
 
     setAllAssets(allAssetsTemp);
@@ -247,15 +220,21 @@ function BillingPage() {
       "N/A",
     ]);
     setTrendsACU(trendsACUTemp);
-    setSelectedMonth(
-      Object.keys(trendsACUTemp)[Object.keys(trendsACUTemp).length - 1]
-    );
+    setSelectedMonth(Object.keys(trendsACUTemp)[0]);
     setTrendsTimeline(timelines);
     setTrendsBreakdown(trendsBreakdownDataTemp);
-    proprocessTrendsBreakdownData(
-      trendsACUTemp[
-        Object.keys(trendsACUTemp)[Object.keys(trendsACUTemp).length - 1]
-      ],
+
+    for (let assetName in totalActiveDevicesTemp) {
+      let arr = totalActiveDevicesTemp[assetName];
+      let average = Math.floor(
+        arr.reduce((acc, val) => acc + val, 0) / arr.length
+      );
+
+      totalActiveDevicesTemp[assetName] = average;
+    }
+
+    buildUsageTrendsBreakdownTable(
+      trendsACUTemp[Object.keys(trendsACUTemp)[0]],
       totalActiveDevicesTemp
     );
   };
@@ -274,10 +253,17 @@ function BillingPage() {
         },
       })
       .then((res) => {
-        preprocessBackendData(res.data.acuMetrics);
-        console.log(res.data);
+        var metrics = res.data.acuMetrics;
+        metrics.reverse();
+        preprocessBackendData(metrics);
+        console.log(metrics);
       })
-      .catch((e) => {});
+      .catch((e) => {
+        console.log(e);
+        toast.error(e.message, {
+          toastId: "errorToast",
+        });
+      });
   };
 
   useEffect(() => {
@@ -286,11 +272,6 @@ function BillingPage() {
 
   return (
     <div className={`flexColumn adminPage`}>
-      {Object.keys(trendsACU).length == 0 && (
-        <div className="loader-wrapper">
-          <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
-        </div>
-      )}
       {Object.keys(trendsACU).length != 0 && (
         <div>
           <div className={`flexColumn adminPageHeader`}>
@@ -301,167 +282,29 @@ function BillingPage() {
           </div>
           <div className={`adminPageContent`}>
             <p className="pageHeaders">Usage At A Glance</p>
-            <div className="glanceCardsRow">
-              <div
-                className="glanceCard"
-                style={{ backgroundColor: getColorFromSeed("7").background }}
-              >
-                <p className="glanceCardTitle">{glanceCardsData[0]}</p>
-                <p className="glanceCardSubTitle">
-                  Total ACU incurred this month till date
-                </p>
-              </div>
-              <div
-                className="glanceCard"
-                style={{ backgroundColor: getColorFromSeed("7").background }}
-              >
-                <p className="glanceCardTitle">{glanceCardsData[1]}</p>
-                <p className="glanceCardSubTitle">Previous month ACU usage</p>
-              </div>
-              <div
-                className="glanceCard"
-                style={{ backgroundColor: getColorFromSeed("7").background }}
-              >
-                <p className="glanceCardTitle">{glanceCardsData[2]}</p>
-                <p className="glanceCardSubTitle">
-                  ACU usage till date previous month
-                </p>
-              </div>
-              <div
-                className="glanceCard"
-                style={{ backgroundColor: getColorFromSeed("7").background }}
-              >
-                <p className="glanceCardTitle">{glanceCardsData[3]}</p>
-                <p className="glanceCardSubTitle">
-                  Projected ACU by the end of this month
-                </p>
-              </div>
-            </div>
+
+            <GlanceCards glanceCardsData={glanceCardsData}></GlanceCards>
 
             <p className="pageHeaders">Usage Trends</p>
-            <div className="graphBox">
-              <div className="graphInfo">
-                <div className="graphLegends">
-                  <p className="pageSubHeaders">Legend</p>
-                  <div className="graphLegend">
-                    <div className="legendSolidLine"></div>
-                    <p className="legendTitle">Usage Till Date</p>
-                  </div>
-                  <div className="graphLegend">
-                    <div className="legendDottedLine"></div>
-                    <p className="legendTitle">Projected Usage</p>
-                  </div>
-                </div>
-                <div
-                  className="monthPicker"
-                  onClick={() => {
-                    setShowMonthPicker(true);
-                  }}
-                >
-                  <img
-                    style={{ marginRight: "4px" }}
-                    src={"/assets/icons/calendar.svg"}
-                  ></img>
-                  <select
-                    value={selectedMonth}
-                    onChange={handleMonthChange}
-                    className="legendPickerFont"
-                    style={{
-                      border: "none",
-                      outline: "none",
-                      background: "none",
-                      appearance: "none",
-                    }}
-                  >
-                    {Object.keys(trendsACU).map((month) => (
-                      <option key={month} value={month}>
-                        {month}
-                      </option>
-                    ))}
-                  </select>
-                  <img
-                    style={{ height: "8px" }}
-                    className="centerVertically"
-                    src={"/assets/icons/dropdownArrow.svg"}
-                  ></img>
-                </div>
-              </div>
-              <div className="usageTrendsGraph">
-                {trendsACU.hasOwnProperty(selectedMonth) && (
-                  <AnalyticsLineChart
-                    trends={trendsACU[selectedMonth]}
-                    trendsTimeline={trendsTimeline[selectedMonth]}
-                    isACU={true}
-                  ></AnalyticsLineChart>
-                )}
-              </div>
-            </div>
+
+            <UsageTrendsGraph
+              trendsACU={trendsACU}
+              selectedMonth={selectedMonth}
+              trendsTimeline={trendsTimeline}
+              handleMonthChange={handleMonthChange}
+            ></UsageTrendsGraph>
 
             <p className="pageHeaders">Usage Trends Breakdown</p>
-            <div className="graphBox">
-              <div className="graphInfo">
-                <div className="graphLegends">
-                  <p className="pageSubHeaders">Legend</p>
-                  {allAssets.map((key, index) => (
-                    <div className="graphLegend">
-                      <div
-                        className="legendSolidLine"
-                        style={{
-                          backgroundColor: GRAPH_COLORS[index % 10],
-                        }}
-                      ></div>
-                      <p className="legendTitle">{key}</p>
-                    </div>
-                  ))}
-                </div>
-                {/* <div
-                  className="monthPicker"
-                  onClick={() => {
-                    setShowMonthPicker(true);
-                  }}
-                >
-                  <img
-                    style={{ marginRight: "4px" }}
-                    src={"/assets/icons/calendar.svg"}
-                  ></img>
-                  <select
-                    value={selectedMonth}
-                    onChange={handleMonthChange}
-                    className="legendPickerFont"
-                    style={{
-                      border: "none",
-                      outline: "none",
-                      background: "none",
-                      appearance: "none",
-                    }}
-                  >
-                    {[
-                      //   "Deployments",
-                      "Models",
-                      //   "Scripts",
-                      //   "Compatiblity Tags",
-                    ].map((options) => (
-                      <option key={options} value={options}>
-                        {options}
-                      </option>
-                    ))}
-                  </select>
-                  <img
-                    style={{ height: "8px" }}
-                    className="centerVertically"
-                    src={"/assets/icons/dropdownArrow.svg"}
-                  ></img>
-                </div> */}
-              </div>
-              <div className="usageTrendsGraph">
-                <StackedBarChart data={trendsBreakdown}></StackedBarChart>
-              </div>
-            </div>
+            <UsageTrendsBreakDownGraph
+              trendsBreakdown={trendsBreakdown}
+              allAssets={allAssets}
+            ></UsageTrendsBreakDownGraph>
 
             <div className={`tasksTableView flexColumn overflowAuto`}>
               <Table data={usageTrendsBreakdownData} />
             </div>
           </div>
+
           {/* <a
             className="externalLink"
             target="_blank"

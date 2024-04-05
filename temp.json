@@ -1,0 +1,380 @@
+[
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 0.38,
+    "numDevices": 478,
+    "deploymentId": 0,
+    "timestamp": "2024-04-05T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 0.05,
+    "numDevices": 305,
+    "deploymentId": 0,
+    "timestamp": "2024-04-05T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 0.38,
+    "numDevices": 478,
+    "deploymentId": 0,
+    "timestamp": "2024-04-05T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 2.13,
+    "numDevices": 2671,
+    "deploymentId": 0,
+    "timestamp": "2024-04-04T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 0.26,
+    "numDevices": 1732,
+    "deploymentId": 0,
+    "timestamp": "2024-04-04T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 2.06,
+    "numDevices": 2578,
+    "deploymentId": 0,
+    "timestamp": "2024-04-04T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 2.9,
+    "numDevices": 3630,
+    "deploymentId": 0,
+    "timestamp": "2024-04-03T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 2.81,
+    "numDevices": 3520,
+    "deploymentId": 0,
+    "timestamp": "2024-04-03T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 0.33,
+    "numDevices": 2156,
+    "deploymentId": 0,
+    "timestamp": "2024-04-03T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 3.5,
+    "numDevices": 4382,
+    "deploymentId": 0,
+    "timestamp": "2024-04-02T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 0.39,
+    "numDevices": 2537,
+    "deploymentId": 0,
+    "timestamp": "2024-04-02T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 3.39,
+    "numDevices": 4250,
+    "deploymentId": 0,
+    "timestamp": "2024-04-02T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 4.29,
+    "numDevices": 5380,
+    "deploymentId": 0,
+    "timestamp": "2024-04-01T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 4.36,
+    "numDevices": 5462,
+    "deploymentId": 0,
+    "timestamp": "2024-04-01T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 0.46,
+    "numDevices": 2986,
+    "deploymentId": 0,
+    "timestamp": "2024-04-01T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 7.46,
+    "numDevices": 9348,
+    "deploymentId": 0,
+    "timestamp": "2024-03-31T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 0.82,
+    "numDevices": 5366,
+    "deploymentId": 0,
+    "timestamp": "2024-03-31T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 7.56,
+    "numDevices": 9470,
+    "deploymentId": 0,
+    "timestamp": "2024-03-31T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 0.91,
+    "numDevices": 5939,
+    "deploymentId": 0,
+    "timestamp": "2024-03-30T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 9.01,
+    "numDevices": 11294,
+    "deploymentId": 0,
+    "timestamp": "2024-03-30T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 8.92,
+    "numDevices": 11179,
+    "deploymentId": 0,
+    "timestamp": "2024-03-30T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 1.5,
+    "numDevices": 9794,
+    "deploymentId": 0,
+    "timestamp": "2024-03-29T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 15.16,
+    "numDevices": 18995,
+    "deploymentId": 0,
+    "timestamp": "2024-03-29T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 15.38,
+    "numDevices": 19269,
+    "deploymentId": 0,
+    "timestamp": "2024-03-29T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 28.73,
+    "numDevices": 36006,
+    "deploymentId": 0,
+    "timestamp": "2024-03-28T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 28.63,
+    "numDevices": 35882,
+    "deploymentId": 0,
+    "timestamp": "2024-03-28T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 2.65,
+    "numDevices": 17342,
+    "deploymentId": 0,
+    "timestamp": "2024-03-28T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 119.94,
+    "numDevices": 150303,
+    "deploymentId": 0,
+    "timestamp": "2024-03-27T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 13.91,
+    "numDevices": 90885,
+    "deploymentId": 0,
+    "timestamp": "2024-03-27T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 120.07,
+    "numDevices": 150458,
+    "deploymentId": 0,
+    "timestamp": "2024-03-27T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 94.83,
+    "numDevices": 619800,
+    "deploymentId": 0,
+    "timestamp": "2024-03-26T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 630.97,
+    "numDevices": 790689,
+    "deploymentId": 0,
+    "timestamp": "2024-03-26T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 630.7,
+    "numDevices": 790347,
+    "deploymentId": 0,
+    "timestamp": "2024-03-26T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 617.59,
+    "numDevices": 773924,
+    "deploymentId": 0,
+    "timestamp": "2024-03-25T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 618.13,
+    "numDevices": 774604,
+    "deploymentId": 0,
+    "timestamp": "2024-03-25T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 94.16,
+    "numDevices": 615396,
+    "deploymentId": 0,
+    "timestamp": "2024-03-25T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 96.29,
+    "numDevices": 629369,
+    "deploymentId": 0,
+    "timestamp": "2024-03-24T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 645.39,
+    "numDevices": 808760,
+    "deploymentId": 0,
+    "timestamp": "2024-03-24T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 644.63,
+    "numDevices": 807809,
+    "deploymentId": 0,
+    "timestamp": "2024-03-24T00:00:00Z"
+  },
+  {
+    "assetId": "CP_Reranker_lgbm_v01",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 98.62,
+    "numDevices": 644543,
+    "deploymentId": 0,
+    "timestamp": "2024-03-23T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cea_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 681.35,
+    "numDevices": 853827,
+    "deploymentId": 0,
+    "timestamp": "2024-03-23T00:00:00Z"
+  },
+  {
+    "assetId": "cross_session_lgbm_cj_label",
+    "assetVersion": "1.0.0",
+    "assetType": "model",
+    "acuCount": 681.08,
+    "numDevices": 853480,
+    "deploymentId": 0,
+    "timestamp": "2024-03-23T00:00:00Z"
+  }
+]
