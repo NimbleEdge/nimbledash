@@ -1,13 +1,12 @@
-import { ACCESS_TOKEN, CLIENT_ID, USER_EMAIL } from "core/constants";
 import {
   ADMIN_PAGE_ROUTE,
+  BILLING_PAGE_ROUTE,
   CONTACT_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
   RBAC_PAGE_ROUTE,
 } from "presentation/routes/route-paths";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 function SideBar() {
@@ -17,12 +16,21 @@ function SideBar() {
   useEffect(() => {
     if (window.location.href.includes(ADMIN_PAGE_ROUTE)) {
       setCurrentTab(1);
-    } else if (window.location.href.includes(RBAC_PAGE_ROUTE)) {
+    }
+    // else if (window.location.href.includes(DEPLOYMENTS_PAGE_ROUTE)) {
+    //   setCurrentTab(2);
+    // }
+    // else if (window.location.href.includes(APPROVAL_PAGE_ROUTE)) {
+    //   setCurrentTab(3);
+    // }
+    else if (window.location.href.includes(RBAC_PAGE_ROUTE)) {
       setCurrentTab(2);
-    } else if (window.location.href.includes(CONTACT_PAGE_ROUTE)) {
+    } else if (window.location.href.includes(BILLING_PAGE_ROUTE)) {
       setCurrentTab(3);
+    } else if (window.location.href.includes(CONTACT_PAGE_ROUTE)) {
+      setCurrentTab(4);
     } else {
-      setCurrentTab(0);
+      setCurrentTab(5);
     }
   });
 
@@ -80,9 +88,65 @@ function SideBar() {
               (currentTab == 1 ? "selected-desc " : "") + "sidebar-item-desc"
             }
           >
-            Upload model
+            {"Admin Panel"}
           </p>
         </div>
+
+        {/* <div
+          className={
+            (currentTab == 2 ? "sidebar-item-selected " : "") +
+            "sidebar-item clickable"
+          }
+          onClick={() => {
+            setCurrentTab(2);
+            navigateTo(DEPLOYMENTS_PAGE_ROUTE);
+          }}
+        >
+          <img
+            className="sidebar-icon"
+            src={
+              currentTab == 2
+                ? "/assets/icons/deployments_selected.svg"
+                : "/assets/icons/deployments.svg"
+            }
+          ></img>
+          <p
+            className={
+              (currentTab == 2 ? "selected-desc " : "") + "sidebar-item-desc"
+            }
+          >
+            {'Deployments'}
+          </p>
+        </div>
+
+
+
+        <div
+          className={
+            (currentTab == 3 ? "sidebar-item-selected " : "") +
+            "sidebar-item clickable"
+          }
+          onClick={() => {
+            setCurrentTab(3);
+            navigateTo(APPROVAL_PAGE_ROUTE);
+          }}
+        >
+          <img
+            className="sidebar-icon"
+            src={
+              currentTab == 3
+                ? "/assets/icons/approval_selected.svg"
+                : "/assets/icons/approval.svg"
+            }
+          ></img>
+          <p
+            className={
+              (currentTab == 3 ? "selected-desc " : "") + "sidebar-item-desc"
+            }
+          >
+            {'Approvals'}
+          </p>
+        </div> */}
 
         <div
           className={
@@ -118,20 +182,47 @@ function SideBar() {
           }
           onClick={() => {
             setCurrentTab(3);
-            navigateTo(CONTACT_PAGE_ROUTE);
+            navigateTo(BILLING_PAGE_ROUTE);
           }}
         >
           <img
             className="sidebar-icon"
             src={
               currentTab == 3
+                ? "/assets/icons/billing_selected.svg"
+                : "/assets/icons/billing.svg"
+            }
+          ></img>
+          <p
+            className={
+              (currentTab == 3 ? "selected-desc " : "") + "sidebar-item-desc"
+            }
+          >
+            {"Billing"}
+          </p>
+        </div>
+
+        <div
+          className={
+            (currentTab == 4 ? "sidebar-item-selected " : "") +
+            "sidebar-item clickable"
+          }
+          onClick={() => {
+            setCurrentTab(4);
+            navigateTo(CONTACT_PAGE_ROUTE);
+          }}
+        >
+          <img
+            className="sidebar-icon"
+            src={
+              currentTab == 4
                 ? "/assets/icons/contact_us_selected.svg"
                 : "/assets/icons/contact_us.svg"
             }
           ></img>
           <p
             className={
-              (currentTab == 3 ? "selected-desc " : "") + "sidebar-item-desc"
+              (currentTab == 4 ? "selected-desc " : "") + "sidebar-item-desc"
             }
           >
             Contact Us
