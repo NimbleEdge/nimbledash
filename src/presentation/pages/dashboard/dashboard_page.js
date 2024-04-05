@@ -44,7 +44,6 @@ import "react-date-range/dist/theme/default.css";
 import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
 import ShapeBarChart from "presentation/components/charts/shape_bar_chart";
 
-
 function OldDashboardPage() {
   var [metrics, setMetrics] = useState({});
   var [modelJson, setModelJson] = useState({});
@@ -102,9 +101,9 @@ function OldDashboardPage() {
   };
 
   useEffect(() => {
-    console.log('a')
+    console.log("a");
     dispatch(loaderActions.toggleLoader(true));
-    console.log('b')
+    console.log("b");
     var cachedClientId = localStorage.getItem(CLIENT_ID);
     var cachedAccessToken = localStorage.getItem(ACCESS_TOKEN);
 
