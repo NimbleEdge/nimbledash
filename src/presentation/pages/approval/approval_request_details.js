@@ -74,7 +74,31 @@ export default function ApprovalRequestDetails(props) {
                     <div className="commentBox rejectBox">
                         <p className="commentTitle">d11-poc-prod</p>
                         <p className="commentBody">
-                            Contrary to popular belief, Lorem Ipsum is not simply random
+                        Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
+                            text. It has roots in a piece of classical Latin literature
+                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
                             text. It has roots in a piece of classical Latin literature
                             from 45 BC, making it over 2000 years old.
                         </p>
