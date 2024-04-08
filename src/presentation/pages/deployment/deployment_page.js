@@ -15,7 +15,6 @@ import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { SelectionModal, MultiSelectionModal } from "./selection_modal";
 import { toast } from "react-toastify";
-import { Toast } from "react-bootstrap";
 
 
 const deploymentActions = () => {
@@ -35,17 +34,6 @@ const deploymentActions = () => {
     </div>
 
   )
-}
-
-
-
-const getModelNameWithVersionList = (dict) => {
-  var temp = [];
-  for (let modelName in dict) {
-    temp.push(`${modelName}(${dict[modelName]})`)
-  }
-
-  return temp;
 }
 
 const DeploymentPage = () => {
@@ -194,7 +182,6 @@ const DeploymentPage = () => {
 
     const newData = { ...deploymentViewData, body: processedData };
     updateDeploymentViewData(newData);
-    dispatch(loaderActions.toggleLoader(false));
   }
 
   const getDeploymentData = async () => {
@@ -277,6 +264,7 @@ const DeploymentPage = () => {
         })
       .then((res) => {
         setVirginScriptList(res.data.tasks);
+        dispatch(loaderActions.toggleLoader(false));
       })
       .catch((e) => {
         console.log(e);
@@ -409,6 +397,7 @@ const DeploymentPage = () => {
           </div>
         </Modal>
       }
+
       <div className={`flexColumn adminPage`}>
         <div className={`flexColumn adminPageHeader`}>
           <div className={`adminPageTitle`}>Edge Deployment Management</div>

@@ -12,13 +12,13 @@ export const AUTH_METHOD = "auth_method";
 export const ACCENT_COLOR = "#6565FF";
 export const STROKE_COLORS_LIST = [
   "#F3AD84",
-  "#DD8E8E",
-  "#B57994",
   "#826A8D",
-  "#515A78",
   "#2F4858",
   "#5F8F43",
   "#FFBEC1",
+  "#DD8E8E",
+  "#B57994",
+  "#515A78",
 ];
 export const GRAPH_COLORS = ["#FF9F40", "#0D2535", "#5388D8", "#F4BE37"];
 export const TAG_COLORS = [

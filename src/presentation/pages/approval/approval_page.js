@@ -65,7 +65,7 @@ const ApprovalPage = () => {
 
     const [selectedTab, setSelectedTab] = useState(0);
 
-    const preprocessDeploymentData = async (raisedReqData, myReqData) => {
+    const preprocessApprovalPageData = async (raisedReqData, myReqData) => {
         var processedData = [];
         var processedData2 = [];
 
@@ -297,7 +297,7 @@ const ApprovalPage = () => {
     };
 
     useEffect(() => {
-        preprocessDeploymentData([1, 2, 3, 4], [1, 2]);
+        preprocessApprovalPageData([1, 2, 3, 4], [1, 2]);
     }, [reload]);
 
     return (
