@@ -104,7 +104,7 @@
 
 .usageTrendsGraph {
   height: 500px;
-  width: 1400px;
+  width: 100%;
 }
 
 .monthPicker {
