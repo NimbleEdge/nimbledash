@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./dashboard_card.css";
 import { InfinitySpin } from "react-loader-spinner";
 import { ACCENT_COLOR } from "core/constants";
@@ -10,26 +10,29 @@ function DashboardCard(props) {
   var cardText = props.cardText;
   var cardSubText = props.cardSubText;
 
+  useEffect(() => {
+    console.log("get", props.some);
+  });
+
   return (
     <div className="number-card">
-      {
-        props.loading ? 
+      {props.loading ? (
         <div className="loader">
           <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
         </div>
-        :
+      ) : (
         <div>
-        <div className="heading-row">
-          <img className="card-icon" src={cardIconAddress}></img>
-          <div className="card-info">
-            <p className="bodyText">{cardInfoTitle}</p>
-            <p className="subHeading2">{cardInfoSubtitle}</p>
+          <div className="heading-row">
+            <img className="card-icon" src={cardIconAddress}></img>
+            <div className="card-info">
+              <p className="bodyText">{cardInfoTitle}</p>
+              <p className="subHeading2">{cardInfoSubtitle}</p>
+            </div>
           </div>
+          <p className="headline card-number">{cardText}</p>
+          <p className="subHeading2 card-subtext">{cardSubText}</p>
         </div>
-        <p className="headline card-number">{cardText}</p>
-        <p className="subHeading2 card-subtext">{cardSubText}</p>
-        </div>
-      }
+      )}
     </div>
   );
 }
