@@ -128,3 +128,23 @@
   left: 0;
   transform: translate(0, -50%);
 }
+
+.deleteRequestBox{
+  margin-top: 52px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #FFCDCD;
+  color: #E60000;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 500;
+  position: relative;
+  cursor: pointer;
+}
+
+.warningText{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
