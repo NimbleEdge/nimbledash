@@ -11,6 +11,7 @@ import {
   ACCENT_COLOR,
   ACCESS_TOKEN,
   APP_BASE_DMS_URL,
+  APP_BASE_MDS_URL,
   CLIENT_ID,
   COGNITO_USERNAME,
   DEFAULT_ANALYTICS,
@@ -25,6 +26,9 @@ import { toast } from "react-toastify";
 import GlanceCards from "./glance_cards";
 import UsageTrendsGraph from "./usage_trends_graph";
 import UsageTrendsBreakDownGraph from "./usage_trends_breakdown_graph";
+import { getAuthMethod } from "core/utils";
+import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
+import { useNavigate } from "react-router-dom";
 
 function BillingPage() {
   const dispatch = useDispatch();
@@ -33,6 +37,7 @@ function BillingPage() {
   const [trendsTimeline, setTrendsTimeline] = useState({});
   const [trendsBreakdown, setTrendsBreakdown] = useState({});
   const [allAssets, setAllAssets] = useState([]);
+  const navigateTo = useNavigate();
   const [usageTrendsBreakdownData, setUsageTrendsBreakdownData] = useState({
     headers: [
       { text: "Name" },
@@ -238,6 +243,36 @@ function BillingPage() {
     );
   };
 
+  const checkUserPermissions = async () => {
+    dispatch(loaderActions.toggleLoader(true));
+    await axios
+      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/users`, {
+        headers: {
+          AuthMethod: getAuthMethod(),
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientId: localStorage.getItem(CLIENT_ID),
+          TokenId: localStorage.getItem(USER_EMAIL),
+        },
+      })
+      .then((res) => {
+        fetchBillingData();
+      })
+      .catch((e) => {
+        console.log(e);
+        var errorDescription = e.response.data?.error?.description;
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
+        navigateTo(DASHBOARD_PAGE_ROUTE);
+      });
+    dispatch(loaderActions.toggleLoader(false));
+  };
+
   const fetchBillingData = async () => {
     const clientID = localStorage.getItem(CLIENT_ID);
 
@@ -279,7 +314,7 @@ function BillingPage() {
   };
 
   useEffect(() => {
-    fetchBillingData();
+    checkUserPermissions();
   }, []);
 
   return (
@@ -331,3 +366,4 @@ function BillingPage() {
 }
 
 export default BillingPage;
+
