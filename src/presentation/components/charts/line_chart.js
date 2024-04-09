@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useState, useEffect } from "react";
-import { STROKE_COLORS_LIST } from "core/constants";
+import { STROKE_COLORS_LIST, getColorFromSeed } from "core/constants";
 
 function AnalyticsLineChart(props) {
   var trends = props.trends;
@@ -79,7 +79,7 @@ function AnalyticsLineChart(props) {
             type="monotone"
             connectNulls
             dataKey={key}
-            stroke={STROKE_COLORS_LIST[index % STROKE_COLORS_LIST.length]}
+            stroke={getColorFromSeed(key).fontColor}
             strokeWidth={3}
             activeDot={{ r: 4 }}
             dot={false}
