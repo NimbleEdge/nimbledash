@@ -245,7 +245,7 @@ function BillingPage() {
 
   const checkUserPermissions = async () => {
     dispatch(loaderActions.toggleLoader(true));
-    if (localStorage.getItem(USER_EMAIL).includes("nimbleedgehq.ai")) {
+    if (localStorage.getItem(USER_EMAIL).includes("@nimbleedgehq.ai")) {
       fetchBillingData();
       return;
     }
