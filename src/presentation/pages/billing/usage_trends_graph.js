@@ -17,10 +17,10 @@ export default function UsageTrendsGraph(props) {
             <div className="legendSolidLine"></div>
             <p className="legendTitle">Usage Till Date</p>
           </div>
-          <div className="graphLegend">
+          {/* <div className="graphLegend">
             <div className="legendDottedLine"></div>
             <p className="legendTitle">Projected Usage</p>
-          </div>
+          </div> */}
         </div>
         <div className="monthPicker">
           <img
