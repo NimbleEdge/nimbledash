@@ -34,6 +34,12 @@ const fetchDmsMetric = async (
   endDateTimeRange.setHours(23);
   endDateTimeRange.setMinutes(59);
 
+  if (startDateTimeRange === endDateTimeRange) {
+    endDateTimeRange.setDate(endDateTimeRange.getDate() + 1);
+  }
+
+  console.log(startDateTimeRange.toISOString(),endDateTimeRange.toISOString());
+
   const apiCalledAt = new Date();
   await axios
     .get(uri, {
