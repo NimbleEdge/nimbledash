@@ -1,0 +1,11 @@
+.download-btn {
+    border: none;
+    border-radius: 4px;
+    font-size: 10px;
+}
+
+.download-model-icon {
+    width: 16px;
+    height: 20px;
+    cursor: pointer;
+}

@@ -15,6 +15,7 @@ import { STROKE_COLORS_LIST } from "core/constants";
 function AnalyticsLineChart(props) {
   var trends = props.trends;
   var trendsTimeline = props.trendsTimeline;
+  var isACU = props.isACU;
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -29,6 +30,8 @@ function AnalyticsLineChart(props) {
         var value = trends[modelName][size - index - 1];
         if (value == -1) {
           value = null;
+        } else if (isACU) {
+          value = parseFloat(value.toFixed(2));
         } else {
           value = parseFloat((value / 1000).toFixed(2));
         }
@@ -37,12 +40,21 @@ function AnalyticsLineChart(props) {
       tempMap["name"] = new Date(trendsTimeline[size - index - 1])
         .toLocaleString()
         .substring(0, 10);
-      tempMap["unit"] = "ms";
+      if (isACU) {
+        tempMap["unit"] = "ACU";
+      } else {
+        tempMap["unit"] = "ms";
+      }
       tempData.push(tempMap);
     }
 
     setData(tempData);
   }, [trends]);
+
+  const getUnit = () => {
+    if (isACU) return " ACU";
+    else return " ms";
+  };
 
   return (
     <ResponsiveContainer debounce={300} width="100%" height="100%">
@@ -58,8 +70,8 @@ function AnalyticsLineChart(props) {
         }}
       >
         {/* <CartesianGrid strokeDasharray="3 3" /> */}
-        <XAxis dataKey="name" dy={20} />
-        <YAxis unit=" ms" width={100} />
+        <XAxis dataKey="name" dy={20} tick={{ fontSize: 12 }} />
+        <YAxis unit={getUnit()} width={100} tick={{ fontSize: 12 }} />
         <Tooltip />
         {/* <Legend dy={20}/> */}
         {Object.keys(trends).map((key, index) => (
@@ -71,6 +83,7 @@ function AnalyticsLineChart(props) {
             strokeWidth={3}
             activeDot={{ r: 4 }}
             dot={false}
+            key={index}
           />
         ))}
       </LineChart>

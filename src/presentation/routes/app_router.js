@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router";
 import {
   ADMIN_PAGE_ROUTE,
+  BILLING_PAGE_ROUTE,
   CONTACT_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
@@ -26,6 +27,7 @@ import RBACPage from "presentation/pages/rbac/rbac_page";
 import ContactPage from "presentation/pages/contact/contact_page";
 import { getAuthMethod } from "core/utils";
 import DashboardPage from "presentation/pages/dashboard/dashboard";
+import BillingPage from "presentation/pages/billing/bililng_page";
 
 function AppRouter(props) {
   const navigateTo = useNavigate();
@@ -85,7 +87,7 @@ function AppRouter(props) {
         },
       })
       .then((res) => {
-        console.log("NEXA",res);
+        console.log("NEXA", res);
         if (res.status == 200) {
           return true;
         } else {
@@ -105,6 +107,7 @@ function AppRouter(props) {
       <Route path={ADMIN_PAGE_ROUTE} element={<AdminPage />} />
       <Route path={CONTACT_PAGE_ROUTE} element={<ContactPage />} />
       <Route path={RBAC_PAGE_ROUTE} element={<RBACPage />} />
+      <Route path={BILLING_PAGE_ROUTE} element={<BillingPage />} />
       {localStorage.getItem(ACCESS_TOKEN) != null && (
         <Route path="/" element={<DashboardPage />} />
       )}

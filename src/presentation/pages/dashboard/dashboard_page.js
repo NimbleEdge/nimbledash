@@ -18,7 +18,6 @@ import AnalyticsRadarChart from "../../components/charts/radar_chart";
 import InputModal from "../../components/inputModal/inputModal";
 import { getRequest } from "data/remote_datasource";
 import { useNavigate } from "react-router-dom";
-import SideBar from "presentation/components/sideBar/side_bar";
 import axios from "axios";
 import {
   ACCESS_TOKEN,
@@ -29,6 +28,7 @@ import {
   DEFAULT_ANALYTICS,
   APP_BASE_MDS_URL,
   APP_BASE_DMS_URL,
+  AUTH_METHOD,
 } from "core/constants";
 import { useDispatch } from "react-redux";
 import {
@@ -43,10 +43,8 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
 import ShapeBarChart from "presentation/components/charts/shape_bar_chart";
-import { getAuthMethod } from "core/utils";
 
-
-function DashboardPage() {
+function OldDashboardPage() {
   var [metrics, setMetrics] = useState({});
   var [modelJson, setModelJson] = useState({});
   var [selectedModelIndex, setSelectedModelIndex] = useState(0);
@@ -103,7 +101,9 @@ function DashboardPage() {
   };
 
   useEffect(() => {
+    console.log("a");
     dispatch(loaderActions.toggleLoader(true));
+    console.log("b");
     var cachedClientId = localStorage.getItem(CLIENT_ID);
     var cachedAccessToken = localStorage.getItem(ACCESS_TOKEN);
 
@@ -130,9 +130,9 @@ function DashboardPage() {
 
   const fetchClientIDList = async () => {
     await axios
-      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/user/clients`, {
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/user/clients`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -141,7 +141,6 @@ function DashboardPage() {
       })
       .then((res) => {
         if (res.status == 200) {
-          console.log("client IDS",res);
           setClientIDList(res.data.Clients);
         } else {
           Toast.error("Can't fetch client ids", {
@@ -166,9 +165,9 @@ function DashboardPage() {
   const fetchModelList = async () => {
     var tempJson = {};
     await axios
-      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/models`, {
+      .get(`${APP_BASE_MDS_URL}api/v2/admin/models`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -203,7 +202,7 @@ function DashboardPage() {
   };
 
   const shortenNumber = (num) =>
-    num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num;
+    num > 1000000 ? (num / 1000000).toFixed(2) + "M" : num.toFixed(2);
 
   const fetchMetrics = async (modelName, versionName) => {
     if (process.env.REACT_APP_IS_ANALYTICS_DISABLED == "TRUE") {
@@ -247,7 +246,7 @@ function DashboardPage() {
     await axios
       .get(uri, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -260,7 +259,7 @@ function DashboardPage() {
       })
       .then((res) => {
         setMetrics(res.data);
-        console.log(res.data);
+        //console.log(res.data);
       })
       .catch((e) => {
         var errorDescription = e.response?.data?.error?.description;
@@ -571,4 +570,4 @@ function DashboardPage() {
   );
 }
 
-export default DashboardPage;
+export default OldDashboardPage;
