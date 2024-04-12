@@ -20,7 +20,7 @@ export default function UsageTrendsBreakDownGraph(props) {
                   backgroundColor: GRAPH_COLORS[index % 10],
                 }}
               ></div>
-              <p className="legendTitle">{key}</p>
+              <p title={key} className="legendTitle">{key}</p>
             </div>
           ))}
         </div>

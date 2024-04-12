@@ -1,4 +1,5 @@
 import { getColorFromSeed } from "core/constants";
+import { makeNumberCompact } from "core/utils";
 import React from "react";
 
 export default function GlanceCards(props) {
@@ -10,7 +11,7 @@ export default function GlanceCards(props) {
         className="glanceCard"
         style={{ backgroundColor: getColorFromSeed("7").background }}
       >
-        <p className="glanceCardTitle">{glanceCardsData[0]}</p>
+        <p className="glanceCardTitle">{makeNumberCompact(glanceCardsData[0])}</p>
         <p className="glanceCardSubTitle">
           Total ACU incurred this month till date
         </p>
@@ -19,14 +20,14 @@ export default function GlanceCards(props) {
         className="glanceCard"
         style={{ backgroundColor: getColorFromSeed("7").background }}
       >
-        <p className="glanceCardTitle">{glanceCardsData[1]}</p>
+        <p className="glanceCardTitle">{makeNumberCompact(glanceCardsData[1])}</p>
         <p className="glanceCardSubTitle">Previous month ACU usage</p>
       </div>
       <div
         className="glanceCard"
         style={{ backgroundColor: getColorFromSeed("7").background }}
       >
-        <p className="glanceCardTitle">{glanceCardsData[2]}</p>
+        <p className="glanceCardTitle">{makeNumberCompact(glanceCardsData[2])}</p>
         <p className="glanceCardSubTitle">ACU usage till date previous month</p>
       </div>
       <div

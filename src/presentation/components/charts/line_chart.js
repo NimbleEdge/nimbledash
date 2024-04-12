@@ -37,9 +37,14 @@ function AnalyticsLineChart(props) {
         }
         value = tempMap[modelName] = value;
       });
-      tempMap["name"] = new Date(trendsTimeline[size - index - 1])
-        .toLocaleString()
-        .substring(0, 10);
+
+      const dateString = new Date(trendsTimeline[size - index - 1])
+      .toLocaleString();
+      const firstSlashIndex = dateString.indexOf("/");
+      const secondSlashIndex = dateString.indexOf("/", firstSlashIndex + 1);
+      
+      tempMap["name"] = 
+        dateString.substring(0, secondSlashIndex);
       if (isACU) {
         tempMap["unit"] = "ACU";
       } else {

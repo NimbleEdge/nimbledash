@@ -26,7 +26,7 @@ import { toast } from "react-toastify";
 import GlanceCards from "./glance_cards";
 import UsageTrendsGraph from "./usage_trends_graph";
 import UsageTrendsBreakDownGraph from "./usage_trends_breakdown_graph";
-import { getAuthMethod } from "core/utils";
+import { getAuthMethod, makeNumberCompact } from "core/utils";
 import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
 import { useNavigate } from "react-router-dom";
 
@@ -93,7 +93,7 @@ function BillingPage() {
         {
           Component: TagsListComponent,
           data: {
-            tags: [totalAssetActiveDevices[assetName].toString()],
+            tags: [makeNumberCompact(totalAssetActiveDevices[assetName]).toString()],
             tableData: {},
             tableTitle: "Linked Models Detail",
             truncationLimit: 2,
@@ -104,9 +104,9 @@ function BillingPage() {
         {
           Component: TextOnlyComponent,
           data: {
-            text: currentMonthModelWiseBreakdown[assetName]
-              .reduce((acc, currentValue) => acc + currentValue, 0)
-              .toFixed(2),
+            text: makeNumberCompact(currentMonthModelWiseBreakdown[assetName]
+              .reduce((acc, currentValue) => acc + currentValue, 0))
+              ,
             customStyle: {
               color: "#74828F",
               fontWeight: 400,
