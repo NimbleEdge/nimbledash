@@ -15,7 +15,7 @@ function isSubstring(str, substr) {
 }  
 
 const clientsWithOldView = ['dream11', 'sostronk'];
-const clientsWithNewView = ['testclient', 'siddharth-test', 'yash-test', 'saket-test', 'palash-test', 'kushal-test', 'naman-test','nimon-rulezzz','mobile-test-client','experience-app'];
+const clientsWithNewView = ['testclient', 'siddharth-test', 'yash-test', 'saket-test', 'palash-test', 'kushal-test', 'naman-test','nimon-rulezzz','mobile-test-client','experience-app','menlo-ventures-prod'];
 
 export const showOldView = () => {
     const currentClientId = localStorage.getItem(CLIENT_ID);
