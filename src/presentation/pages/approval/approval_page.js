@@ -69,223 +69,223 @@ const ApprovalPage = () => {
         var processedData = [];
         var processedData2 = [];
 
-        for (let deployment of raisedReqData) {
-            processedData.push([
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "State 1",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            fontWeight: 500,
-                            color: "#494949",
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "This is a random description",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "naman.anand@nimbleedgehq.ai",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "01/01/1970",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "3",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "5",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "PENDING",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-            ]);
-        }
+        // for (let deployment of raisedReqData) {
+        //     processedData.push([
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "State 1",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     fontWeight: 500,
+        //                     color: "#494949",
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "This is a random description",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "naman.anand@nimbleedgehq.ai",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "01/01/1970",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "3",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "5",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "PENDING",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //     ]);
+        // }
 
-        for (let deployment of myReqData) {
-            processedData2.push([
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "State 1",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            fontWeight: 500,
-                            color: "#494949",
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "This is a random description",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "01/01/1970",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "3",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "5",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-                {
-                    Component: TextOnlyComponent,
-                    data: {
-                        text: "PENDING",
-                        onClick: () => {
-                            setSelectedRowIndex(0);
-                        },
-                        customStyle: {
-                            color: "#74828F",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                        },
-                        highlightOnHover: true,
-                    },
-                },
-            ]);
-        }
+        // for (let deployment of myReqData) {
+        //     processedData2.push([
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "State 1",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     fontWeight: 500,
+        //                     color: "#494949",
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "This is a random description",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "01/01/1970",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "3",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "5",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //         {
+        //             Component: TextOnlyComponent,
+        //             data: {
+        //                 text: "PENDING",
+        //                 onClick: () => {
+        //                     setSelectedRowIndex(0);
+        //                 },
+        //                 customStyle: {
+        //                     color: "#74828F",
+        //                     fontWeight: 400,
+        //                     fontSize: "14px",
+        //                     cursor: "pointer",
+        //                 },
+        //                 highlightOnHover: true,
+        //             },
+        //         },
+        //     ]);
+        // }
 
         var newData = { ...raisedReqTableData, body: processedData };
         setRaisedReqTableData(newData);

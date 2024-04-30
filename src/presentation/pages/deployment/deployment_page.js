@@ -171,7 +171,7 @@ const DeploymentPage = () => {
             Component: TagsListComponent, data: {
               tags: Object.keys(deployment.models), tableData: {
                 headers: [{ text: 'Name' }, { text: 'Version' }, { text: 'Description' }],
-                body: ((n) => Array.from({ length: Object.keys(deployment.models).length }, (_, i) => [{ Component: TextOnlyComponent, data: { text: Object.keys(deployment.models)[i], customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: deployment.models[Object.keys(deployment.models)[i]], customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample mfin description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]))(Object.keys(deployment.models))
+                body: ((n) => Array.from({ length: Object.keys(deployment.models).length }, (_, i) => [{ Component: TextOnlyComponent, data: { text: Object.keys(deployment.models)[i], customStyle: { fontWeight: '500', fontSize: '14px', color: '#494949', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: deployment.models[Object.keys(deployment.models)[i]], customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }, { Component: TextOnlyComponent, data: { text: "This is a sample description", customStyle: { fontWeight: '400', fontSize: '14px', color: '#74828F', fontFamily: 'Poppins' } } }]))(Object.keys(deployment.models))
               }, tableTitle: "Linked Models Detail", truncationLimit: 2, expandable: true, highlightOnHover: true
             }
           },
