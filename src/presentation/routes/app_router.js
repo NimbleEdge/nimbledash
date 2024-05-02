@@ -71,8 +71,6 @@ function AppRouter(props) {
       isTokenValid(token).then((isValid) => {
         if (isValid && currentBrowserUrl.includes("/login")) {
           navigateTo(DASHBOARD_PAGE_ROUTE);
-          console.log("less go");
-
         }
         if (!isValid && !currentBrowserUrl.includes("/login")) {
           localStorage.clear();
