@@ -56,12 +56,12 @@ const DashboardPage = () => {
     const [clientID, setClientID] = useState("");
     const [clientIDList, setClientIDList] = useState([]);
     const [internalInterval, setInternalInterval] = useState({
-        startDate: subtractDays(new Date(), 2),
+        startDate: subtractDays(new Date(), 7),
         endDate: new Date(),
         key: "selection",
     });
     const [interval, setInterval] = useState({
-        startDate: subtractDays(new Date(), 2),
+        startDate: subtractDays(new Date(), 7),
         endDate: new Date(),
         key: "selection",
     });
