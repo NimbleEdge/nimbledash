@@ -6,6 +6,8 @@ import {
   COGNITO_USERNAME,
   APP_BASE_DMS_URL,
   AUTH_METHOD,
+  FORM_PASSWORD,
+  FORM_USERNAME,
 } from "core/constants";
 import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
 import { loaderActions } from "presentation/redux/stores/store";
@@ -33,8 +35,8 @@ function ContactPage() {
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       })
       .then((res) => {
@@ -72,7 +74,7 @@ function ContactPage() {
                 <p className="heading5">{onCallList["primary"]["name"]}</p>
                 <p className="subHeading3">{onCallList["primary"]["email"]}</p>
               </div>
-              <div className="right-content" onClick={() => {}}>
+              <div className="right-content" onClick={() => { }}>
                 <p className="heading5">{onCallList["primary"]["mobile"]}</p>
               </div>
             </div>
@@ -84,7 +86,7 @@ function ContactPage() {
                   {onCallList["secondary"]["email"]}
                 </p>
               </div>
-              <div className="right-content" onClick={() => {}}>
+              <div className="right-content" onClick={() => { }}>
                 <p className="heading5">{onCallList["secondary"]["mobile"]}</p>
               </div>
             </div>

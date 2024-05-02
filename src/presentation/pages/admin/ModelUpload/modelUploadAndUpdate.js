@@ -9,6 +9,8 @@ import {
   AUTH_METHOD,
   CLIENT_ID,
   COGNITO_USERNAME,
+  FORM_PASSWORD,
+  FORM_USERNAME,
   USER_EMAIL,
 } from "core/constants";
 import axios, { all } from "axios";
@@ -96,8 +98,8 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
                   AuthMethod: localStorage.getItem(AUTH_METHOD),
                   Token: localStorage.getItem(ACCESS_TOKEN),
                   ClientId: localStorage.getItem(CLIENT_ID),
-                  TokenId: localStorage.getItem(USER_EMAIL),
-                  CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+                  TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+                  password: localStorage.getItem(FORM_PASSWORD),                  CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
                 },
               }
             )
@@ -143,8 +145,8 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
                 AuthMethod: localStorage.getItem(AUTH_METHOD),
                 Token: localStorage.getItem(ACCESS_TOKEN),
                 ClientId: localStorage.getItem(CLIENT_ID),
-                TokenId: localStorage.getItem(USER_EMAIL),
-                CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+                TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+                password: localStorage.getItem(FORM_PASSWORD),                CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
               },
             }
           )
@@ -183,8 +185,8 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL),
-            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+            TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+            password: localStorage.getItem(FORM_PASSWORD),            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
           },
         }
       )

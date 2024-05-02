@@ -7,6 +7,8 @@ export const USER_EMAIL = "user_email";
 export const CLIENT_ID = "client_id";
 export const COGNITO_USERNAME = "cognito_username";
 export const AUTH_METHOD = "auth_method";
+export const FORM_USERNAME = "form_username";
+export const FORM_PASSWORD = "form_password";
 
 // COLORS
 export const ACCENT_COLOR = "#6565FF";

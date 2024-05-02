@@ -6,6 +6,8 @@ import {
   AUTH_METHOD,
   COGNITO_USERNAME,
   DEFAULT_ANALYTICS,
+  FORM_PASSWORD,
+  FORM_USERNAME,
   USER_EMAIL,
 } from "core/constants";
 import AnalyticsLineChart from "presentation/components/charts/line_chart";
@@ -41,8 +43,8 @@ const fetchDmsMetric = async (
         AuthMethod: localStorage.getItem(AUTH_METHOD),
         Token: localStorage.getItem(ACCESS_TOKEN),
         ClientId: clientID,
-        TokenId: localStorage.getItem(USER_EMAIL),
-        CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+        TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+        password: localStorage.getItem(FORM_PASSWORD),        CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
       },
       params: {
         startTime: startDateTimeRange.toISOString(),
