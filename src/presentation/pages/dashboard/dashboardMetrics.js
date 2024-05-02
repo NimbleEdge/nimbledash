@@ -41,18 +41,6 @@ const DashboardMetrics = ({clientID, selectedModelIndex, selectedVersionIndex, i
                 cardInfoTitle={'Total Inferences'}
                 cardInfoSubtitle={'Comparing latest versions of all model'}
             />
-            <MetricDisplay
-                metricType={METRIC_TYPES.BAR_CHART}
-                clientID={clientID}
-                modelName={selectedModelIndex == 0 ? "" : Object.keys(modelJson)[selectedModelIndex]} 
-                modelVersion={selectedModelIndex != 0 && selectedVersionIndex != 0 ? modelJson[Object.keys(modelJson)[selectedModelIndex]][selectedVersionIndex] : ""}
-                intervalObject={intervalObject}
-                metricPath={'active-user-trends'}
-                metricKey={'activeUsersTrends'}
-                cardIconAddress={'/assets/icons/total_inferences.jpg'}
-                cardInfoTitle={'Active Users'}
-                cardInfoSubtitle={'Across all the live models'}
-            />
         </>
     )
 }
