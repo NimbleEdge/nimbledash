@@ -4,6 +4,8 @@ import {
   AUTH_METHOD,
   CLIENT_ID,
   COGNITO_USERNAME,
+  FORM_PASSWORD,
+  FORM_USERNAME,
   USER_EMAIL,
 } from "core/constants";
 import axios from "axios";
@@ -45,8 +47,8 @@ export const downloadModel = async ({modelName, modelVersion}) => {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL),
-            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+            TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+            password: localStorage.getItem(FORM_PASSWORD),            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
             },
         })
         .then((res) => {

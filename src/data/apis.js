@@ -5,6 +5,8 @@ import {
   AUTH_METHOD,
   CLIENT_ID,
   COGNITO_USERNAME,
+  FORM_PASSWORD,
+  FORM_USERNAME,
   USER_EMAIL,
 } from "core/constants";
 import axios from "axios";
@@ -19,7 +21,8 @@ export const fetchClientIDList = async (clientID, setClientIDList) => {
         AuthMethod: localStorage.getItem(AUTH_METHOD),
         Token: localStorage.getItem(ACCESS_TOKEN),
         ClientId: clientID,
-        TokenId: localStorage.getItem(USER_EMAIL),
+        TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+        password: localStorage.getItem(FORM_PASSWORD),
         CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
       },
     })
@@ -55,8 +58,9 @@ export const fetchTaskFile = async ({ taskVersion }) => {
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
           CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
         },
       }
     );
@@ -90,7 +94,8 @@ export const fetchActiveUsers = async (modelName, version) => {
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
           CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       }
@@ -120,8 +125,8 @@ export const updateDeploymentTag = async ({
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       }
     )
@@ -152,8 +157,8 @@ export const createDeploymentTag = async ({
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       }
     )
@@ -173,8 +178,8 @@ export const fetchDeploymentTags = async (updateTagsList) => {
         AuthMethod: localStorage.getItem(AUTH_METHOD),
         Token: localStorage.getItem(ACCESS_TOKEN),
         ClientId: localStorage.getItem(CLIENT_ID),
-        TokenId: localStorage.getItem(USER_EMAIL),
-        CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+        TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+        password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
       },
     })
     .then((res) => {
@@ -195,8 +200,9 @@ export const fetchDeploymentTagDetails = async (tag) => {
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
           CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
         },
       }
     );
@@ -216,8 +222,8 @@ export const fetchModelList = async ({ successCallback, dispatch = null }) => {
         AuthMethod: localStorage.getItem(AUTH_METHOD),
         Token: localStorage.getItem(ACCESS_TOKEN),
         ClientId: localStorage.getItem(CLIENT_ID),
-        TokenId: localStorage.getItem(USER_EMAIL),
-        CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+        TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+        password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
       },
     })
     .then((res) => {
@@ -260,8 +266,8 @@ export const addDeploymentTags = async (
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       }
     )
@@ -294,8 +300,8 @@ export const fetchTasksList = async (
         AuthMethod: localStorage.getItem(AUTH_METHOD),
         Token: localStorage.getItem(ACCESS_TOKEN),
         ClientId: localStorage.getItem(CLIENT_ID),
-        TokenId: localStorage.getItem(USER_EMAIL),
-        CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+        TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+        password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
       },
     })
     .then((res) => {
@@ -336,8 +342,8 @@ export const updateTask = async ({
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       }
     )
@@ -384,8 +390,8 @@ export const createNewTask = async ({
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       }
     )

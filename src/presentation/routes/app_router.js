@@ -16,6 +16,8 @@ import {
   APP_BASE_MDS_URL,
   AUTH_METHOD,
   COGNITO_USERNAME,
+  FORM_PASSWORD,
+  FORM_USERNAME,
   USER_EMAIL,
 } from "core/constants";
 import axios from "axios";
@@ -69,6 +71,8 @@ function AppRouter(props) {
       isTokenValid(token).then((isValid) => {
         if (isValid && currentBrowserUrl.includes("/login")) {
           navigateTo(DASHBOARD_PAGE_ROUTE);
+          console.log("less go");
+
         }
         if (!isValid && !currentBrowserUrl.includes("/login")) {
           localStorage.clear();
@@ -80,13 +84,13 @@ function AppRouter(props) {
   }, []);
 
   const isTokenValid = async (token) => {
-    if (token == null) return false;
-
     return await axios
       .get(`${APP_BASE_MDS_URL}api/v2/admin/ping`, {
         headers: {
           authMethod: localStorage.getItem(AUTH_METHOD),
           Token: token,
+          TokenId: localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
         },
       })
       .then((res) => {
@@ -97,7 +101,7 @@ function AppRouter(props) {
         }
       })
       .catch((e) => {
-        //console.log(e);
+        console.log(e);
         //console.log('palash');
         return false;
       });

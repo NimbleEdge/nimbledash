@@ -10,6 +10,8 @@ import {
   APP_BASE_URL,
   AUTH_METHOD,
   CLIENT_ID,
+  FORM_PASSWORD,
+  FORM_USERNAME,
   PermissionEnum,
   USER_EMAIL,
 } from "core/constants";
@@ -44,7 +46,8 @@ function RBACPage() {
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
         },
       })
       .then((res) => {
@@ -84,7 +87,8 @@ function RBACPage() {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL),
+            TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+            password: localStorage.getItem(FORM_PASSWORD),
           },
         }
       )
@@ -122,7 +126,8 @@ function RBACPage() {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL),
+            TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+            password: localStorage.getItem(FORM_PASSWORD),
           },
         }
       )
@@ -153,7 +158,8 @@ function RBACPage() {
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
         },
         data: {
           email: inputEmail,
@@ -253,8 +259,8 @@ function RBACPage() {
                           user.permission == PermissionEnum.ADMIN
                             ? 2
                             : user.permission == PermissionEnum.READ_WRITE
-                            ? 1
-                            : 0
+                              ? 1
+                              : 0
                         }
                       ></DropdownComponent>
 

@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import {
   ACCESS_TOKEN,
   CLIENT_ID,
+  FORM_PASSWORD,
+  FORM_USERNAME,
 } from "core/constants";
 import { useDispatch } from "react-redux";
 import {
@@ -99,7 +101,10 @@ const DashboardPage = () => {
         dispatch(loaderActions.toggleLoader(true));
         const cachedClientId = localStorage.getItem(CLIENT_ID);
         const cachedAccessToken = localStorage.getItem(ACCESS_TOKEN);
-        if (cachedAccessToken == "" || cachedAccessToken == null) {
+        const username = localStorage.getItem(FORM_USERNAME);
+        const password = localStorage.getItem(FORM_PASSWORD);
+
+        if ((cachedAccessToken == "" || cachedAccessToken == null) && (username == "" || password == "")) {
           navigateTo(LOGIN_PAGE_ROUTE);
         }
         if (clientIDList.length == 0) {
@@ -110,7 +115,7 @@ const DashboardPage = () => {
           fetchModelList({successCallback: handleModelListUpdate});
           dispatch(loaderActions.toggleLoader(false));
         }
-        if (clientID == "" && cachedClientId != null) {
+        if (clientID == "" && (cachedClientId != null)) {
           setClientID(cachedClientId);
           dispatch(loaderActions.toggleLoader(false));
         } else if (clientID == "") {

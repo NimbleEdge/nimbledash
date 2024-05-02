@@ -15,6 +15,8 @@ import {
   CLIENT_ID,
   COGNITO_USERNAME,
   DEFAULT_ANALYTICS,
+  FORM_PASSWORD,
+  FORM_USERNAME,
   GRAPH_COLORS,
   USER_EMAIL,
   getColorFromSeed,
@@ -174,9 +176,9 @@ function BillingPage() {
 
       if (
         currentMonthDateObject.getMonth() ===
-          new Date(obj.timestamp).getMonth() &&
+        new Date(obj.timestamp).getMonth() &&
         currentMonthDateObject.getFullYear() ===
-          new Date(obj.timestamp).getFullYear()
+        new Date(obj.timestamp).getFullYear()
       ) {
         if (totalActiveDevicesTemp.hasOwnProperty(assetName)) {
           totalActiveDevicesTemp[assetName] = [
@@ -248,8 +250,8 @@ function BillingPage() {
           AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
         },
       })
       .then((res) => {

@@ -10,7 +10,7 @@ import '../admin/TasksSection/tasksTable.css';
 import './deployment_page.css';
 import Modal from "presentation/components/modal/modal";
 import axios from "axios";
-import { AUTH_METHOD, ACCESS_TOKEN, CLIENT_ID, USER_EMAIL, COGNITO_USERNAME, APP_BASE_MDS_URL } from "core/constants";
+import { AUTH_METHOD, ACCESS_TOKEN, CLIENT_ID, USER_EMAIL, COGNITO_USERNAME, APP_BASE_MDS_URL, FORM_PASSWORD, FORM_USERNAME } from "core/constants";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { SelectionModal, MultiSelectionModal } from "./selection_modal";
@@ -192,7 +192,8 @@ const DeploymentPage = () => {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL),
+                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
             CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
           },
         })
@@ -214,7 +215,8 @@ const DeploymentPage = () => {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL),
+                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
             CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
           },
         })
@@ -236,7 +238,8 @@ const DeploymentPage = () => {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL),
+                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
             CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
           },
         })
@@ -258,7 +261,8 @@ const DeploymentPage = () => {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL),
+                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
             CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
           },
         })
@@ -288,7 +292,8 @@ const DeploymentPage = () => {
             AuthMethod: localStorage.getItem(AUTH_METHOD),
             Token: localStorage.getItem(ACCESS_TOKEN),
             ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL),
+                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
+          password: localStorage.getItem(FORM_PASSWORD),
             CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
           },
         })
