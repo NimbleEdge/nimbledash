@@ -201,7 +201,7 @@ function BillingPage() {
 
       trendsACUTemp[readableDate][assetName] =
         trendsACUTemp[readableDate][assetName] ||
-        Array.from({ length: timelines[readableDate].length }, () => -1);
+        Array.from({ length: timelines[readableDate].length }, () => 0);
 
       let timestampIndex = timelines[readableDate].findIndex(
         (element) => element === obj.timestamp
