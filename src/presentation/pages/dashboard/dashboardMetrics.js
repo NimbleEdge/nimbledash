@@ -15,7 +15,7 @@ const DashboardMetrics = ({clientID, selectedModelIndex, selectedVersionIndex, i
                 metricPath={'latency-trends'}
                 cardIconAddress={'/assets/icons/avg_latency.jpg'}
                 cardInfoTitle={'Latency Trends'}
-                cardInfoSubtitle={'Average latency per 15 mins'}
+                cardInfoSubtitle={'Average latency across devices'}
             />
             <MetricDisplay
                 metricType={METRIC_TYPES.DAU_LINE_CHART}
