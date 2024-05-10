@@ -119,6 +119,7 @@ export const updateTask = async ({
   updateTasksList,
   dispatch = null,
 }) => {
+  if(dispatch) dispatch(loaderActions.toggleLoader(true));
   await postRequest(APP_BASE_MDS_URL, `api/v2/admin/taskversion`, {
     taskName: taskName,
     deploymentTags: deploymentTags,
@@ -128,6 +129,7 @@ export const updateTask = async ({
   },);
   onCompletion();
   fetchTasksList(updateTasksList, dispatch, null);
+  if(dispatch) dispatch(loaderActions.toggleLoader(false));
 };
 
 export const createNewTask = async ({
@@ -139,6 +141,7 @@ export const createNewTask = async ({
   updateTasksList,
   dispatch = null,
 }) => {
+  if(dispatch) dispatch(loaderActions.toggleLoader(true));
   await postRequest(APP_BASE_MDS_URL, `api/v2/admin/task`, {
     taskName: taskName,
     taskCode: taskCode,
@@ -147,5 +150,6 @@ export const createNewTask = async ({
 
   onCompletion();
   await fetchTasksList(updateTasksList, dispatch, null);
-  toast.success("Script uploaded successfully")
+  if(dispatch) dispatch(loaderActions.toggleLoader(false));
+  toast.success("Script uploaded successfully");
 };

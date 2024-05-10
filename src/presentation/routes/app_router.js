@@ -27,7 +27,7 @@ import {
 } from "core/constants";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import store, { loaderActions, userActions } from "presentation/redux/stores/store";
 import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
@@ -44,6 +44,7 @@ function AppRouter(props) {
   const dispatch = useDispatch();
   const isAuthenticated = props.isAuthenticated;
   const setIsAuthenticated = props.setIsAuthenticated;
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
     dispatch(loaderActions.toggleLoader(true));
@@ -52,16 +53,17 @@ function AppRouter(props) {
 
     switch (authMethod) {
       case COGNITO_LOGIN:
-        handeSamlLogin().then(() => { dispatch(loaderActions.toggleLoader(false)); });
+        handeSamlLogin().then(() => { dispatch(loaderActions.toggleLoader(false)); setCheckingAuth(false); });
         break;
       case SSO_LOGIN:
-        handleGoogleLogin().then(() => { dispatch(loaderActions.toggleLoader(false)); });
+        handleGoogleLogin().then(() => { dispatch(loaderActions.toggleLoader(false)); setCheckingAuth(false); });
         break;
       case FORM_LOGIN:
-        handleFormLogin().then(() => { dispatch(loaderActions.toggleLoader(false)); });
+        handleFormLogin().then(() => { dispatch(loaderActions.toggleLoader(false)); setCheckingAuth(false); });
         break;
       default:
         dispatch(loaderActions.toggleLoader(false));
+        setCheckingAuth(false);
     }
   }, []);
 
@@ -184,7 +186,7 @@ function AppRouter(props) {
   return (
 
     <div>
-      {<Routes>
+      {!checkingAuth && <Routes>
         <Route path={LOGIN_PAGE_ROUTE} element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <LoginPage />} />
         <Route path={DASHBOARD_PAGE_ROUTE} element={isAuthenticated ? <DashboardPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
         <Route path={ADMIN_PAGE_ROUTE} element={isAuthenticated ? <AdminPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
@@ -193,7 +195,8 @@ function AppRouter(props) {
         <Route path={DEPLOYMENTS_PAGE_ROUTE} element={isAuthenticated ? <DeploymentPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
         <Route path={BILLING_PAGE_ROUTE} element={isAuthenticated ? <BillingPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
         <Route path={APPROVAL_PAGE_ROUTE} element={isAuthenticated ? <ApprovalPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
-        {localStorage.getItem(ACCESS_TOKEN) != null && <Route path="/" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
+        {(localStorage.getItem(ACCESS_TOKEN) != null || localStorage.getItem(FORM_PASSWORD) != null) && <Route path="/" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
+        { <Route path="*" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
       </Routes>}
     </div>
 

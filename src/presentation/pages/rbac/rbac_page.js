@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
 import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
 import { getAuthMethod } from "core/utils";
+import { fetchHeaders, getRequest, postRequest } from "data/remote_datasource";
 
 function RBACPage() {
   var [isModalVisible, setModalVisiblity] = useState(false);
@@ -40,127 +41,51 @@ function RBACPage() {
 
   const listUsers = async () => {
     dispatch(loaderActions.toggleLoader(true));
-    await axios
-      .get(`${APP_BASE_MDS_URL}api/v2/admin/users`, {
-        headers: {
-          AuthMethod: localStorage.getItem(AUTH_METHOD),
-          Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD),
-        },
-      })
-      .then((res) => {
-        var listOfObjects = res.data.users;
-        listOfObjects.sort(function (a, b) {
-          return a.email.localeCompare(b.email);
-        });
-        setUserList(listOfObjects);
-      })
-      .catch((e) => {
-        //console.log(e);
-        var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null)
-          toast.error(errorDescription, {
-            toastId: "errorToast",
-          });
-        else
-          toast.error("Something Went Wrong.", {
-            toastId: "errorToast",
-          });
-        navigateTo(DASHBOARD_PAGE_ROUTE);
-      });
+    var res = await getRequest(APP_BASE_MDS_URL, 'api/v2/admin/users');
+
+    if (res == null) {
+      navigateTo(DASHBOARD_PAGE_ROUTE);
+      return;
+    }
+
+    var listOfObjects = res.data.users;
+    listOfObjects.sort(function (a, b) {
+      return a.email.localeCompare(b.email);
+    });
+    setUserList(listOfObjects);
+
     dispatch(loaderActions.toggleLoader(false));
   };
 
   const addUser = async (inputEmail) => {
     dispatch(loaderActions.toggleLoader(true));
-    await axios
-      .post(
-        `${APP_BASE_MDS_URL}api/v2/admin/user`,
-        {
-          email: inputEmail,
-          permission: PermissionEnum.READ,
-        },
-        {
-          headers: {
-            AuthMethod: localStorage.getItem(AUTH_METHOD),
-            Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-            password: localStorage.getItem(FORM_PASSWORD),
-          },
-        }
-      )
-      .then((res) => {
-        //console.log(res);
-        setModalVisiblity(false);
-        window.location.reload();
-      })
-      .catch((e) => {
-        dispatch(loaderActions.toggleLoader(false));
-        //console.log(e);
-        var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null)
-          toast.error(errorDescription, {
-            toastId: "errorToast",
-          });
-        else
-          toast.error("Something Went Wrong.", {
-            toastId: "errorToast",
-          });
-      });
+
+    await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/user', {
+      email: inputEmail,
+      permission: PermissionEnum.READ,
+    });
+
+    setModalVisiblity(false);
+    window.location.reload();
   };
 
   const updateUserPermission = async (inputEmail, permission) => {
     dispatch(loaderActions.toggleLoader(true));
-    await axios
-      .post(
-        `${APP_BASE_MDS_URL}api/v2/admin/user`,
-        {
-          email: inputEmail,
-          permission: permission,
-        },
-        {
-          headers: {
-            AuthMethod: localStorage.getItem(AUTH_METHOD),
-            Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-            password: localStorage.getItem(FORM_PASSWORD),
-          },
-        }
-      )
-      .then((res) => {
-        dispatch(loaderActions.toggleLoader(false));
-        toast.success("Permission updated succesfully.");
-        window.location.reload();
-      })
-      .catch((e) => {
-        dispatch(loaderActions.toggleLoader(false));
-        //console.log(e);
-        var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null)
-          toast.error(errorDescription, {
-            toastId: "errorToast",
-          });
-        else
-          toast.error("Something Went Wrong.", {
-            toastId: "errorToast",
-          });
-      });
+    var res = await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/user', {
+      email: inputEmail,
+      permission: permission,
+    });
+
+    if (res != null) {
+      toast.success("Permission updated succesfully.");
+      window.location.reload();
+    }
   };
 
   const deleteUser = async (inputEmail) => {
     await axios
       .delete(`${APP_BASE_MDS_URL}api/v2/admin/user`, {
-        headers: {
-          AuthMethod: localStorage.getItem(AUTH_METHOD),
-          Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD),
-        },
+        headers: fetchHeaders(),
         data: {
           email: inputEmail,
         },
@@ -263,55 +188,8 @@ function RBACPage() {
                               : 0
                         }
                       ></DropdownComponent>
-
-                      {/* <Toggle
-                        className="toggle-button"
-                        icons={false}
-                        defaultChecked={
-                          user.permission == PermissionEnum.READ_WRITE || user.permission == PermissionEnum.ADMIN
-                        }
-                        disabled = {user.permission == PermissionEnum.ADMIN}
-                        aria-label="No label tag"
-                        onChange={(permission) => {
-                          var isChecked = permission.target.checked;
-                          if (isChecked) {
-                            updateUserPermission(
-                              user.email,
-                              PermissionEnum.READ_WRITE
-                            );
-                          } else {
-                            updateUserPermission(
-                              user.email,
-                              PermissionEnum.READ
-                            );
-                          }
-                          console.log(permission.target.checked);
-                        }}
-                      /> */}
                     </div>
-                    {/* <div className="rbac-control-width-container">
-                      <Toggle
-                        className="toggle-button"
-                        defaultChecked={user.permission == PermissionEnum.ADMIN}
-                        icons={false}
-                        aria-label="No label tag"
-                        disabled={false}
-                        onChange={(permission) => {
-                          var isChecked = permission.target.checked;
-                          if (isChecked) {
-                            updateUserPermission(
-                              user.email,
-                              PermissionEnum.ADMIN
-                            );
-                          } else {
-                            updateUserPermission(
-                              user.email,
-                              PermissionEnum.READ_WRITE
-                            );
-                          }
-                        }}
-                      />
-                    </div> */}
+
                     <div
                       className="rbac-control-width-container rbac-trash"
                       title={

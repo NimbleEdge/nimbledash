@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import "./contact_page.css";
 import { getAuthMethod } from "core/utils";
+import { getRequest } from "data/remote_datasource";
 
 function ContactPage() {
   const dispatch = useDispatch();
@@ -29,31 +30,8 @@ function ContactPage() {
   const fetchOnCallList = async () => {
     dispatch(loaderActions.toggleLoader(true));
 
-    await axios
-      .get(`${APP_BASE_DMS_URL}/dms/api/v1/oncall`, {
-        headers: {
-          AuthMethod: localStorage.getItem(AUTH_METHOD),
-          Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientId: localStorage.getItem(CLIENT_ID),
-          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-        },
-      })
-      .then((res) => {
-        setOnCallList(res.data);
-      })
-      .catch((e) => {
-        console.log(e);
-        var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null)
-          toast.error(errorDescription, {
-            toastId: "errorToast",
-          });
-        else
-          toast.error("Something Went Wrong.", {
-            toastId: "errorToast",
-          });
-      });
+    var res = await getRequest(APP_BASE_DMS_URL, '/dms/api/v1/oncall');
+    setOnCallList(res.data);
     dispatch(loaderActions.toggleLoader(false));
   };
 

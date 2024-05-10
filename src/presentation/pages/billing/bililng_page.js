@@ -28,6 +28,7 @@ import { toast } from "react-toastify";
 import GlanceCards from "./glance_cards";
 import UsageTrendsGraph from "./usage_trends_graph";
 import UsageTrendsBreakDownGraph from "./usage_trends_breakdown_graph";
+import { getRequest } from "data/remote_datasource";
 
 function BillingPage() {
   const dispatch = useDispatch();
@@ -244,93 +245,79 @@ function BillingPage() {
   const fetchBillingData = async () => {
     const clientID = localStorage.getItem(CLIENT_ID);
 
-    await axios
-      .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
-        headers: {
-          AuthMethod: localStorage.getItem(AUTH_METHOD),
-          Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientId: clientID,
-          TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD), CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-        },
-      })
-      .then((res) => {
-        var metrics = res.data.acuMetrics;
-        if (metrics.length == 0) {
-          metrics = [
-            {
-              assetId: "none",
-              assetVersion: "1.0.0",
-              assetType: "model",
-              acuCount: 0,
-              numDevices: 0,
-              deploymentId: 0,
-              timestamp: "1970-01-01T00:00:00Z",
-            },
-          ];
-        }
-        metrics.reverse();
-        preprocessBackendData(metrics);
-        console.log(metrics);
-      })
-      .catch((e) => {
-        console.log(e);
-        toast.error(e.message, {
-          toastId: "errorToast",
-        });
-      });
-  };
+    var res = await getRequest(APP_BASE_DMS_URL, `/dms/api/v2/metrics/clients/${clientID}/acu`);
 
-  useEffect(() => {
-    fetchBillingData();
-  }, []);
+    if (res != null) {
+      var metrics = res.data.acuMetrics;
+      if (metrics.length == 0) {
+        metrics = [
+          {
+            assetId: "none",
+            assetVersion: "1.0.0",
+            assetType: "model",
+            acuCount: 0,
+            numDevices: 0,
+            deploymentId: 0,
+            timestamp: "1970-01-01T00:00:00Z",
+          },
+        ];
+      }
+      metrics.reverse();
+      preprocessBackendData(metrics);
+      console.log(metrics);
+      dispatch(loaderActions.toggleLoader(false));
+    }}
 
-  return (
-    <div className={`flexColumn adminPage`}>
-      {Object.keys(trendsACU).length != 0 && (
-        <div>
-          <div className={`flexColumn adminPageHeader`}>
-            <div className={`adminPageTitle`}>Billing Information</div>
-            <div className={`adminPageSubtitle`}>
-              Monitor Active Compute Units In Realtime
+    useEffect(() => {
+      fetchBillingData();
+    }, []);
+
+    return (
+      <div className={`flexColumn adminPage`}>
+        {Object.keys(trendsACU).length != 0 && (
+          <div>
+            <div className={`flexColumn adminPageHeader`}>
+              <div className={`adminPageTitle`}>Billing Information</div>
+              <div className={`adminPageSubtitle`}>
+                Monitor Active Compute Units In Realtime
+              </div>
             </div>
-          </div>
-          <div className={`adminPageContent`}>
-            <p className="pageHeaders">Usage At A Glance</p>
+            <div className={`adminPageContent`}>
+              <p className="pageHeaders">Usage At A Glance</p>
 
-            <GlanceCards glanceCardsData={glanceCardsData}></GlanceCards>
+              <GlanceCards glanceCardsData={glanceCardsData}></GlanceCards>
 
-            <p className="pageHeaders">Usage Trends</p>
+              <p className="pageHeaders">Usage Trends</p>
 
-            <UsageTrendsGraph
-              trendsACU={trendsACU}
-              selectedMonth={selectedMonth}
-              trendsTimeline={trendsTimeline}
-              handleMonthChange={handleMonthChange}
-            ></UsageTrendsGraph>
+              <UsageTrendsGraph
+                trendsACU={trendsACU}
+                selectedMonth={selectedMonth}
+                trendsTimeline={trendsTimeline}
+                handleMonthChange={handleMonthChange}
+              ></UsageTrendsGraph>
 
-            <p className="pageHeaders">Usage Trends Breakdown</p>
-            <UsageTrendsBreakDownGraph
-              trendsBreakdown={trendsBreakdown}
-              allAssets={allAssets}
-            ></UsageTrendsBreakDownGraph>
+              <p className="pageHeaders">Usage Trends Breakdown</p>
+              <UsageTrendsBreakDownGraph
+                trendsBreakdown={trendsBreakdown}
+                allAssets={allAssets}
+              ></UsageTrendsBreakDownGraph>
 
-            <div className={`tasksTableView flexColumn overflowAuto`}>
-              <Table data={usageTrendsBreakdownData} />
+              <div className={`tasksTableView flexColumn overflowAuto`}>
+                <Table data={usageTrendsBreakdownData} />
+              </div>
             </div>
-          </div>
 
-          {/* <a
+            {/* <a
             className="externalLink"
             target="_blank"
             href="https://codeclock.in"
           >
             Please click here to perform advance queries.
           </a> */}
-        </div>
-      )}
-    </div>
-  );
-}
+          </div>
+        )}
+      </div>
+    );
+  }
 
-export default BillingPage;
+  export default BillingPage;

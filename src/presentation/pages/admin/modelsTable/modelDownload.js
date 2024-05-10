@@ -1,17 +1,18 @@
 import {
-  ACCESS_TOKEN,
-  APP_BASE_MDS_URL,
-  AUTH_METHOD,
-  CLIENT_ID,
-  COGNITO_USERNAME,
-  FORM_PASSWORD,
-  FORM_USERNAME,
-  USER_EMAIL,
+    ACCESS_TOKEN,
+    APP_BASE_MDS_URL,
+    AUTH_METHOD,
+    CLIENT_ID,
+    COGNITO_USERNAME,
+    FORM_PASSWORD,
+    FORM_USERNAME,
+    USER_EMAIL,
 } from "core/constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getAuthMethod } from "core/utils";
 import { atob, atobPolyfill } from "js-base64";
+import { getRequest } from "data/remote_datasource";
 
 const saveFile = async (file, fileType, fileName) => {
     const blob = new Blob([file], {
@@ -37,47 +38,24 @@ function base64ToArrayBuffer(base64) {
     return bytes.buffer;
 }
 
-export const downloadModel = async ({modelName, modelVersion}) => {
+export const downloadModel = async ({ modelName, modelVersion }) => {
     toast.success("Download started");
-    await axios
-        .get(
-        `${APP_BASE_MDS_URL}api/v2/admin/models/${modelName}/versions/${modelVersion}`,
-        {
-            headers: {
-            AuthMethod: localStorage.getItem(AUTH_METHOD),
-            Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-            password: localStorage.getItem(FORM_PASSWORD),            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-            },
-        })
-        .then((res) => {
-            toast.success("Download success");
-            var modelBinary = new Uint8Array(base64ToArrayBuffer(res.data.model));
-            var modelConfig = res.data.modelConfig;
-            saveFile(
-                modelBinary,
-                "application/octet-stream",
-                modelName + "_" + modelVersion + "." + res["data"]["fileType"]
-            );
+    var res = await getRequest(APP_BASE_MDS_URL, `api/v2/admin/models/${modelName}/versions/${modelVersion}`);
 
-            saveFile(
-                JSON.stringify(modelConfig),
-                "application/json",
-                modelName + "_" + modelVersion + ".json"
-            );
-        })
-        .catch((e) => {
-            console.log(e);
-            var errorDescription = e.response.data?.error?.description;
-            if (errorDescription != null) {
-                toast.error(errorDescription, {
-                    toastId: "errorToast",
-                });
-            } else {
-                toast.error("Something Went Wrong.", {
-                    toastId: "errorToast",
-                });
-            }
-        });
+    if (res != null) {
+        toast.success("Download success");
+        var modelBinary = new Uint8Array(base64ToArrayBuffer(res.data.model));
+        var modelConfig = res.data.modelConfig;
+        saveFile(
+            modelBinary,
+            "application/octet-stream",
+            modelName + "_" + modelVersion + "." + res["data"]["fileType"]
+        );
+
+        saveFile(
+            JSON.stringify(modelConfig),
+            "application/json",
+            modelName + "_" + modelVersion + ".json"
+        );
+    }
 };
