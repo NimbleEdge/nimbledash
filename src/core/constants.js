@@ -10,6 +10,11 @@ export const AUTH_METHOD = "auth_method";
 export const FORM_USERNAME = "form_username";
 export const FORM_PASSWORD = "form_password";
 
+//LOCAL STORAGE VALUE
+export const COGNITO_LOGIN = "Cognito";
+export const SSO_LOGIN = "GoogleSSO";
+export const FORM_LOGIN = "UserPass";
+
 // COLORS
 export const ACCENT_COLOR = "#6565FF";
 export const STROKE_COLORS_LIST = [
@@ -97,3 +102,6 @@ export const DEFAULT_ANALYTICS = {
     "2023-06-18T13:39:00Z",
   ],
 };
+
+// ENDPONTS
+export const PING_ENDPOINT = "api/v2/admin/ping";

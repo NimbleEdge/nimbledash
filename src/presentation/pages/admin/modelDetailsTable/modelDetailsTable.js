@@ -68,37 +68,6 @@ const AddTagsToModel = ({existingTags, allTagsList, modelName, version, updateTa
   );
 }
 
-const VersionColumnComponent = ({version, existingTags, allTagsList, modelName, updateTagsList}) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-    return (
-        <>
-            <div className={`version`} onClick={() => openModal()}>
-                {`v${version}`}
-            </div>
-            {
-                isModalOpen && 
-                <Modal isOpen={isModalOpen} onClose={closeModal} hasSaveButton={true} customStyle={{height: '586px'}}>
-                    {
-                        ({clickCount}) => {
-                            return (
-                                <AddTagsToModel existingTags={existingTags} allTagsList={allTagsList} modelName={modelName} version={version} updateTagsList={updateTagsList} onCloseModal={closeModal} clickCount={clickCount} />
-                            );
-                        }
-                    }
-                </Modal>
-            }
-        </>
-    )
-}
-
 const ActionColComponent = ({modelName, modelVersion}) => {
     return (
         <div className="actionColCell">

@@ -1,3 +1,4 @@
+import { loaderActions } from "presentation/redux/stores/store";
 import {
   ADMIN_PAGE_ROUTE,
   APPROVAL_PAGE_ROUTE,
@@ -9,9 +10,10 @@ import {
   RBAC_PAGE_ROUTE,
 } from "presentation/routes/route-paths";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-function SideBar() {
+function SideBar(props) {
   const navigateTo = useNavigate();
   const [currentTab, setCurrentTab] = useState(0);
 
@@ -37,6 +39,8 @@ function SideBar() {
       setCurrentTab(0);
     }
   });
+
+  const dispatch = useDispatch();
 
   return (
     <div className="sidebar">
@@ -77,6 +81,7 @@ function SideBar() {
           onClick={() => {
             setCurrentTab(1);
             navigateTo(ADMIN_PAGE_ROUTE);
+            dispatch(loaderActions.toggleLoader(true));
           }}
         >
           <img
@@ -105,6 +110,7 @@ function SideBar() {
           onClick={() => {
             setCurrentTab(2);
             navigateTo(DEPLOYMENTS_PAGE_ROUTE);
+            dispatch(loaderActions.toggleLoader(true));
           }}
         >
           <img
@@ -134,6 +140,7 @@ function SideBar() {
           onClick={() => {
             setCurrentTab(3);
             navigateTo(APPROVAL_PAGE_ROUTE);
+            dispatch(loaderActions.toggleLoader(true));
           }}
         >
           <img
@@ -162,6 +169,7 @@ function SideBar() {
           onClick={() => {
             setCurrentTab(4);
             navigateTo(RBAC_PAGE_ROUTE);
+            dispatch(loaderActions.toggleLoader(true));
           }}
         >
           <img
@@ -190,6 +198,7 @@ function SideBar() {
           onClick={() => {
             setCurrentTab(5);
             navigateTo(BILLING_PAGE_ROUTE);
+            dispatch(loaderActions.toggleLoader(true));
           }}
         >
           <img
@@ -217,6 +226,7 @@ function SideBar() {
           onClick={() => {
             setCurrentTab(6);
             navigateTo(CONTACT_PAGE_ROUTE);
+            dispatch(loaderActions.toggleLoader(true));
           }}
         >
           <img
@@ -240,7 +250,9 @@ function SideBar() {
           className="sidebar-item"
           onClick={() => {
             localStorage.clear();
+            props.setIsAuthenticated(false);
             navigateTo(LOGIN_PAGE_ROUTE);
+            dispatch(loaderActions.toggleLoader(false));
           }}
         >
           <img className="sidebar-icon" src="/assets/icons/logout.svg"></img>

@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { SelectionModal, MultiSelectionModal } from "./selection_modal";
 import { toast } from "react-toastify";
+import { getRequest, postRequest } from "data/remote_datasource";
 
 
 const deploymentActions = () => {
@@ -185,128 +186,42 @@ const DeploymentPage = () => {
   }
 
   const getDeploymentData = async () => {
-    axios
-      .get(`${APP_BASE_MDS_URL}api/v2/admin/deployments`,
-        {
-          headers: {
-            AuthMethod: localStorage.getItem(AUTH_METHOD),
-            Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientId: localStorage.getItem(CLIENT_ID),
-                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD),
-            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-          },
-        })
-      .then((res) => {
-        setVirginDeploymentApiData(res.data.deployments);
-        preprocessDeploymentData(res.data.deployments);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-
+    const res = await getRequest(APP_BASE_MDS_URL, 'api/v2/admin/deployments');
+    setVirginDeploymentApiData(res.data.deployments);
+    preprocessDeploymentData(res.data.deployments);
   }
 
   const getModelsData = async () => {
-    axios
-      .get(`${APP_BASE_MDS_URL}api/v2/admin/models`,
-        {
-          headers: {
-            AuthMethod: localStorage.getItem(AUTH_METHOD),
-            Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientId: localStorage.getItem(CLIENT_ID),
-                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD),
-            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-          },
-        })
-      .then((res) => {
-        setVirginModelList(res.data.models);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-
+    const res = await getRequest(APP_BASE_MDS_URL, 'api/v2/admin/models');
+    setVirginModelList(res.data.models);
   }
 
 
   const getCTData = async () => {
-    axios
-      .get(`${APP_BASE_MDS_URL}api/v2/admin/compatibilityTags`,
-        {
-          headers: {
-            AuthMethod: localStorage.getItem(AUTH_METHOD),
-            Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientId: localStorage.getItem(CLIENT_ID),
-                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD),
-            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-          },
-        })
-      .then((res) => {
-        setVirginCTList(res.data.tags);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-
+    const res = await getRequest(APP_BASE_MDS_URL, 'api/v2/admin/compatibilityTags');
+    setVirginCTList(res.data.tags);
   }
 
 
   const getScriptData = async () => {
-    axios
-      .get(`${APP_BASE_MDS_URL}api/v2/admin/tasks`,
-        {
-          headers: {
-            AuthMethod: localStorage.getItem(AUTH_METHOD),
-            Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientId: localStorage.getItem(CLIENT_ID),
-                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD),
-            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-          },
-        })
-      .then((res) => {
-        setVirginScriptList(res.data.tasks);
-        dispatch(loaderActions.toggleLoader(false));
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    const res = await getRequest(APP_BASE_MDS_URL, 'api/v2/admin/tasks');
+    setVirginScriptList(res.data.tasks);
   }
 
   const createDeployment = async () => {
-    axios
-      .post(`${APP_BASE_MDS_URL}api/v2/admin/deployment`,
-        {
-          "compatibilityTag": virginCTList[deploymentSelections.ctIndex].name,
-          "models": deploymentSelections.modelIndexes.reduce((acc, modelIndex) => (acc[virginModelList[modelIndex].modelName] = virginModelList[modelIndex].modelVersion, acc), {}),
-          "tasks": {
-            "DEFAULT_SCRIPT": virginScriptList[deploymentSelections.scriptIndex].version
-          },
-          "name": deploymentSelections.name,
-          "decsription": deploymentSelections.description,
-        },
-        {
-          headers: {
-            AuthMethod: localStorage.getItem(AUTH_METHOD),
-            Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientId: localStorage.getItem(CLIENT_ID),
-                      TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD),
-            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-          },
-        })
-      .then((res) => {
-        console.log(res.data);
-        toast.success("Deployment Creation Successful!")
-        setReload(!reload);
-        setDeploymentSelections(defaultDeploymentSelections);
-      })
-      .catch((e) => {
-        console.log(e);
-        toast.error(e.message);
-      });
+    const res = await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/deployment', {
+      "compatibilityTag": virginCTList[deploymentSelections.ctIndex].name,
+      "models": deploymentSelections.modelIndexes.reduce((acc, modelIndex) => (acc[virginModelList[modelIndex].modelName] = virginModelList[modelIndex].modelVersion, acc), {}),
+      "tasks": {
+        "DEFAULT_SCRIPT": virginScriptList[deploymentSelections.scriptIndex].version
+      },
+      "name": deploymentSelections.name,
+      "description": deploymentSelections.description,
+    },);
+
+    toast.success("Deployment Creation Successful!")
+    setReload(!reload);
+    setDeploymentSelections(defaultDeploymentSelections);
   }
 
 
@@ -344,11 +259,12 @@ const DeploymentPage = () => {
   }
 
   useEffect(() => {
+    var count = 0;
     dispatch(loaderActions.toggleLoader(true));
-    getDeploymentData();
-    getModelsData();
-    getCTData();
-    getScriptData();
+    getDeploymentData().then(() => { count++; if (count == 4) dispatch(loaderActions.toggleLoader(false)); });;
+    getModelsData().then(() => { count++; if (count == 4) dispatch(loaderActions.toggleLoader(false)); });;
+    getCTData().then(() => { count++; if (count == 4) dispatch(loaderActions.toggleLoader(false)); });;
+    getScriptData().then(() => { count++; if (count == 4) dispatch(loaderActions.toggleLoader(false)); });;
   }, [reload]);
 
   return (
