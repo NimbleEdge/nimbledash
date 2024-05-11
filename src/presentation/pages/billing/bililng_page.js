@@ -1,6 +1,6 @@
 import Table, { TextOnlyComponent } from "presentation/components/Table/table";
 import { TagsListComponent } from "presentation/components/Tags/tagsList";
-import { loaderActions } from "presentation/redux/stores/store";
+import store, { loaderActions } from "presentation/redux/stores/store";
 import React, { useEffect, useState, version } from "react";
 import { useDispatch } from "react-redux";
 import "../../../common.css";
@@ -243,7 +243,7 @@ function BillingPage() {
   };
 
   const fetchBillingData = async () => {
-    const clientID = localStorage.getItem(CLIENT_ID);
+    const clientID = store.getState().userReducer.clientId;
 
     var res = await getRequest(APP_BASE_DMS_URL, `/dms/api/v2/metrics/clients/${clientID}/acu`);
 

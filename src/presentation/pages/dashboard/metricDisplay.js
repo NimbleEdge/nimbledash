@@ -43,7 +43,6 @@ const fetchDmsMetric = async (
     modelName: modelName,
     modelVersion: modelVersion,
   });
-  console.log('oh yeeee',res);
 
   if (successCallback) successCallback(res);
   

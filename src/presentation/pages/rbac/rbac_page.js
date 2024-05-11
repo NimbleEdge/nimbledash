@@ -17,7 +17,7 @@ import {
 } from "core/constants";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { loaderActions } from "presentation/redux/stores/store";
+import store, { loaderActions } from "presentation/redux/stores/store";
 import { useNavigate } from "react-router-dom";
 import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
 import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
@@ -110,7 +110,12 @@ function RBACPage() {
   };
 
   useEffect(() => {
-    setUserEmailLocal(localStorage.getItem(USER_EMAIL));
+    var email = store.getState().userReducer.email;
+
+    if (email == null || email == 'null') {
+      email = store.getState().userReducer.username;
+    } 
+    setUserEmailLocal(email);
     listUsers();
   }, []);
 

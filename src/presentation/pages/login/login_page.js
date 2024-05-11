@@ -107,37 +107,6 @@ function LoginPage() {
               }}
             ></img>
           </div>
-
-          {/* <div
-            className="custom-loginPage-button clickable "
-            onClick={() => {
-              dispatch(loaderActions.toggleLoader(true));
-              samlLogin();
-            }}
-          >
-            <img
-              className="buttonLogo"
-              src="/assets/icons/saml_login.png"
-              height={"28px"}
-            ></img>
-            <p className="buttonText">Login with SAML</p>
-          </div>
-
-          <div
-            className="custom-loginPage-button clickable"
-            onClick={() => {
-              dispatch(loaderActions.toggleLoader(true));
-              googleLogin();
-            }}
-          >
-            <img
-              className="buttonLogo"
-              src="/assets/logo_google.png"
-              height={"28px"}
-            ></img>
-            <p className="buttonText">Login with Google</p>
-          </div> */}
-
         </div>
         <a
           href="mailto:siddharth.mittal@nimbleedgehq.ai"

@@ -74,7 +74,7 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
           });
         } else {
           dispatch(loaderActions.toggleLoader(true));
-          await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/model', {
+          var res = await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/model', {
             modelConfig: {},
             modelName: modelName,
             model: modelContentBase64,
@@ -82,6 +82,12 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
             deploymentTags: selectedTags
           },
           );
+
+          if(res == null){
+            closeModal();
+            dispatch(loaderActions.toggleLoader(false));
+            return;
+          }
 
           fetchModelList({
             successCallback: (modelsList) => {
