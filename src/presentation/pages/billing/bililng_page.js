@@ -296,7 +296,7 @@ function BillingPage() {
     return await axios
       .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
         headers: {
-          AuthMethod: "Cognito",
+          AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -339,7 +339,7 @@ function BillingPage() {
     await axios
       .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
         headers: {
-          AuthMethod: "Cognito",
+          AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
