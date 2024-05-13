@@ -158,6 +158,7 @@ function BillingPage() {
     var currentMonthTotalACUTemp = 0;
     var previousMonthTotalACUTemp = 0;
     var previousMonthTillDateACUTemp = 0;
+    var acuThisMonth = 0;
     var trendsBreakdownDataTemp = {};
     const currentMonthDateObject = new Date();
     const tempMD = new Date();
@@ -182,6 +183,13 @@ function BillingPage() {
       }
 
       let timestamp = new Date(obj.timestamp);
+
+      if (
+        timestamp.getMonth() === currentMonthDateObject.getMonth() &&
+        timestamp.getFullYear() === currentMonthDateObject.getFullYear()
+      ) {
+        acuThisMonth += obj.acuCount;
+      }
 
       if (
         timestamp.getMonth() === previousMonthDateObject.getMonth() &&
@@ -245,12 +253,14 @@ function BillingPage() {
         (trendsBreakdownDataTemp[readableDate][assetName] || 0) + obj.acuCount;
     }
 
+    var daysElapsedThisMonth = new Date().getDate();
+
     setAllAssets(allAssetsTemp);
     setGlanceCardsData([
       currentMonthTotalACUTemp.toFixed(2).toString(),
       previousMonthTotalACUTemp.toFixed(2).toString(),
       previousMonthTillDateACUTemp.toFixed(2).toString(),
-      "N/A",
+     ((acuThisMonth/daysElapsedThisMonth)*30).toFixed(2).toString(),
     ]);
     setTrendsACU(trendsACUTemp);
     setSelectedMonth(Object.keys(trendsACUTemp)[0]);
