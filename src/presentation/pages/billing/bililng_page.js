@@ -44,7 +44,7 @@ function BillingPage() {
       { text: "Name" },
       { text: "Version" },
       { text: "Avg Active Devices Per Day" },
-      { text: "ACU Incurred This Month (descending)" },
+      { text: "ACU Incurred This Month ▼" },
     ],
     body: [],
   });
@@ -79,9 +79,13 @@ function BillingPage() {
 
     var id = 0;
     for (let assetName in currentMonthModelWiseBreakdown) {
-      acuIncurred.push(parseFloat(currentMonthModelWiseBreakdown[assetName]
-        .reduce((acc, currentValue) => acc + currentValue, 0)
-        .toFixed(2)));
+      acuIncurred.push(
+        parseFloat(
+          currentMonthModelWiseBreakdown[assetName]
+            .reduce((acc, currentValue) => acc + currentValue, 0)
+            .toFixed(2)
+        )
+      );
 
       processedData.push([
         {
@@ -147,7 +151,7 @@ function BillingPage() {
     for (var i = 0; i < sortedAcu.length; i++) {
       var oldIndex = acuIncurred.indexOf(sortedAcu[i]);
       var newIndex = i;
-      sortedData[newIndex] = processedData[oldIndex]
+      sortedData[newIndex] = processedData[oldIndex];
     }
 
     const newData = { ...usageTrendsBreakdownData, body: sortedData };
@@ -215,9 +219,9 @@ function BillingPage() {
 
       if (
         currentMonthDateObject.getMonth() ===
-        new Date(obj.timestamp).getMonth() &&
+          new Date(obj.timestamp).getMonth() &&
         currentMonthDateObject.getFullYear() ===
-        new Date(obj.timestamp).getFullYear()
+          new Date(obj.timestamp).getFullYear()
       ) {
         if (totalActiveDevicesTemp.hasOwnProperty(assetName)) {
           totalActiveDevicesTemp[assetName] = [
@@ -260,7 +264,7 @@ function BillingPage() {
       currentMonthTotalACUTemp.toFixed(2).toString(),
       previousMonthTotalACUTemp.toFixed(2).toString(),
       previousMonthTillDateACUTemp.toFixed(2).toString(),
-     ((acuThisMonth/daysElapsedThisMonth)*30).toFixed(2).toString(),
+      ((acuThisMonth / daysElapsedThisMonth) * 30).toFixed(2).toString(),
     ]);
     setTrendsACU(trendsACUTemp);
     setSelectedMonth(Object.keys(trendsACUTemp)[0]);
@@ -289,19 +293,22 @@ function BillingPage() {
 
     const modifiedStartDateTime = new Date(startDateTime);
     const modifiedEndDateTime = new Date(endDateTime);
-    
+
     modifiedStartDateTime.setHours(0);
     modifiedStartDateTime.setMinutes(0);
     modifiedStartDateTime.setSeconds(0);
     modifiedStartDateTime.setMilliseconds(0);
-    
+
     modifiedEndDateTime.setHours(23);
     modifiedEndDateTime.setMinutes(59);
     modifiedEndDateTime.setSeconds(59);
-    modifiedEndDateTime.setMilliseconds(999); 
-    
+    modifiedEndDateTime.setMilliseconds(999);
+
     console.log(modifiedStartDateTime, modifiedEndDateTime);
-    console.log(modifiedStartDateTime.toISOString(), modifiedEndDateTime.toISOString());
+    console.log(
+      modifiedStartDateTime.toISOString(),
+      modifiedEndDateTime.toISOString()
+    );
 
     return await axios
       .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
@@ -340,8 +347,7 @@ function BillingPage() {
           toastId: "errorToast",
         });
       });
-
-  }
+  };
 
   const fetchBillingData = async () => {
     const clientID = localStorage.getItem(CLIENT_ID);
@@ -384,15 +390,12 @@ function BillingPage() {
       });
   };
 
-
-
   useEffect(() => {
     fetchBillingData();
   }, [interval]);
 
   return (
     <div className={`flexColumn adminPage billingPage`}>
-
       {Object.keys(trendsACU).length != 0 && (
         <div>
           <div className={`flexColumn adminPageHeader`}>
@@ -404,7 +407,11 @@ function BillingPage() {
           <div className={`adminPageContent`}>
             <p className="pageHeaders">Usage At A Glance</p>
 
-            <GlanceCards interval={interval} setInterval={setInterval} glanceCardsData={glanceCardsData}></GlanceCards>
+            <GlanceCards
+              interval={interval}
+              setInterval={setInterval}
+              glanceCardsData={glanceCardsData}
+            ></GlanceCards>
 
             <p className="pageHeaders">Usage Trends</p>
 
@@ -422,7 +429,18 @@ function BillingPage() {
             ></UsageTrendsBreakDownGraph>
 
             <div className={`tasksTableView flexColumn overflowAuto`}>
-              <Table data={usageTrendsBreakdownData} />
+              <Table
+                clickableHeaderCallback={() => {
+                  var temp = usageTrendsBreakdownData.body;
+                  temp.reverse();
+                  setUsageTrendsBreakdownData({
+                    headers: usageTrendsBreakdownData.headers,
+                    body: temp,
+                  });
+                }}
+                clickableHeaderIndex={3}
+                data={usageTrendsBreakdownData}
+              />
             </div>
           </div>
 
@@ -440,4 +458,3 @@ function BillingPage() {
 }
 
 export default BillingPage;
-
