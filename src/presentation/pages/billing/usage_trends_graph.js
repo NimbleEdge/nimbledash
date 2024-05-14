@@ -6,6 +6,9 @@ export default function UsageTrendsGraph(props) {
   var selectedMonth = props.selectedMonth;
   var handleMonthChange = props.handleMonthChange;
   var trendsACU = props.trendsACU;
+  for (let i = 0; i < trendsACU.length; i++) {
+    trendsACU[i] = parseFloat(trendsACU[i].toFixed(2));
+  }
   var trendsTimeline = props.trendsTimeline;
 
   return (
