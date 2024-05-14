@@ -28,7 +28,6 @@ import { toast } from "react-toastify";
 import GlanceCards from "./glance_cards";
 import UsageTrendsGraph from "./usage_trends_graph";
 import UsageTrendsBreakDownGraph from "./usage_trends_breakdown_graph";
-import { getAuthMethod } from "core/utils";
 import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
 import { useNavigate } from "react-router-dom";
 import { DateRangePicker } from "react-date-range";
@@ -316,7 +315,7 @@ function BillingPage() {
     return await axios
       .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
         headers: {
-          AuthMethod: getAuthMethod(),
+          AuthMethod: localStorage.getItem(AUTH_METHOD),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
@@ -359,7 +358,6 @@ function BillingPage() {
       .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
         headers: {
           AuthMethod: localStorage.getItem(AUTH_METHOD),
-          AuthMethod: getAuthMethod(),
           Token: localStorage.getItem(ACCESS_TOKEN),
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
