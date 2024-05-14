@@ -7,6 +7,12 @@ export default function UsageTrendsBreakDownGraph(props) {
   var trendsBreakdown = props.trendsBreakdown;
   var allAssets = props.allAssets;
 
+  Object.keys(trendsBreakdown).forEach(month => {
+    Object.keys(trendsBreakdown[month]).forEach(key => {
+      trendsBreakdown[month][key] = parseFloat(trendsBreakdown[month][key].toFixed(2));
+    });
+});
+
   return (
     <div className="graphBox">
       <div className="graphInfo">
