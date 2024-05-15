@@ -40,6 +40,17 @@ function AdminPage() {
     multiple: false,
   });
 
+  const modelSizes = {
+    CP_Reranker_lgbm_v01: 149.52,
+    cross_session_lgbm_cea_label: 780.16,
+    cross_session_lgbm_cj_label: 780.16,
+    cross_session_lgbm_cea_round_level_ipl_2024: 778.66,
+    cross_session_lgbm_cj_round_level_ipl_2024: 778.66,
+    cross_session_lgbm_cj_session_level_ipl_2024: 778.66,
+    in_session_lgbm_cj_session_level_ipl_2024: 777.18
+  }
+
+
   useEffect(() => {
     fetchModelList();
   }, []);
@@ -272,7 +283,11 @@ function AdminPage() {
           <div className="model-holder-card">
             <div className="left-content">
               <p className="heading5">{item.modelName}</p>
+              <div className="subHeadingFlex">
               <p className="subHeading3">{item.modelVersion}</p>
+              <p className="subHeading3">|</p>
+                <p className="subHeading3">{modelSizes[item.modelName]+' KBs'}</p>
+              </div>
             </div>
             <div
               className="right-content"
@@ -312,7 +327,7 @@ function AdminPage() {
               <img src="/assets/icons/upload.svg"></img>
               <p className="heading6 margin-top-8">Upload Model & Config</p>
               {modelContentBase64 != "" &&
-              Object.keys(modelConfigJson).length != 0 ? (
+                Object.keys(modelConfigJson).length != 0 ? (
                 <p className="subHeading2 selected-files">
                   Selected files: [{filesContent[0].name},{" "}
                   {filesContent[1].name}]

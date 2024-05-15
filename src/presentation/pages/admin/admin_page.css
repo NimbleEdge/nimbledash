@@ -113,3 +113,7 @@
 .selected-files {
   /* margin-top: 4px; */
 }
+.subHeadingFlex{
+  display: flex;
+  gap: 8px;
+}
