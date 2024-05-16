@@ -47,13 +47,7 @@ function AdminPage() {
     cross_session_lgbm_cea_round_level_ipl_2024: 778.66,
     cross_session_lgbm_cj_round_level_ipl_2024: 778.66,
     cross_session_lgbm_cj_session_level_ipl_2024: 778.66,
-    in_session_lgbm_cj_session_level_ipl_2024: 777.18,
-    SceneDetectorv6: 170.84,
-    SpectateDetectorv2: 333.8,
-    CombinedClassifierTightBox: 3164.16,
-    SceneDetectorNewArch: 1304.4,
-    NumClassifier: 2109.77,
-    SceneDetectorv3: 162.65
+    in_session_lgbm_cj_session_level_ipl_2024: 777.18
   }
 
 
@@ -290,9 +284,9 @@ function AdminPage() {
             <div className="left-content">
               <p className="heading5">{item.modelName}</p>
               <div className="subHeadingFlex">
-                <p className="subHeading3">{item.modelVersion}</p>
-                <p className="subHeading3">|</p>
-                <p className="subHeading3">{modelSizes[item.modelName] + ' KiB'}</p>
+              <p className="subHeading3">{item.modelVersion}</p>
+              <p className="subHeading3">|</p>
+                <p className="subHeading3">{modelSizes[item.modelName]+' KiB'}</p>
               </div>
             </div>
             <div
