@@ -11,6 +11,7 @@ import {
   ACCENT_COLOR,
   ACCESS_TOKEN,
   APP_BASE_DMS_URL,
+  APP_BASE_MDS_URL,
   CLIENT_ID,
   COGNITO_USERNAME,
   DEFAULT_ANALYTICS,
@@ -55,6 +56,8 @@ function BillingPage() {
     "N/A",
     "N/A",
   ]);
+
+  const navigateTo = useNavigate();
 
   const subtractDays = (date, days) => {
     date.setDate(date.getDate() - days);
@@ -285,6 +288,36 @@ function BillingPage() {
     );
   };
 
+  const checkUserPermissions = async () => {
+    dispatch(loaderActions.toggleLoader(true));
+    await axios
+      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/users`, {
+        headers: {
+          AuthMethod: "Cognito",
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientId: localStorage.getItem(CLIENT_ID),
+          TokenId: localStorage.getItem(USER_EMAIL),
+        },
+      })
+      .then((res) => {
+        fetchBillingData();
+      })
+      .catch((e) => {
+        console.log(e);
+        var errorDescription = e.response.data?.error?.description;
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
+        navigateTo(DASHBOARD_PAGE_ROUTE);
+      });
+    dispatch(loaderActions.toggleLoader(false));
+  };
+
   const fetchIntervalBillignData = async () => {
     const clientID = localStorage.getItem(CLIENT_ID);
     const startDateTime = interval.startDate;
@@ -410,6 +443,7 @@ function BillingPage() {
   };
 
   useEffect(() => {
+    checkUserPermissions();
     fetchBillingData();
   }, [interval]);
 
