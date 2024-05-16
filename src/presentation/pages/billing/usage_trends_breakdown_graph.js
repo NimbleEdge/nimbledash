@@ -7,12 +7,39 @@ export default function UsageTrendsBreakDownGraph(props) {
   var trendsBreakdown = props.trendsBreakdown;
   var allAssets = props.allAssets;
 
+  Object.keys(trendsBreakdown).forEach(month => {
+    Object.keys(trendsBreakdown[month]).forEach(key => {
+      trendsBreakdown[month][key] = parseFloat(trendsBreakdown[month][key].toFixed(2));
+    });
+  });
+
+  var updatedMap = {};
+  var legendSet = new Set();
+
+  for (var month in trendsBreakdown) {
+    var map = trendsBreakdown[month];
+
+    var keyList = Object.keys(map);
+
+    for (var key of keyList) {
+
+      if (map[key] < 1) {
+        delete map[key];
+      }
+      else {
+        legendSet.add(key);
+      }
+    }
+
+    updatedMap[month] = map;
+  }
+
   return (
     <div className="graphBox">
       <div className="graphInfo">
         <div className="graphLegends">
           <p className="pageSubHeaders">Legend</p>
-          {allAssets.map((key, index) => (
+          {Array.from(legendSet).map((key, index) => (
             <div className="graphLegend">
               <div
                 className="legendSolidLine"
@@ -26,7 +53,7 @@ export default function UsageTrendsBreakDownGraph(props) {
         </div>
       </div>
       <div className="usageTrendsGraph">
-        <StackedBarChart data={trendsBreakdown}></StackedBarChart>
+        <StackedBarChart data={updatedMap}></StackedBarChart>
       </div>
     </div>
   );
