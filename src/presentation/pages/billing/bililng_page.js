@@ -351,6 +351,22 @@ function BillingPage() {
   const fetchBillingData = async () => {
     const clientID = localStorage.getItem(CLIENT_ID);
 
+    const startDateTime = new Date();
+    const endDateTime = new Date();
+
+    startDateTime.setDate(startDateTime.getDate() - 65);
+
+
+    startDateTime.setHours(0);
+    startDateTime.setMinutes(0);
+    startDateTime.setSeconds(0);
+    startDateTime.setMilliseconds(0);
+
+    endDateTime.setHours(23);
+    endDateTime.setMinutes(59);
+    endDateTime.setSeconds(59);
+    endDateTime.setMilliseconds(999);
+
     await axios
       .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
         headers: {
@@ -359,6 +375,10 @@ function BillingPage() {
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
           CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
+        },
+        params: {
+          startTime: startDateTime.toISOString(),
+          endTime: endDateTime.toISOString(),
         },
       })
       .then(async (res) => {
