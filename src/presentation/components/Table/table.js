@@ -5,12 +5,9 @@ import "./style2.css";
 import "./table.css";
 import "../../../common.css";
 
-export const TextOnlyComponent = ({ text, customStyle }) => {
+export const TextOnlyComponent = ({ text, customStyle, onClick }) => {
   return (
-    <div
-      className={`textOnlyComponent`}
-      style={{ ...customStyle, fontSize: "14px", fontFamily: "Roboto" }}
-    >
+    <div onClick={onClick} className={`textOnlyComponent`} style={customStyle}>
       {text}
     </div>
   );
@@ -59,17 +56,33 @@ const Table = ({
   data,
   customStyles = {},
   STYLE = TABLE_STYLE_TYPE.STYLE1,
+  clickableHeaderIndex,
+  clickableHeaderCallback,
 }) => {
   const styles = {}; //= STYLE == TABLE_STYLE_TYPE.STYLE1 ? { ...defaultStyles1, ...customStyles } : { ...defaultStyles2, ...customStyles };
 
-  const headerCell = (cellData, index) => {
+  const headerCell = (
+    cellData,
+    index,
+    clickableHeaderIndex,
+    clickableHeaderCallback
+  ) => {
     let cellStyle = styles.headerCell;
     if (index == 0) cellStyle = { ...cellStyle, ...styles.leftMostHeaderCell };
     if (index == data.headers.length - 1)
       cellStyle = { ...cellStyle, ...styles.rightMostHeaderCell };
     return (
       <th key={index} style={cellStyle} className={STYLE}>
-        <div style={styles.headerText} className={STYLE}>
+        <div
+          onClick={
+            clickableHeaderIndex == index ? clickableHeaderCallback : () => {}
+          }
+          style={{
+            ...styles.headerText,
+            cursor: clickableHeaderIndex == index ? "pointer" : "",
+          }}
+          className={STYLE}
+        >
           {cellData.text}
         </div>
       </th>
@@ -104,7 +117,14 @@ const Table = ({
   return (
     <table style={styles.table} className={STYLE}>
       <thead style={styles.thead} className={STYLE}>
-        {data.headers.map((header, index) => headerCell(header, index))}
+        {data.headers.map((header, index) =>
+          headerCell(
+            header,
+            index,
+            clickableHeaderIndex,
+            clickableHeaderCallback
+          )
+        )}
       </thead>
       <tbody style={styles.tbody} className={STYLE}>
         {data.body.map((row, rowIndex) => getBodyRow(row, rowIndex))}
