@@ -11,6 +11,7 @@ import {
   ACCENT_COLOR,
   ACCESS_TOKEN,
   APP_BASE_DMS_URL,
+  APP_BASE_MDS_URL,
   CLIENT_ID,
   COGNITO_USERNAME,
   DEFAULT_ANALYTICS,
@@ -25,9 +26,9 @@ import { toast } from "react-toastify";
 import GlanceCards from "./glance_cards";
 import UsageTrendsGraph from "./usage_trends_graph";
 import UsageTrendsBreakDownGraph from "./usage_trends_breakdown_graph";
+import { getAuthMethod } from "core/utils";
 import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
 import { useNavigate } from "react-router-dom";
-import { DateRangePicker } from "react-date-range";
 
 function BillingPage() {
   const dispatch = useDispatch();
@@ -36,12 +37,13 @@ function BillingPage() {
   const [trendsTimeline, setTrendsTimeline] = useState({});
   const [trendsBreakdown, setTrendsBreakdown] = useState({});
   const [allAssets, setAllAssets] = useState([]);
+  const navigateTo = useNavigate();
   const [usageTrendsBreakdownData, setUsageTrendsBreakdownData] = useState({
     headers: [
       { text: "Name" },
       { text: "Version" },
       { text: "Avg Active Devices Per Day" },
-      { text: "ACU Incurred This Month ▼" },
+      { text: "ACU Incurred This Month" },
     ],
     body: [],
   });
@@ -56,37 +58,15 @@ function BillingPage() {
     "N/A",
   ]);
 
-  const subtractDays = (date, days) => {
-    date.setDate(date.getDate() - days);
-    return date;
-  };
-
-  const [interval, setInterval] = useState({
-    startDate: subtractDays(new Date(), 7),
-    endDate: new Date(),
-    key: "selection",
-  });
-
   const buildUsageTrendsBreakdownTable = async (
     currentMonthModelWiseBreakdown,
     totalAssetActiveDevices
   ) => {
     var processedData = [];
-    var acuIncurred = [];
 
-    var id = 0;
     for (let assetName in currentMonthModelWiseBreakdown) {
-      acuIncurred.push(
-        parseFloat(
-          currentMonthModelWiseBreakdown[assetName]
-            .reduce((acc, currentValue) => acc + currentValue, 0)
-            .toFixed(2)
-        )
-      );
-
       processedData.push([
         {
-          id: id++,
           Component: TextOnlyComponent,
           data: {
             text: assetName.split(" ")[0],
@@ -138,37 +118,19 @@ function BillingPage() {
       ]);
     }
 
-    const ascendingOrder = (a, b) => a - b;
-    const descendingOrder = (a, b) => b - a;
-
-    const sortedAcu = acuIncurred.slice().sort(descendingOrder);
-
-    var sortedData = Array(sortedAcu.length).fill([]);
-
-    for (var i = 0; i < sortedAcu.length; i++) {
-      var oldIndex = acuIncurred.indexOf(sortedAcu[i]);
-      var newIndex = i;
-      sortedData[newIndex] = processedData[oldIndex];
-    }
-
-    const newData = { ...usageTrendsBreakdownData, body: sortedData };
+    const newData = { ...usageTrendsBreakdownData, body: processedData };
     setUsageTrendsBreakdownData(newData);
   };
 
-  const preprocessBackendData = (data, intervalData) => {
+  const preprocessBackendData = (data) => {
     var currentMonthTotalACUTemp = 0;
     var previousMonthTotalACUTemp = 0;
     var previousMonthTillDateACUTemp = 0;
-    var acuThisMonth = 0;
     var trendsBreakdownDataTemp = {};
     const currentMonthDateObject = new Date();
     const tempMD = new Date();
     tempMD.setMonth(tempMD.getMonth() - 1);
     const previousMonthDateObject = tempMD;
-
-    for (let obj of intervalData) {
-      currentMonthTotalACUTemp += obj.acuCount;
-    }
 
     let timelines = {};
     for (let obj of data) {
@@ -184,14 +146,12 @@ function BillingPage() {
       }
 
       let timestamp = new Date(obj.timestamp);
-      let sevenDaysBackTimestamp = new Date();
-      sevenDaysBackTimestamp.setDate(currentMonthDateObject.getDate() - 7);
 
       if (
         timestamp.getMonth() === currentMonthDateObject.getMonth() &&
-        timestamp.getFullYear() === currentMonthDateObject.getFullYear() && timestamp > sevenDaysBackTimestamp
+        timestamp.getFullYear() === currentMonthDateObject.getFullYear()
       ) {
-        acuThisMonth += obj.acuCount;
+        currentMonthTotalACUTemp += obj.acuCount;
       }
 
       if (
@@ -218,9 +178,9 @@ function BillingPage() {
 
       if (
         currentMonthDateObject.getMonth() ===
-        new Date(obj.timestamp).getMonth() &&
+          new Date(obj.timestamp).getMonth() &&
         currentMonthDateObject.getFullYear() ===
-        new Date(obj.timestamp).getFullYear()
+          new Date(obj.timestamp).getFullYear()
       ) {
         if (totalActiveDevicesTemp.hasOwnProperty(assetName)) {
           totalActiveDevicesTemp[assetName] = [
@@ -256,14 +216,12 @@ function BillingPage() {
         (trendsBreakdownDataTemp[readableDate][assetName] || 0) + obj.acuCount;
     }
 
-    var daysElapsedThisMonth = new Date().getDate();
-
     setAllAssets(allAssetsTemp);
     setGlanceCardsData([
       currentMonthTotalACUTemp.toFixed(2).toString(),
       previousMonthTotalACUTemp.toFixed(2).toString(),
       previousMonthTillDateACUTemp.toFixed(2).toString(),
-      ((acuThisMonth / 7) * 30).toFixed(2).toString(),
+      "N/A",
     ]);
     setTrendsACU(trendsACUTemp);
     setSelectedMonth(Object.keys(trendsACUTemp)[0]);
@@ -285,31 +243,40 @@ function BillingPage() {
     );
   };
 
-  const fetchIntervalBillignData = async () => {
+  const checkUserPermissions = async () => {
+    dispatch(loaderActions.toggleLoader(true));
+    await axios
+      .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/users`, {
+        headers: {
+          AuthMethod: getAuthMethod(),
+          Token: localStorage.getItem(ACCESS_TOKEN),
+          ClientId: localStorage.getItem(CLIENT_ID),
+          TokenId: localStorage.getItem(USER_EMAIL),
+        },
+      })
+      .then((res) => {
+        fetchBillingData();
+      })
+      .catch((e) => {
+        console.log(e);
+        var errorDescription = e.response.data?.error?.description;
+        if (errorDescription != null)
+          toast.error(errorDescription, {
+            toastId: "errorToast",
+          });
+        else
+          toast.error("Something Went Wrong.", {
+            toastId: "errorToast",
+          });
+        navigateTo(DASHBOARD_PAGE_ROUTE);
+      });
+    dispatch(loaderActions.toggleLoader(false));
+  };
+
+  const fetchBillingData = async () => {
     const clientID = localStorage.getItem(CLIENT_ID);
-    const startDateTime = interval.startDate;
-    const endDateTime = interval.endDate;
 
-    const modifiedStartDateTime = new Date(startDateTime);
-    const modifiedEndDateTime = new Date(endDateTime);
-
-    modifiedStartDateTime.setHours(0);
-    modifiedStartDateTime.setMinutes(0);
-    modifiedStartDateTime.setSeconds(0);
-    modifiedStartDateTime.setMilliseconds(0);
-
-    modifiedEndDateTime.setHours(23);
-    modifiedEndDateTime.setMinutes(59);
-    modifiedEndDateTime.setSeconds(59);
-    modifiedEndDateTime.setMilliseconds(999);
-
-    console.log(modifiedStartDateTime, modifiedEndDateTime);
-    console.log(
-      modifiedStartDateTime.toISOString(),
-      modifiedEndDateTime.toISOString()
-    );
-
-    return await axios
+    await axios
       .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
         headers: {
           AuthMethod: "Cognito",
@@ -317,10 +284,6 @@ function BillingPage() {
           ClientId: clientID,
           TokenId: localStorage.getItem(USER_EMAIL),
           CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-        },
-        params: {
-          startTime: modifiedStartDateTime.toISOString(),
-          endTime: modifiedEndDateTime.toISOString(),
         },
       })
       .then((res) => {
@@ -338,67 +301,8 @@ function BillingPage() {
             },
           ];
         }
-        return metrics;
-      })
-      .catch((e) => {
-        console.log(e);
-        toast.error(e.message, {
-          toastId: "errorToast",
-        });
-      });
-  };
-
-  const fetchBillingData = async () => {
-    const clientID = localStorage.getItem(CLIENT_ID);
-
-    const startDateTime = new Date();
-    const endDateTime = new Date();
-
-    startDateTime.setDate(startDateTime.getDate() - 65);
-
-
-    startDateTime.setHours(0);
-    startDateTime.setMinutes(0);
-    startDateTime.setSeconds(0);
-    startDateTime.setMilliseconds(0);
-
-    endDateTime.setHours(23);
-    endDateTime.setMinutes(59);
-    endDateTime.setSeconds(59);
-    endDateTime.setMilliseconds(999);
-
-    await axios
-      .get(`${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/acu`, {
-        headers: {
-          AuthMethod: "Cognito",
-          Token: localStorage.getItem(ACCESS_TOKEN),
-          ClientId: clientID,
-          TokenId: localStorage.getItem(USER_EMAIL),
-          CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-        },
-        params: {
-          startTime: startDateTime.toISOString(),
-          endTime: endDateTime.toISOString(),
-        },
-      })
-      .then(async (res) => {
-        var metrics = res.data.acuMetrics;
-        if (metrics.length == 0) {
-          metrics = [
-            {
-              assetId: "none",
-              assetVersion: "1.0.0",
-              assetType: "model",
-              acuCount: 0,
-              numDevices: 0,
-              deploymentId: 0,
-              timestamp: "1970-01-01T00:00:00Z",
-            },
-          ];
-        }
         metrics.reverse();
-        var metrics2 = await fetchIntervalBillignData();
-        preprocessBackendData(metrics, metrics2);
+        preprocessBackendData(metrics);
         console.log(metrics);
       })
       .catch((e) => {
@@ -410,27 +314,23 @@ function BillingPage() {
   };
 
   useEffect(() => {
-    fetchBillingData();
-  }, [interval]);
+    checkUserPermissions();
+  }, []);
 
   return (
-    <div className={`flexColumn adminPage`}>
+    <div className={`flexColumn adminPage billingPage`}>
       {Object.keys(trendsACU).length != 0 && (
         <div>
           <div className={`flexColumn adminPageHeader`}>
-            <div className={`adminPageTitle`}>Billing Information</div>
-            <div className={`adminPageSubtitle`}>
+            <div className={`heading3`}>Billing Information</div>
+            <div className={`subHeading header-margin`}>
               Monitor Active Compute Units In Realtime
             </div>
           </div>
           <div className={`adminPageContent`}>
             <p className="pageHeaders">Usage At A Glance</p>
 
-            <GlanceCards
-              interval={interval}
-              setInterval={setInterval}
-              glanceCardsData={glanceCardsData}
-            ></GlanceCards>
+            <GlanceCards glanceCardsData={glanceCardsData}></GlanceCards>
 
             <p className="pageHeaders">Usage Trends</p>
 
@@ -448,18 +348,7 @@ function BillingPage() {
             ></UsageTrendsBreakDownGraph>
 
             <div className={`tasksTableView flexColumn overflowAuto`}>
-              <Table
-                clickableHeaderCallback={() => {
-                  var temp = usageTrendsBreakdownData.body;
-                  temp.reverse();
-                  setUsageTrendsBreakdownData({
-                    headers: usageTrendsBreakdownData.headers,
-                    body: temp,
-                  });
-                }}
-                clickableHeaderIndex={3}
-                data={usageTrendsBreakdownData}
-              />
+              <Table data={usageTrendsBreakdownData} />
             </div>
           </div>
 
@@ -477,3 +366,4 @@ function BillingPage() {
 }
 
 export default BillingPage;
+
