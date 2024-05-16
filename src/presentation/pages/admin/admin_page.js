@@ -286,7 +286,7 @@ function AdminPage() {
               <div className="subHeadingFlex">
               <p className="subHeading3">{item.modelVersion}</p>
               <p className="subHeading3">|</p>
-                <p className="subHeading3">{modelSizes[item.modelName]+' KBs'}</p>
+                <p className="subHeading3">{modelSizes[item.modelName]+' KiB'}</p>
               </div>
             </div>
             <div
