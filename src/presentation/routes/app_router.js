@@ -6,6 +6,7 @@ import {
   CONTACT_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
   DEPLOYMENTS_PAGE_ROUTE,
+  EVENTS_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
   RBAC_PAGE_ROUTE,
 } from "./route-paths";
@@ -39,6 +40,7 @@ import DeploymentPage from "presentation/pages/deployment/deployment_page";
 import BillingPage from "presentation/pages/billing/bililng_page";
 import ApprovalPage from "presentation/pages/approval/approval_page";
 import { getRequest } from "data/remote_datasource";
+import EventsPage from "presentation/pages/events/events_page";
 
 function AppRouter(props) {
   const dispatch = useDispatch();
@@ -195,6 +197,8 @@ function AppRouter(props) {
         <Route path={DEPLOYMENTS_PAGE_ROUTE} element={isAuthenticated ? <DeploymentPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
         <Route path={BILLING_PAGE_ROUTE} element={isAuthenticated ? <BillingPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
         <Route path={APPROVAL_PAGE_ROUTE} element={isAuthenticated ? <ApprovalPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={APPROVAL_PAGE_ROUTE} element={isAuthenticated ? <ApprovalPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={EVENTS_PAGE_ROUTE} element={isAuthenticated ? <EventsPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
         {(localStorage.getItem(ACCESS_TOKEN) != null || localStorage.getItem(FORM_PASSWORD) != null) && <Route path="/" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
         { <Route path="*" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
       </Routes>}

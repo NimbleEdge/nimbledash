@@ -6,6 +6,7 @@ import {
   CONTACT_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
   DEPLOYMENTS_PAGE_ROUTE,
+  EVENTS_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
   RBAC_PAGE_ROUTE,
 } from "presentation/routes/route-paths";
@@ -41,211 +42,86 @@ function SideBar(props) {
   });
 
   const dispatch = useDispatch();
+  const tabData = [
+    {
+      title: "Dashboard",
+      route: DASHBOARD_PAGE_ROUTE,
+      iconName: "dashboard",
+    },
+    {
+      title: "Admin",
+      route: ADMIN_PAGE_ROUTE,
+      iconName: "admin",
+    },
+    {
+      title: "Deployments",
+      route: DEPLOYMENTS_PAGE_ROUTE,
+      iconName: "deployments",
+    },
+    {
+      title: "Approvals",
+      route: APPROVAL_PAGE_ROUTE,
+      iconName: "approval",
+    },
+    {
+      title: "Events Control",
+      route: EVENTS_PAGE_ROUTE,
+      iconName: "approval",
+    },
+    {
+      title: "Access Control",
+      route: RBAC_PAGE_ROUTE,
+      iconName: "rbac",
+    },
+    {
+      title: "Billing",
+      route: BILLING_PAGE_ROUTE,
+      iconName: "billing",
+    },
+    {
+      title: "Contact Us",
+      route: CONTACT_PAGE_ROUTE,
+      iconName: "contact_us",
+    },
+  ];
 
   return (
     <div className="sidebar">
       <div className="sidebar-margin">
         <img className="sidebar-logo" src="/assets/logo.png"></img>
-        <div
-          className={
-            (currentTab == 0 ? "sidebar-item-selected " : "") +
-            "sidebar-item clickable"
-          }
-          onClick={() => {
-            setCurrentTab(0);
-            navigateTo(DASHBOARD_PAGE_ROUTE);
-          }}
-        >
-          <img
-            className="sidebar-icon"
-            src={
-              currentTab == 0
-                ? "/assets/icons/dashboard_selected.svg"
-                : "/assets/icons/dashboard.svg"
-            }
-          ></img>
-          <p
-            className={
-              (currentTab == 0 ? "selected-desc " : "") + "sidebar-item-desc"
-            }
-          >
-            Dashboard
-          </p>
-        </div>
 
-        <div
-          className={
-            (currentTab == 1 ? "sidebar-item-selected " : "") +
-            "sidebar-item clickable"
-          }
-          onClick={() => {
-            setCurrentTab(1);
-            navigateTo(ADMIN_PAGE_ROUTE);
-            dispatch(loaderActions.toggleLoader(true));
-          }}
-        >
-          <img
-            className="sidebar-icon"
-            src={
-              currentTab == 1
-                ? "/assets/icons/admin_selected.svg"
-                : "/assets/icons/admin.svg"
-            }
-          ></img>
-          <p
-            className={
-              (currentTab == 1 ? "selected-desc " : "") + "sidebar-item-desc"
-            }
-          >
-            {'Admin Panel'}
-          </p>
-        </div>
+        {
+          tabData.map((tab, index) => (
+            <div
+              className={
+                (currentTab == index ? "sidebar-item-selected " : "") +
+                "sidebar-item clickable"
+              }
+              onClick={() => {
+                setCurrentTab(index);
+                navigateTo(tab.route);
+              }}
+            >
+              <img
+                className="sidebar-icon"
+                src={
+                  currentTab == index
+                    ? `/assets/icons/${tab.iconName}_selected.svg`
+                    : `/assets/icons/${tab.iconName}.svg`
+                }
+              ></img>
+              <p
+                className={
+                  (currentTab == index ? "selected-desc " : "") + "sidebar-item-desc"
+                }
+              >
+                {tab.title}
+              </p>
+            </div>
+          ))
+        }
 
-
-        <div
-          className={
-            (currentTab == 2 ? "sidebar-item-selected " : "") +
-            "sidebar-item clickable"
-          }
-          onClick={() => {
-            setCurrentTab(2);
-            navigateTo(DEPLOYMENTS_PAGE_ROUTE);
-            dispatch(loaderActions.toggleLoader(true));
-          }}
-        >
-          <img
-            className="sidebar-icon"
-            src={
-              currentTab == 2
-                ? "/assets/icons/deployments_selected.svg"
-                : "/assets/icons/deployments.svg"
-            }
-          ></img>
-          <p
-            className={
-              (currentTab == 2 ? "selected-desc " : "") + "sidebar-item-desc"
-            }
-          >
-            {'Deployments'}
-          </p>
-        </div>
-
-
-
-        <div
-          className={
-            (currentTab == 3 ? "sidebar-item-selected " : "") +
-            "sidebar-item clickable"
-          }
-          onClick={() => {
-            setCurrentTab(3);
-            navigateTo(APPROVAL_PAGE_ROUTE);
-            dispatch(loaderActions.toggleLoader(true));
-          }}
-        >
-          <img
-            className="sidebar-icon"
-            src={
-              currentTab == 3
-                ? "/assets/icons/approval_selected.svg"
-                : "/assets/icons/approval.svg"
-            }
-          ></img>
-          <p
-            className={
-              (currentTab == 3 ? "selected-desc " : "") + "sidebar-item-desc"
-            }
-          >
-            {'Approvals'}
-          </p>
-        </div>
-
-
-        <div
-          className={
-            (currentTab == 4 ? "sidebar-item-selected " : "") +
-            "sidebar-item clickable"
-          }
-          onClick={() => {
-            setCurrentTab(4);
-            navigateTo(RBAC_PAGE_ROUTE);
-            dispatch(loaderActions.toggleLoader(true));
-          }}
-        >
-          <img
-            className="sidebar-icon"
-            src={
-              currentTab == 4
-                ? "/assets/icons/rbac_selected.svg"
-                : "/assets/icons/rbac.svg"
-            }
-          ></img>
-          <p
-            className={
-              (currentTab == 4 ? "selected-desc " : "") + "sidebar-item-desc"
-            }
-          >
-            Access control
-          </p>
-        </div>
-
-
-        <div
-          className={
-            (currentTab == 5 ? "sidebar-item-selected " : "") +
-            "sidebar-item clickable"
-          }
-          onClick={() => {
-            setCurrentTab(5);
-            navigateTo(BILLING_PAGE_ROUTE);
-            dispatch(loaderActions.toggleLoader(true));
-          }}
-        >
-          <img
-            className="sidebar-icon"
-            src={
-              currentTab == 5
-                ? "/assets/icons/billing_selected.svg"
-                : "/assets/icons/billing.svg"
-            }
-          ></img>
-          <p
-            className={
-              (currentTab == 5 ? "selected-desc " : "") + "sidebar-item-desc"
-            }
-          >
-            {'Billing'}
-          </p>
-        </div>
-
-        <div
-          className={
-            (currentTab == 6 ? "sidebar-item-selected " : "") +
-            "sidebar-item clickable"
-          }
-          onClick={() => {
-            setCurrentTab(6);
-            navigateTo(CONTACT_PAGE_ROUTE);
-            dispatch(loaderActions.toggleLoader(true));
-          }}
-        >
-          <img
-            className="sidebar-icon"
-            src={
-              currentTab == 6
-                ? "/assets/icons/contact_us_selected.svg"
-                : "/assets/icons/contact_us.svg"
-            }
-          ></img>
-          <p
-            className={
-              (currentTab == 6 ? "selected-desc " : "") + "sidebar-item-desc"
-            }
-          >
-            Contact Us
-          </p>
-        </div>
-
+{/* LOGOUT BUTTON */}
         <div
           className="sidebar-item"
           onClick={() => {

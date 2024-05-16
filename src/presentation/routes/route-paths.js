@@ -7,4 +7,5 @@ export const CONTACT_PAGE_ROUTE = "/contact";
 export const DEPLOYMENTS_PAGE_ROUTE = "/deployments";
 export const APPROVAL_PAGE_ROUTE = "/approval";
 export const BILLING_PAGE_ROUTE = "/billing";
+export const EVENTS_PAGE_ROUTE = "/events"
 
