@@ -1,6 +1,6 @@
 import Table, { TextOnlyComponent } from "presentation/components/Table/table";
 import { TagsListComponent } from "presentation/components/Tags/tagsList";
-import { loaderActions } from "presentation/redux/stores/store";
+import store, { loaderActions } from "presentation/redux/stores/store";
 import React, { useEffect, useState, version } from "react";
 import { useDispatch } from "react-redux";
 import "../../../common.css";
@@ -28,6 +28,7 @@ import { toast } from "react-toastify";
 import GlanceCards from "./glance_cards";
 import UsageTrendsGraph from "./usage_trends_graph";
 import UsageTrendsBreakDownGraph from "./usage_trends_breakdown_graph";
+import { getRequest } from "data/remote_datasource";
 import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
 import { useNavigate } from "react-router-dom";
 import { DateRangePicker } from "react-date-range";
@@ -289,7 +290,7 @@ function BillingPage() {
   };
 
   const fetchIntervalBillignData = async () => {
-    const clientID = localStorage.getItem(CLIENT_ID);
+    const clientID = store.getState().userReducer.clientId;
     const startDateTime = interval.startDate;
     const endDateTime = interval.endDate;
 
@@ -396,18 +397,18 @@ function BillingPage() {
     fetchBillingData();
   }, [interval]);
 
-  return (
-    <div className={`flexColumn adminPage`}>
-      {Object.keys(trendsACU).length != 0 && (
-        <div>
-          <div className={`flexColumn adminPageHeader`}>
-            <div className={`adminPageTitle`}>Billing Information</div>
-            <div className={`adminPageSubtitle`}>
-              Monitor Active Compute Units In Realtime
+    return (
+      <div className={`flexColumn adminPage`}>
+        {Object.keys(trendsACU).length != 0 && (
+          <div>
+            <div className={`flexColumn adminPageHeader`}>
+              <div className={`adminPageTitle`}>Billing Information</div>
+              <div className={`adminPageSubtitle`}>
+                Monitor Active Compute Units In Realtime
+              </div>
             </div>
-          </div>
-          <div className={`adminPageContent`}>
-            <p className="pageHeaders">Usage At A Glance</p>
+            <div className={`adminPageContent`}>
+              <p className="pageHeaders">Usage At A Glance</p>
 
             <GlanceCards
               interval={interval}
@@ -415,20 +416,20 @@ function BillingPage() {
               glanceCardsData={glanceCardsData}
             ></GlanceCards>
 
-            <p className="pageHeaders">Usage Trends</p>
+              <p className="pageHeaders">Usage Trends</p>
 
-            <UsageTrendsGraph
-              trendsACU={trendsACU}
-              selectedMonth={selectedMonth}
-              trendsTimeline={trendsTimeline}
-              handleMonthChange={handleMonthChange}
-            ></UsageTrendsGraph>
+              <UsageTrendsGraph
+                trendsACU={trendsACU}
+                selectedMonth={selectedMonth}
+                trendsTimeline={trendsTimeline}
+                handleMonthChange={handleMonthChange}
+              ></UsageTrendsGraph>
 
-            <p className="pageHeaders">Usage Trends Breakdown</p>
-            <UsageTrendsBreakDownGraph
-              trendsBreakdown={trendsBreakdown}
-              allAssets={allAssets}
-            ></UsageTrendsBreakDownGraph>
+              <p className="pageHeaders">Usage Trends Breakdown</p>
+              <UsageTrendsBreakDownGraph
+                trendsBreakdown={trendsBreakdown}
+                allAssets={allAssets}
+              ></UsageTrendsBreakDownGraph>
 
             <div className={`tasksTableView flexColumn overflowAuto`}>
               <Table
@@ -446,17 +447,17 @@ function BillingPage() {
             </div>
           </div>
 
-          {/* <a
+            {/* <a
             className="externalLink"
             target="_blank"
             href="https://codeclock.in"
           >
             Please click here to perform advance queries.
           </a> */}
-        </div>
-      )}
-    </div>
-  );
-}
+          </div>
+        )}
+      </div>
+    );
+  }
 
-export default BillingPage;
+  export default BillingPage;

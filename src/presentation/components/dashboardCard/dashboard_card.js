@@ -10,10 +10,6 @@ function DashboardCard(props) {
   var cardText = props.cardText;
   var cardSubText = props.cardSubText;
 
-  useEffect(() => {
-    console.log("get", props.some);
-  });
-
   return (
     <div className="number-card">
       {props.loading ? (

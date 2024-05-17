@@ -10,6 +10,7 @@ import {
   FORM_USERNAME,
   USER_EMAIL,
 } from "core/constants";
+import { getRequestParams } from "data/remote_datasource";
 import AnalyticsLineChart from "presentation/components/charts/line_chart";
 import AnalyticsLineChartSingle from "presentation/components/charts/line_chart_single";
 import AnalyticsPieChart from "presentation/components/charts/pie_chart";
@@ -27,7 +28,6 @@ const fetchDmsMetric = async (
   intervalObject,
   successCallback
 ) => {
-  const uri = `${APP_BASE_DMS_URL}/dms/api/v2/metrics/clients/${clientID}/${metricPath}`;
   let startDateTimeRange = new Date(intervalObject["startDate"]);
   let endDateTimeRange = new Date(intervalObject["endDate"]);
 
@@ -37,40 +37,15 @@ const fetchDmsMetric = async (
   endDateTimeRange.setMinutes(59);
 
   const apiCalledAt = new Date();
-  await axios
-    .get(uri, {
-      headers: {
-        AuthMethod: localStorage.getItem(AUTH_METHOD),
-        Token: localStorage.getItem(ACCESS_TOKEN),
-        ClientId: clientID,
-        TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-        password: localStorage.getItem(FORM_PASSWORD),        CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-      },
-      params: {
-        startTime: startDateTimeRange.toISOString(),
-        endTime: endDateTimeRange.toISOString(),
-        modelName: modelName,
-        modelVersion: modelVersion,
-      },
-    })
-    .then((res) => {
-      const currTime = new Date();
-      const elapsedTime = currTime - apiCalledAt;
-      console.log(metricPath, elapsedTime);
-      if (successCallback) successCallback(res.data);
-    })
-    .catch((e) => {
-      var errorDescription = e.response?.data?.error?.description;
-      if (errorDescription != null) {
-        toast.error(errorDescription, {
-          toastId: "errorToast",
-        });
-      } else {
-        toast.error("Something Went Wrong.", {
-          toastId: "errorToast",
-        });
-      }
-    });
+  var res = await getRequestParams(APP_BASE_DMS_URL,`/dms/api/v2/metrics/clients/${clientID}/${metricPath}`,{
+    startTime: startDateTimeRange.toISOString(),
+    endTime: endDateTimeRange.toISOString(),
+    modelName: modelName,
+    modelVersion: modelVersion,
+  });
+
+  if (successCallback) successCallback(res);
+  
 };
 
 export const METRIC_TYPES = {

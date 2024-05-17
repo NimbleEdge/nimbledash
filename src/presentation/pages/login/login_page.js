@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import "./login_page.css";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router";
 import { ADMIN_PAGE_ROUTE, DASHBOARD_PAGE_ROUTE, LOGIN_PAGE_ROUTE, RBAC_PAGE_ROUTE } from "presentation/routes/route-paths";
 import axios from "axios";
-import { ACCESS_TOKEN, APP_BASE_MDS_URL, AUTH_METHOD, FORM_PASSWORD, FORM_USERNAME, USER_EMAIL } from "core/constants";
+import { ACCESS_TOKEN, APP_BASE_MDS_URL, AUTH_METHOD, COGNITO_LOGIN, FORM_LOGIN, FORM_PASSWORD, FORM_USERNAME, SSO_LOGIN, USER_EMAIL } from "core/constants";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { toast } from "react-toastify";
@@ -18,8 +18,8 @@ function LoginPage() {
   const passwordRef = useRef(null);
 
   const samlLogin = () => {
+    localStorage.setItem(AUTH_METHOD, COGNITO_LOGIN);
     window.location.href = loginUrl;
-    localStorage.setItem(AUTH_METHOD, "Cognito");
   };
 
   const googleLogin = useGoogleLogin({
@@ -29,14 +29,11 @@ function LoginPage() {
           headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
         })
         .then((res) => res.data);
-      console.log(tokenResponse);
 
       localStorage.setItem(ACCESS_TOKEN, tokenResponse.access_token);
       localStorage.setItem(USER_EMAIL, userInfo.email);
-      localStorage.setItem(AUTH_METHOD, "GoogleSSO");
-
-      navigateTo(DASHBOARD_PAGE_ROUTE);
-      dispatch(loaderActions.toggleLoader(false));
+      localStorage.setItem(AUTH_METHOD, SSO_LOGIN);
+      window.location.reload();
     },
     onError: (errorResponse) => {
       console.log(errorResponse);
@@ -48,32 +45,12 @@ function LoginPage() {
     event.preventDefault();
     dispatch(loaderActions.toggleLoader(true));
 
-    await axios
-      .get(`${APP_BASE_MDS_URL}api/v2/admin/ping`, {
-        headers: {
-          authMethod: "UserPass",
-          TokenId: usernameRef.current.value,
-          password: passwordRef.current.value,
-        },
-      })
-      .then((res) => {
-        if (res.status == 200) {
-          toast.success("Login successful!");
-          localStorage.setItem(AUTH_METHOD, "UserPass");
-          localStorage.setItem(FORM_USERNAME, usernameRef.current.value);
-          localStorage.setItem(FORM_PASSWORD, passwordRef.current.value);
-          navigateTo(DASHBOARD_PAGE_ROUTE);
-        } else {
-          localStorage.clear();
-          toast.error("Login failed. Please try again!");
-        }
-      })
-      .catch((e) => {
-        localStorage.clear();
-        toast.error("Login failed. Please try again!");
-      });
+    localStorage.setItem(AUTH_METHOD, FORM_LOGIN);
+    localStorage.setItem(FORM_USERNAME, usernameRef.current.value);
+    localStorage.setItem(FORM_PASSWORD, passwordRef.current.value);
+    window.location.reload();
 
-    dispatch(loaderActions.toggleLoader(false));
+    // dispatch(loaderActions.toggleLoader(false));
   }
 
   return (
@@ -130,37 +107,6 @@ function LoginPage() {
               }}
             ></img>
           </div>
-
-          {/* <div
-            className="custom-loginPage-button clickable "
-            onClick={() => {
-              dispatch(loaderActions.toggleLoader(true));
-              samlLogin();
-            }}
-          >
-            <img
-              className="buttonLogo"
-              src="/assets/icons/saml_login.png"
-              height={"28px"}
-            ></img>
-            <p className="buttonText">Login with SAML</p>
-          </div>
-
-          <div
-            className="custom-loginPage-button clickable"
-            onClick={() => {
-              dispatch(loaderActions.toggleLoader(true));
-              googleLogin();
-            }}
-          >
-            <img
-              className="buttonLogo"
-              src="/assets/logo_google.png"
-              height={"28px"}
-            ></img>
-            <p className="buttonText">Login with Google</p>
-          </div> */}
-
         </div>
         <a
           href="mailto:siddharth.mittal@nimbleedgehq.ai"

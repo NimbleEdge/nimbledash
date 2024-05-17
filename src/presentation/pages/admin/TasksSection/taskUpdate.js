@@ -66,7 +66,7 @@ const TaskUpdate = ({ preSelectedTagsList = [], allTagsList, isNewTask = false, 
             createNewTask({ taskName: DEFAULT_TASK_NAME, deploymentTags: selectedDeploymentTags, taskCode: fileContent, description: description, onCompletion, updateTasksList: updateTasksList, dispatch: dispatch })
 
         } else {
-            updateTask({ taskName: DEFAULT_TASK_NAME, deploymentTags: selectedDeploymentTags, taskCode: fileContent, updateType: selectedUpdateTypeIndex + 1, description: description, onCompletion, updateTasksList: updateTasksList });
+            updateTask({ taskName: DEFAULT_TASK_NAME, deploymentTags: selectedDeploymentTags, taskCode: fileContent, updateType: selectedUpdateTypeIndex + 1, description: description, onCompletion, updateTasksList: updateTasksList, dispatch:dispatch });
         }
     };
 

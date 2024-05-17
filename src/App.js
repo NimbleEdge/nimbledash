@@ -1,7 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 import AppRouter from "presentation/routes/app_router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { loaderActions } from "presentation/redux/stores/store";
 import { InfinitySpin } from "react-loader-spinner";
@@ -11,6 +11,8 @@ import { ToastContainer } from "react-toastify";
 import SideBar from "presentation/components/sideBar/side_bar";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   useEffect(() => {
     if (process.env.REACT_APP_ENV_NAME == "STAGING") {
       console.log("STAGE ENV STARTED!!!");
@@ -43,8 +45,8 @@ function App() {
             <InfinitySpin color={ACCENT_COLOR}></InfinitySpin>
           </div>
         )}
-        <SideBar></SideBar>
-        <AppRouter></AppRouter>
+        <SideBar setIsAuthenticated={setIsAuthenticated} ></SideBar>
+        <AppRouter isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} ></AppRouter>
       </div>
     </GoogleOAuthProvider>
   );

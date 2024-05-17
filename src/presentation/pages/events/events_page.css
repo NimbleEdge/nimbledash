@@ -1,0 +1,44 @@
+.checkbox {
+    margin-left: 40px;
+}
+
+.relative {
+    position: relative;
+    height: 100vh;
+}
+
+.flex {
+    display: flex;
+    gap: 12px;
+}
+
+.action-container {
+    position: absolute;
+    display: flex;
+    bottom: 32px;
+    right: 40px;
+    gap: 12px;
+}
+
+.action-button {
+    width: 200px;
+    height: 52px;
+    background-color: #FF6565;
+    border-radius: 8px;
+    padding-left: 16px;
+    cursor: pointer;
+}
+
+
+.action-button-primary {
+    width: 180px;
+    height: 52px;
+    background-color: #6565FF;
+    border-radius: 8px;
+    padding-left: 16px;
+    cursor: pointer;
+}
+
+.action-icon {
+    width: 16px;
+}

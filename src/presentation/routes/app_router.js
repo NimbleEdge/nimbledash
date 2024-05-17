@@ -6,6 +6,7 @@ import {
   CONTACT_PAGE_ROUTE,
   DASHBOARD_PAGE_ROUTE,
   DEPLOYMENTS_PAGE_ROUTE,
+  EVENTS_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
   RBAC_PAGE_ROUTE,
 } from "./route-paths";
@@ -15,15 +16,20 @@ import {
   ACCESS_TOKEN,
   APP_BASE_MDS_URL,
   AUTH_METHOD,
+  CLIENT_ID,
+  COGNITO_LOGIN,
   COGNITO_USERNAME,
+  FORM_LOGIN,
   FORM_PASSWORD,
   FORM_USERNAME,
+  PING_ENDPOINT,
+  SSO_LOGIN,
   USER_EMAIL,
 } from "core/constants";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { loaderActions } from "presentation/redux/stores/store";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import store, { loaderActions, userActions } from "presentation/redux/stores/store";
 import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
 import RBACPage from "presentation/pages/rbac/rbac_page";
@@ -33,92 +39,171 @@ import DashboardPage from "presentation/pages/dashboard/dashboard";
 import DeploymentPage from "presentation/pages/deployment/deployment_page";
 import BillingPage from "presentation/pages/billing/bililng_page";
 import ApprovalPage from "presentation/pages/approval/approval_page";
+import { getRequest } from "data/remote_datasource";
+import EventsPage from "presentation/pages/events/events_page";
 
 function AppRouter(props) {
-  const navigateTo = useNavigate();
   const dispatch = useDispatch();
-  const canRender = useState(false);
+  const isAuthenticated = props.isAuthenticated;
+  const setIsAuthenticated = props.setIsAuthenticated;
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
     dispatch(loaderActions.toggleLoader(true));
+
+    var authMethod = localStorage.getItem(AUTH_METHOD);
+
+    switch (authMethod) {
+      case COGNITO_LOGIN:
+        handeSamlLogin().then(() => { dispatch(loaderActions.toggleLoader(false)); setCheckingAuth(false); });
+        break;
+      case SSO_LOGIN:
+        handleGoogleLogin().then(() => { dispatch(loaderActions.toggleLoader(false)); setCheckingAuth(false); });
+        break;
+      case FORM_LOGIN:
+        handleFormLogin().then(() => { dispatch(loaderActions.toggleLoader(false)); setCheckingAuth(false); });
+        break;
+      default:
+        dispatch(loaderActions.toggleLoader(false));
+        setCheckingAuth(false);
+    }
+  }, []);
+
+  const handeSamlLogin = async () => {
     var currentBrowserUrl = window.location.href;
 
     if (currentBrowserUrl.includes("access_token")) {
       var myUrl = new URL(window.location.href.replace(/#/g, "?"));
-      var access_token = myUrl.searchParams.get("access_token");
-      var id_token = myUrl.searchParams.get("id_token");
+      var accessToken = myUrl.searchParams.get("access_token");
+      var idToken = myUrl.searchParams.get("id_token");
+      var decodedIdToken = jwt_decode(idToken);
+      var email = decodedIdToken["email"]
 
-      isTokenValid(access_token).then((isValid) => {
-        if (!isValid) {
-          navigateTo(LOGIN_PAGE_ROUTE);
-          toast.error("Login failed. Please try again!");
-        } else {
-          toast.success("Login successful!");
-          var decodedIdToken = jwt_decode(id_token);
-          localStorage.setItem(ACCESS_TOKEN, access_token);
-          localStorage.setItem(USER_EMAIL, decodedIdToken["email"]);
-          localStorage.setItem(
-            COGNITO_USERNAME,
-            decodedIdToken["cognito:username"]
-          );
-          navigateTo(DASHBOARD_PAGE_ROUTE);
-        }
-        dispatch(loaderActions.toggleLoader(false));
-      });
-    } else {
-      var token = localStorage.getItem(ACCESS_TOKEN);
-
-      isTokenValid(token).then((isValid) => {
-        if (isValid && currentBrowserUrl.includes("/login")) {
-          navigateTo(DASHBOARD_PAGE_ROUTE);
-        }
-        if (!isValid && !currentBrowserUrl.includes("/login")) {
-          localStorage.clear();
-          navigateTo(LOGIN_PAGE_ROUTE);
-        }
-      });
-      dispatch(loaderActions.toggleLoader(false));
+      if (await isAccessTokenValid(COGNITO_LOGIN, accessToken, email, null)) {
+        handleSuccessfulLogin(COGNITO_LOGIN, decodedIdToken["cognito:username"], null, null, email, accessToken, null);
+      }
+      else {
+        handleFailedLogin();
+      }
     }
-  }, []);
+    else {
+      var cachedAccessToken = localStorage.getItem(ACCESS_TOKEN);
+      var cachedEmail = localStorage.getItem(USER_EMAIL);
+      var cachedClientId = localStorage.getItem(CLIENT_ID);
+      var cognitoUsername = localStorage.getItem(COGNITO_USERNAME);
 
-  const isTokenValid = async (token) => {
-    return await axios
-      .get(`${APP_BASE_MDS_URL}api/v2/admin/ping`, {
-        headers: {
-          authMethod: localStorage.getItem(AUTH_METHOD),
-          Token: token,
-          TokenId: localStorage.getItem(FORM_USERNAME),
-          password: localStorage.getItem(FORM_PASSWORD),
-        },
-      })
-      .then((res) => {
-        if (res.status == 200) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        //console.log('palash');
-        return false;
-      });
+      if (cachedAccessToken == 'undefined' || cachedAccessToken == 'null') { handleFailedLogin(); }
+
+      if (await isAccessTokenValid(COGNITO_LOGIN, cachedAccessToken, cachedEmail, null)) {
+        handleSuccessfulLogin(COGNITO_LOGIN, cognitoUsername, null, null, cachedEmail, cachedAccessToken, cachedClientId);
+      }
+      else {
+        handleFailedLogin();
+      }
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    var cachedAccessToken = localStorage.getItem(ACCESS_TOKEN);
+    var cachedEmail = localStorage.getItem(USER_EMAIL);
+    var cachedClientId = localStorage.getItem(CLIENT_ID);
+
+    if (cachedAccessToken == 'undefined' || cachedAccessToken == 'null') { handleFailedLogin() }
+
+    if (await isAccessTokenValid(SSO_LOGIN, cachedAccessToken, cachedEmail, null)) {
+      handleSuccessfulLogin(SSO_LOGIN, null, null, null, cachedEmail, cachedAccessToken, cachedClientId);
+    }
+    else {
+      handleFailedLogin();
+    }
+  }
+
+  const handleFormLogin = async () => {
+    var username = localStorage.getItem(FORM_USERNAME);
+    var password = localStorage.getItem(FORM_PASSWORD);
+    var cachedClientId = localStorage.getItem(CLIENT_ID);
+
+    if (await isAccessTokenValid(FORM_LOGIN, null, username, password)) {
+      handleSuccessfulLogin(FORM_LOGIN, null, username, password, null, null, cachedClientId);
+    }
+    else {
+      handleFailedLogin();
+    }
+  }
+
+  const handleSuccessfulLogin = (authMethod, cognitoUsername, username, password, email, accessToken, clientId) => {
+    var currentBrowserUrl = window.location.href;
+
+    localStorage.setItem(AUTH_METHOD, authMethod);
+    localStorage.setItem(COGNITO_USERNAME, cognitoUsername);
+    localStorage.setItem(FORM_USERNAME, username);
+    localStorage.setItem(FORM_PASSWORD, password);
+    localStorage.setItem(USER_EMAIL, email);
+    localStorage.setItem(ACCESS_TOKEN, accessToken);
+    localStorage.setItem(CLIENT_ID, clientId);
+
+    // @ts-ignore
+    dispatch(userActions.setUser({
+      authMethod: authMethod,
+      cognitoUsername: cognitoUsername,
+      username: username,
+      password: password,
+      email: email,
+      accessToken: accessToken,
+      clientId: clientId,
+      clientIdList: []
+    }));
+
+
+    if (currentBrowserUrl.includes("/login")) {
+      toast.success("Login successful!");
+    }
+    setIsAuthenticated(true);
+
+  }
+
+  const handleFailedLogin = () => {
+    localStorage.clear();
+
+    toast.error("Login failed. Please try again!");
+  }
+
+  const isAccessTokenValid = async (authMethod, accessToken, tokenId, password) => {
+    localStorage.setItem("GAYLOB2", authMethod + accessToken + tokenId + password);
+
+    var res = await getRequest(APP_BASE_MDS_URL, PING_ENDPOINT, {
+      authMethod: authMethod,
+      Token: accessToken,
+      TokenId: tokenId,
+      password: password,
+    });
+
+    if (res != null && res.status <= 200 && res.status < 300) {
+      return true;
+    }
+
+    return false;
   };
 
   return (
-    <Routes>
-      <Route path={LOGIN_PAGE_ROUTE} element={<LoginPage />} />
-      <Route path={DASHBOARD_PAGE_ROUTE} element={<DashboardPage />} />
-      <Route path={ADMIN_PAGE_ROUTE} element={<AdminPage />} />
-      <Route path={CONTACT_PAGE_ROUTE} element={<ContactPage />} />
-      <Route path={RBAC_PAGE_ROUTE} element={<RBACPage />} />
-      <Route path={DEPLOYMENTS_PAGE_ROUTE} element={<DeploymentPage />} />
-      <Route path={BILLING_PAGE_ROUTE} element={<BillingPage />} />
-      <Route path={APPROVAL_PAGE_ROUTE} element={<ApprovalPage />} />
-      {localStorage.getItem(ACCESS_TOKEN) != null && (
-        <Route path="/" element={<DashboardPage />} />
-      )}
-    </Routes>
+
+    <div>
+      {!checkingAuth && <Routes>
+        <Route path={LOGIN_PAGE_ROUTE} element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <LoginPage />} />
+        <Route path={DASHBOARD_PAGE_ROUTE} element={isAuthenticated ? <DashboardPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={ADMIN_PAGE_ROUTE} element={isAuthenticated ? <AdminPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={CONTACT_PAGE_ROUTE} element={isAuthenticated ? <ContactPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={RBAC_PAGE_ROUTE} element={isAuthenticated ? <RBACPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={DEPLOYMENTS_PAGE_ROUTE} element={isAuthenticated ? <DeploymentPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={BILLING_PAGE_ROUTE} element={isAuthenticated ? <BillingPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={APPROVAL_PAGE_ROUTE} element={isAuthenticated ? <ApprovalPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={APPROVAL_PAGE_ROUTE} element={isAuthenticated ? <ApprovalPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        <Route path={EVENTS_PAGE_ROUTE} element={isAuthenticated ? <EventsPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
+        {(localStorage.getItem(ACCESS_TOKEN) != null || localStorage.getItem(FORM_PASSWORD) != null) && <Route path="/" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
+        { <Route path="*" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
+      </Routes>}
+    </div>
+
   );
 }
 

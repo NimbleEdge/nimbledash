@@ -25,6 +25,7 @@ import "./modelUpload.css";
 import { SelectableCardsList } from "presentation/components/RectangularCards/rectangularCards";
 import Search from "presentation/components/Search/searchComponent";
 import { RectCard } from "presentation/components/RectangularCards/card";
+import { postRequest } from "data/remote_datasource";
 
 const uploadModelView = {
   UPLOAD_MODEL_VIEW: 0,
@@ -46,16 +47,6 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
   const [currentView, setCurrentView] = useState(uploadModelView.UPLOAD_MODEL_VIEW);
   const [selectedTags, setSelectedTags] = useState([]);
   const [newModelName, setNewModelName] = useState(null);
-
-  const handleTagSelection = (card) => {
-    setSelectedTags(prevSelectedTags => {
-      if (prevSelectedTags.includes(card.title)) {
-        return prevSelectedTags.filter(selectedTag => selectedTag !== card.title);
-      } else {
-        return [...prevSelectedTags, card.title];
-      }
-    });
-  }
 
   filesContent.map((file) => {
     if (file["name"].includes(".ort")) {
@@ -83,167 +74,56 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
           });
         } else {
           dispatch(loaderActions.toggleLoader(true));
-          await axios
-            .post(
-              `${APP_BASE_MDS_URL}api/v2/admin/model`,
-              {
-                modelConfig: {},
-                modelName: modelName,
-                model: modelContentBase64,
-                fileType: modelType,
-                deploymentTags: selectedTags
-              },
-              {
-                headers: {
-                  AuthMethod: localStorage.getItem(AUTH_METHOD),
-                  Token: localStorage.getItem(ACCESS_TOKEN),
-                  ClientId: localStorage.getItem(CLIENT_ID),
-                  TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-                  password: localStorage.getItem(FORM_PASSWORD),                  CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-                },
-              }
-            )
-            .then((res) => {
-              fetchModelList({
-                successCallback: (modelsList) => {
-                  updateModelsList(modelsList);
-                  closeModal();
-                  toast.success("Model uploaded successfully")
-                }, dispatch: dispatch
-              });
+          var res = await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/model', {
+            modelConfig: {},
+            modelName: modelName,
+            model: modelContentBase64,
+            fileType: modelType,
+            deploymentTags: selectedTags
+          },
+          );
+
+          if(res == null){
+            closeModal();
+            dispatch(loaderActions.toggleLoader(false));
+            return;
+          }
+
+          fetchModelList({
+            successCallback: (modelsList) => {
+              updateModelsList(modelsList);
               closeModal();
-              dispatch(loaderActions.toggleLoader(false));
-            })
-            .catch((e) => {
-              dispatch(loaderActions.toggleLoader(false));
-              var errorDescription = e.response.data?.error?.description;
-              if (errorDescription != null)
-                toast.error(errorDescription, {
-                  toastId: "errorToast",
-                });
-              else
-                toast.error("Something Went Wrong.", {
-                  toastId: "errorToast",
-                });
-            });
+              toast.success("Model uploaded successfully")
+            }, dispatch: dispatch
+          });
+          closeModal();
+          dispatch(loaderActions.toggleLoader(false));
         }
       } else {
         dispatch(loaderActions.toggleLoader(true));
-        await axios
-          .post(
-            `${APP_BASE_MDS_URL}api/v2/admin/modelversion`,
-            {
-              modelConfig: {},
-              modelName: existingModelName,
-              model: modelContentBase64,
-              updateType: selectedUpdateTypeIndex + 1,
-              fileType: modelType,
-              deploymentTags: selectedTags,
-            },
-            {
-              headers: {
-                AuthMethod: localStorage.getItem(AUTH_METHOD),
-                Token: localStorage.getItem(ACCESS_TOKEN),
-                ClientId: localStorage.getItem(CLIENT_ID),
-                TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-                password: localStorage.getItem(FORM_PASSWORD),                CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-              },
-            }
-          )
-          .then((res) => {
-            const successToast = { message: "Model updated successfully" };
-            fetchModelList({
-              successCallback: (modelsList) => {
-                updateModelsList(modelsList);
-                closeModal();
-                toast.success("Model updated successfully")
-              }, dispatch: dispatch
-            });
-          })
-          .catch((e) => {
-            dispatch(loaderActions.toggleLoader(false));
-            var errorDescription = e.response.data?.error?.description;
-            if (errorDescription != null)
-              toast.error(errorDescription, {
-                toastId: "errorToast",
-              });
-            else
-              toast.error("Something Went Wrong.", {
-                toastId: "errorToast",
-              });
-          });
+
+        await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/modelversion', {
+          modelConfig: {},
+          modelName: existingModelName,
+          model: modelContentBase64,
+          updateType: selectedUpdateTypeIndex + 1,
+          fileType: modelType,
+          deploymentTags: selectedTags,
+        });
+
+        fetchModelList({
+          successCallback: (modelsList) => {
+            updateModelsList(modelsList);
+            closeModal();
+            toast.success("Model updated successfully")
+          }, dispatch: dispatch
+        });
+
+        dispatch(loaderActions.toggleLoader(false));
+
       }
     }
   };
-
-  const downloadModel = async (modelName, modelVersion) => {
-    await axios
-      .get(
-        `${APP_BASE_MDS_URL}api/v2/admin/models/${modelName}/versions/${modelVersion}`,
-        {
-          headers: {
-            AuthMethod: localStorage.getItem(AUTH_METHOD),
-            Token: localStorage.getItem(ACCESS_TOKEN),
-            ClientId: localStorage.getItem(CLIENT_ID),
-            TokenId: localStorage.getItem(USER_EMAIL) || localStorage.getItem(FORM_USERNAME),
-            password: localStorage.getItem(FORM_PASSWORD),            CognitoUsername: localStorage.getItem(COGNITO_USERNAME),
-          },
-        }
-      )
-      .then((res) => {
-        toast.success("Download started");
-
-        var modelBinary = new Uint8Array(base64ToArrayBuffer(res.data.model));
-        var modelConfig = res.data.modelConfig;
-
-        saveFile(
-          modelBinary,
-          "application/octet-stream",
-          modelName + "_" + modelVersion + "." + res["data"]["fileType"]
-        );
-
-        saveFile(
-          JSON.stringify(modelConfig),
-          "application/json",
-          modelName + "_" + modelVersion + ".json"
-        );
-      })
-      .catch((e) => {
-        //console.log(e);
-        var errorDescription = e.response.data?.error?.description;
-        if (errorDescription != null)
-          toast.error(errorDescription, {
-            toastId: "errorToast",
-          });
-        else
-          toast.error("Something Went Wrong.", {
-            toastId: "errorToast",
-          });
-      });
-  };
-
-  const saveFile = async (file, fileType, fileName) => {
-    const blob = new Blob([file], {
-      type: fileType,
-    });
-
-    const a = document.createElement("a");
-    a.download = fileName;
-    a.href = URL.createObjectURL(blob);
-    a.addEventListener("click", (e) => {
-      setTimeout(() => URL.revokeObjectURL(a.href), 30 * 1000);
-    });
-    a.click();
-  };
-
-  function base64ToArrayBuffer(base64) {
-    var binaryString = atob(base64);
-    var bytes = new Uint8Array(binaryString.length);
-    for (var i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes.buffer;
-  }
 
   return (
     <>
