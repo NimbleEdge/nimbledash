@@ -15,12 +15,9 @@ import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { toast } from "react-toastify";
 import { getRequest, postRequest } from "data/remote_datasource";
+import CheckBox from "presentation/components/checkbox/checkbox";
 
 const EventsPage = () => {
-    const [virginDeploymentApiData, setVirginDeploymentApiData] = useState([]);
-    const [virginCTList, setVirginCTList] = useState([]);
-    const [virginScriptList, setVirginScriptList] = useState([]);
-    const [virginModelList, setVirginModelList] = useState([]);
     const [reload, setReload] = useState(true);
     const defaultDeploymentSelections = {
         name: "",
@@ -35,6 +32,7 @@ const EventsPage = () => {
     const closeModal = () => {
         setIsCreateNewModelOpen(false);
     };
+    const [isChangesMade, setIsChangesMade] = useState(false);
 
     const [deploymentViewData, updateDeploymentViewData] = useState({
         headers: [
@@ -48,27 +46,29 @@ const EventsPage = () => {
         ],
     });
 
+
+    const virginData = [
+        {
+            name: 'CLICK_EVENT',
+            description: 'This is a sample non m*in event',
+            createdAt: '24th December, 2024',
+            isEnabled: true
+        },
+        {
+            name: 'LIKE_EVENT',
+            description: 'This is a sample non m*in event',
+            createdAt: '12th June, 2023',
+            isEnabled: false
+        },
+        {
+            name: 'SCROLL_EVENT',
+            description: 'This is a sample non m*in event',
+            createdAt: '30th September, 2022',
+            isEnabled: false
+        }
+    ];
+
     const preprocessDeploymentData = async (data) => {
-        data = [
-            {
-                name: 'CLICK_EVENT',
-                description:'This is a sample non m*in event',
-                createdAt:'24th December, 2024',
-                isEnabled:true
-            },
-            {
-                name: 'LIKE_EVENT',
-                description:'This is a sample non m*in event',
-                createdAt:'12th June, 2023',
-                isEnabled:false
-            },
-            {
-                name: 'SCROLL_EVENT',
-                description:'This is a sample non m*in event',
-                createdAt:'30th September, 2022',
-                isEnabled:false
-            }
-        ]
         var processedData = [];
 
         for (let event of data) {
@@ -77,7 +77,7 @@ const EventsPage = () => {
                     { Component: TextOnlyComponent, data: { text: event.name, customStyle: { fontWeight: 500, color: '#494949', fontSize: '14px' }, highlightOnHover: true } },
                     { Component: TextOnlyComponent, data: { text: event.description, customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
                     { Component: TextOnlyComponent, data: { text: event.createdAt, customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
-                    { Component: TextOnlyComponent, data: { text: event.isEnabled, customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
+                    { Component: (() => <CheckBox isEnabled={event.isEnabled} onChange={(() => { setIsChangesMade(true); })} />), data: {} }
                 ]
             );
         }
@@ -86,29 +86,13 @@ const EventsPage = () => {
         updateDeploymentViewData(newData);
     }
 
-    const getEventsData = async () => {
-        // const res = await getRequest(APP_BASE_MDS_URL, 'api/v2/admin/deployments');
-        // setVirginDeploymentApiData(res.data.deployments);
-        // preprocessDeploymentData(res.data.deployments);
-    }
-
-    const createEvent = async () => {
-
-    }
-
-
     const searchFilter = (keyword) => {
         const keywords = keyword.split(" ");
         var temp = []
 
-        for (let deployment of virginDeploymentApiData) {
+        for (let event of virginData) {
             var isValid = true;
-            var modelSearchString = "";
-            for (let modelName in deployment.models) {
-                modelSearchString += modelName + deployment.models[modelName];
-            }
-
-            var candidateString = deployment.compatibilityTag + deployment.tasks.DEFAULT_SCRIPT + deployment.name + deployment.description + modelSearchString;
+            var candidateString = event.name + event.description + event.createdAt;
 
             for (let singleKeyword of keywords) {
                 if (!candidateString.toLowerCase().includes(singleKeyword.toLowerCase())) {
@@ -118,26 +102,35 @@ const EventsPage = () => {
             }
 
             if (isValid) {
-                temp.push(deployment);
+                temp.push(event);
             }
         }
 
         if (keyword == "") {
-            temp = virginDeploymentApiData;
+            temp = virginData;
         }
         console.log(temp);
         preprocessDeploymentData(temp);
-
     }
 
     useEffect(() => {
-        // var count = 0;
-        // dispatch(loaderActions.toggleLoader(true));
-        // getDeploymentData().then(() => { count++; if (count == 4) dispatch(loaderActions.toggleLoader(false)); });
+        preprocessDeploymentData(virginData);
     }, [reload]);
 
     return (
-        <>
+        <div className="relative">
+            {isChangesMade && <div className="action-container">
+                <div className="action-button flex" onClick={()=>{setIsChangesMade(false);}}>
+                    <img src="/assets/icons/close.svg" className="action-icon"></img>
+                    <p className="buttonText">Discard changes</p>
+                </div>
+
+                <div className="action-button-primary flex" onClick={()=>{setIsChangesMade(false);}}>
+                    <img src="/assets/icons/saveTick.svg" className="action-icon"></img>
+                    <p className="buttonText">Apply changes</p>
+                </div>
+            </div>}
+
             {isCreateNewModelOpen &&
                 <Modal seriesInfo={{
                     isSeries: true,
@@ -213,7 +206,7 @@ const EventsPage = () => {
                                     />
                                 </form>
 
-                                <div className="new-admin-page-upload-btn cursorPointer" onClick={() => { setIsCreateNewModelOpen(true);  }}>
+                                <div className="new-admin-page-upload-btn cursorPointer" onClick={() => { setIsCreateNewModelOpen(true); }}>
                                     <img src={"/assets/icons/CreatePlus.svg"} className={``} />
                                 </div>
                             </div>
@@ -225,7 +218,7 @@ const EventsPage = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 };
 

@@ -28,14 +28,17 @@ function SideBar(props) {
     else if (window.location.href.includes(APPROVAL_PAGE_ROUTE)) {
       setCurrentTab(3);
     }
-    else if (window.location.href.includes(RBAC_PAGE_ROUTE)) {
+    else if (window.location.href.includes(EVENTS_PAGE_ROUTE)) {
       setCurrentTab(4);
     }
-    else if (window.location.href.includes(BILLING_PAGE_ROUTE)) {
+    else if (window.location.href.includes(RBAC_PAGE_ROUTE)) {
       setCurrentTab(5);
     }
-    else if (window.location.href.includes(CONTACT_PAGE_ROUTE)) {
+    else if (window.location.href.includes(BILLING_PAGE_ROUTE)) {
       setCurrentTab(6);
+    }
+    else if (window.location.href.includes(CONTACT_PAGE_ROUTE)) {
+      setCurrentTab(7);
     } else {
       setCurrentTab(0);
     }
@@ -66,7 +69,7 @@ function SideBar(props) {
     {
       title: "Events Control",
       route: EVENTS_PAGE_ROUTE,
-      iconName: "approval",
+      iconName: "events",
     },
     {
       title: "Access Control",
@@ -121,7 +124,7 @@ function SideBar(props) {
           ))
         }
 
-{/* LOGOUT BUTTON */}
+        {/* LOGOUT BUTTON */}
         <div
           className="sidebar-item"
           onClick={() => {
