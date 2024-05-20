@@ -50,19 +50,19 @@ const EventsPage = () => {
     const virginData = [
         {
             name: 'CLICK_EVENT',
-            description: 'This is a sample event',
+            description: 'User clicks on an element within the app',
             createdAt: '24th December, 2024',
             isEnabled: true
         },
         {
             name: 'LIKE_EVENT',
-            description: 'This is a sample event',
+            description: 'User likes a post or an item within the app',
             createdAt: '12th June, 2023',
             isEnabled: false
         },
         {
             name: 'SCROLL_EVENT',
-            description: 'This is a sample event',
+            description: 'User scrolls through content within the app',
             createdAt: '30th September, 2022',
             isEnabled: false
         }

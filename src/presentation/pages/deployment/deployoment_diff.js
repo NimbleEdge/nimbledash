@@ -73,7 +73,7 @@ function DeploymentDiff({ deployment1, deployment2, onBack }) {
 
     return <div className={`flexColumn adminPage`}>
         <div className={`flexColumn adminPageHeader`}>
-            <div className={`adminPageTitle`}>Deployment Comparision</div>
+            <div className={`adminPageTitle`}>Deployment Comparison</div>
             <div className={`adminPageSubtitle`}>{deployment1.name} v/s {deployment2.name}</div>
         </div>
         <div className='flex'>
