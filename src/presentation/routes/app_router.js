@@ -200,7 +200,7 @@ function AppRouter(props) {
         <Route path={APPROVAL_PAGE_ROUTE} element={isAuthenticated ? <ApprovalPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
         <Route path={EVENTS_PAGE_ROUTE} element={isAuthenticated ? <EventsPage /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />
         {(localStorage.getItem(ACCESS_TOKEN) != null || localStorage.getItem(FORM_PASSWORD) != null) && <Route path="/" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
-        { <Route path="*" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
+        {<Route path="*" element={isAuthenticated ? <Navigate to={DASHBOARD_PAGE_ROUTE} /> : <Navigate to={LOGIN_PAGE_ROUTE} />} />}
       </Routes>}
     </div>
 

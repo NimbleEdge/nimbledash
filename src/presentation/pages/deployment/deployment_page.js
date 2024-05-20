@@ -16,6 +16,8 @@ import { loaderActions } from "presentation/redux/stores/store";
 import { SelectionModal, MultiSelectionModal } from "./selection_modal";
 import { toast } from "react-toastify";
 import { getRequest, postRequest } from "data/remote_datasource";
+import { DropdownButton, ButtonGroup, Dropdown } from "react-bootstrap";
+import DeploymentDiff from "./deployoment_diff";
 
 
 const deploymentActions = () => {
@@ -57,6 +59,7 @@ const DeploymentPage = () => {
   const closeModal = () => {
     setIsCreateNewModelOpen(false);
   };
+  const [isComparisionModalOpen, setIsComparisionModelOpen] = useState(false);
   const seriesTitles = [
     "Create A New Deployment - Enter Deployment Details",
     "Create A New Deployment - Select Script Version",
@@ -77,6 +80,10 @@ const DeploymentPage = () => {
 
     ],
   });
+
+  const [onDiffPage, setOnDiffPage] = useState(false);
+
+  const [comparisionSelectedIndexes, setComparisionSelectedIndexes] = useState([-1, -1]);
 
   const seriesPages = [
     (<form className="expanded">
@@ -269,91 +276,162 @@ const DeploymentPage = () => {
 
   return (
     <>
-      {isCreateNewModelOpen &&
-        <Modal seriesInfo={{
-          isSeries: true,
-          hasNext: seriesIndex != 4,
-          hasPrev: seriesIndex != 0,
-          onNext: () => {
-            if ((seriesIndex == 0 && (deploymentSelections.name == "" || deploymentSelections.description == "")) ||
-              (seriesIndex == 1 && deploymentSelections.scriptIndex == -1) ||
-              (seriesIndex == 2 && deploymentSelections.modelIndexes.length == 0) ||
-              (seriesIndex == 3 && deploymentSelections.ctIndex == -1)
-            ) {
-              toast.error("Invalid values");
-            }
-            else {
-              setSeriesIndex(seriesIndex + 1);
-            }
-          },
-          onPrev: () => {
-            setSeriesIndex(seriesIndex - 1);
-          },
-          onDone: () => {
-            createDeployment();
-            setIsCreateNewModelOpen(false);
-          }
-        }}
-          isOpen={isCreateNewModelOpen} onClose={closeModal} closeButtonDisabled={false} customStyle={{ maxHeight: '90%', height: '654px' }} >
-          <div className='tagsListModalContent'>
-            <div className='tagsListModalHeader'>{seriesTitles[seriesIndex]}</div>
 
-            <div className="progressIndicator">
-              <div onClick={() => {
-                setSeriesIndex(0)
-              }} className={`singleIndicator ${seriesIndex == 0 ? "inProgress" : "finished"}`}></div>
-              <div onClick={() => {
-                if (seriesIndex > 1 || !(deploymentSelections.name == "" || deploymentSelections.description == "")) { setSeriesIndex(1) } else { toast.error("Invalid values"); }
-              }} className={`singleIndicator ${seriesIndex < 1 ? "" : seriesIndex == 1 ? "inProgress" : "finished"}`}></div>
-              <div onClick={() => {
-                if (seriesIndex > 2 || !(deploymentSelections.scriptIndex == -1)) { setSeriesIndex(2) } else { toast.error("Invalid values"); }
-              }} className={`singleIndicator ${seriesIndex < 2 ? "" : seriesIndex == 2 ? "inProgress" : "finished"}`}></div>
-              <div onClick={() => {
-                if (seriesIndex > 3 || !(deploymentSelections.modelIndexes.length == 0)) { setSeriesIndex(3) } else { toast.error("Invalid values"); }
-              }} className={`singleIndicator ${seriesIndex < 3 ? "" : seriesIndex == 3 ? "inProgress" : "finished"}`}></div>
-            </div>
+      {onDiffPage && <DeploymentDiff onBack={() => {
+        setOnDiffPage(false);
+        setIsComparisionModelOpen(false);
+      }} deployment1={virginDeploymentApiData[comparisionSelectedIndexes[0]]} deployment2={virginDeploymentApiData[comparisionSelectedIndexes[1]]} />}
 
-            {seriesPages[seriesIndex]}
+      {!onDiffPage && <div>
+        {isComparisionModalOpen && <div>
+          <div className="translucent-bg"></div>
 
-          </div>
-        </Modal>
-      }
+          <div className="comparisionModal">
+            <img className="modal-close-button" src="/assets/icons/close.svg" onClick={() => { setIsComparisionModelOpen(false); }}></img>
+            <p className="heading4 center">Select Two Deployments For Comparision</p>
+            <div className="flex">
+              <DropdownButton
+                as={ButtonGroup}
+                key="0"
+                title={comparisionSelectedIndexes[0] != -1 ? virginDeploymentApiData[comparisionSelectedIndexes[0]].name : "Deployment 1"}
+                variant=""
+                bsPrefix={"client-id-dropdown" + " " + "buttonText"}
+                onSelect={(selectedIndex) => {
+                  setComparisionSelectedIndexes([Number(selectedIndex), comparisionSelectedIndexes[1]]);
 
-      <div className={`flexColumn adminPage`}>
-        <div className={`flexColumn adminPageHeader`}>
-          <div className={`adminPageTitle`}>Edge Deployment Management</div>
-          <div className={`adminPageSubtitle`}>Manage Deployments</div>
-        </div>
-        <div className={`adminPageContent`}>
-          {
-            <div className={`subHeader flexRow`}>
-              <div className={`subHeaderText`}>Correlations</div>
-              {<div className="subHeaderActions">
-                <form className="expanded">
-                  <input
-                    id="searchSelectedModel"
-                    type="text"
-                    name="searchSelectedModel"
-                    className="model-upload-custom-dropdown itemsPaddingVerySmall"
-                    placeholder={"Search"}
-                    onChange={(res) => {
-                      searchFilter(res.target.value);
-                    }}
-                  />
-                </form>
+                }}
+                children={virginDeploymentApiData.map((item, idx) => (
+                  <Dropdown.Item key={idx} eventKey={idx}>
+                    {item.name}
+                  </Dropdown.Item>
+                ))}
+              ></DropdownButton>
 
-                <div className="new-admin-page-upload-btn cursorPointer" onClick={() => { setIsCreateNewModelOpen(true); setSeriesIndex(0); }}>
-                  <img src={"/assets/icons/CreatePlus.svg"} className={``} />
-                </div>
+              <DropdownButton
+                as={ButtonGroup}
+                key="0"
+                id="000"
+                size="lg"
+                title={comparisionSelectedIndexes[1] != -1 ? virginDeploymentApiData[comparisionSelectedIndexes[1]].name : "Deployment 2"}
+                variant=""
+                bsPrefix={"client-id-dropdown" + " " + "buttonText"}
+                onSelect={(selectedIndex) => {
+                  setComparisionSelectedIndexes([comparisionSelectedIndexes[0], Number(selectedIndex)]);
+                }}
+                children={virginDeploymentApiData.map((item, idx) => (
+                  <Dropdown.Item key={idx} eventKey={idx}>
+                    {item.name}
+                  </Dropdown.Item>
+                ))}
+              ></DropdownButton>
+
+              <div className="proceed-button" onClick={() => {
+                if (comparisionSelectedIndexes[0] != -1 && comparisionSelectedIndexes[1] != -1) {
+                  setOnDiffPage(true);
+                }
+                else {
+                  toast.error("Please select valid values");
+                }
+
+              }}>
+                <p className="button-text2">➤</p>
               </div>
-              }
+
             </div>
-          }
-          <div className={`tasksTableView flexColumn overflowAuto`}>
-            <Table data={deploymentViewData} />
+
+          </div></div>}
+
+        {isCreateNewModelOpen &&
+          <Modal seriesInfo={{
+            isSeries: true,
+            hasNext: seriesIndex != 4,
+            hasPrev: seriesIndex != 0,
+            onNext: () => {
+              if ((seriesIndex == 0 && (deploymentSelections.name == "" || deploymentSelections.description == "")) ||
+                (seriesIndex == 1 && deploymentSelections.scriptIndex == -1) ||
+                (seriesIndex == 2 && deploymentSelections.modelIndexes.length == 0) ||
+                (seriesIndex == 3 && deploymentSelections.ctIndex == -1)
+              ) {
+                toast.error("Invalid values");
+              }
+              else {
+                setSeriesIndex(seriesIndex + 1);
+              }
+            },
+            onPrev: () => {
+              setSeriesIndex(seriesIndex - 1);
+            },
+            onDone: () => {
+              createDeployment();
+              setIsCreateNewModelOpen(false);
+            }
+          }}
+            isOpen={isCreateNewModelOpen} onClose={closeModal} closeButtonDisabled={false} customStyle={{ maxHeight: '90%', height: '654px' }} >
+            <div className='tagsListModalContent'>
+              <div className='tagsListModalHeader'>{seriesTitles[seriesIndex]}</div>
+
+              <div className="progressIndicator">
+                <div onClick={() => {
+                  setSeriesIndex(0)
+                }} className={`singleIndicator ${seriesIndex == 0 ? "inProgress" : "finished"}`}></div>
+                <div onClick={() => {
+                  if (seriesIndex > 1 || !(deploymentSelections.name == "" || deploymentSelections.description == "")) { setSeriesIndex(1) } else { toast.error("Invalid values"); }
+                }} className={`singleIndicator ${seriesIndex < 1 ? "" : seriesIndex == 1 ? "inProgress" : "finished"}`}></div>
+                <div onClick={() => {
+                  if (seriesIndex > 2 || !(deploymentSelections.scriptIndex == -1)) { setSeriesIndex(2) } else { toast.error("Invalid values"); }
+                }} className={`singleIndicator ${seriesIndex < 2 ? "" : seriesIndex == 2 ? "inProgress" : "finished"}`}></div>
+                <div onClick={() => {
+                  if (seriesIndex > 3 || !(deploymentSelections.modelIndexes.length == 0)) { setSeriesIndex(3) } else { toast.error("Invalid values"); }
+                }} className={`singleIndicator ${seriesIndex < 3 ? "" : seriesIndex == 3 ? "inProgress" : "finished"}`}></div>
+              </div>
+
+              {seriesPages[seriesIndex]}
+
+            </div>
+          </Modal>
+        }
+
+        <div className={`flexColumn adminPage`}>
+          <div className={`flexColumn adminPageHeader`}>
+            <div className={`adminPageTitle`}>Edge Deployment Management</div>
+            <div className={`adminPageSubtitle`}>Manage Deployments</div>
           </div>
-        </div>
-      </div>
+          <div className={`adminPageContent`}>
+            {
+              <div className={`subHeader flexRow`}>
+                <div className={`subHeaderText`}>Correlations</div>
+                {<div className="subHeaderActions">
+                  <form className="expanded">
+                    <input
+                      id="searchSelectedModel"
+                      type="text"
+                      name="searchSelectedModel"
+                      className="model-upload-custom-dropdown itemsPaddingVerySmall"
+                      placeholder={"Search"}
+                      onChange={(res) => {
+                        searchFilter(res.target.value);
+                      }}
+                    />
+                  </form>
+
+                  <div className="compareButton" onClick={() => {
+                    setIsComparisionModelOpen(true);
+                  }}>
+                    <p className="buttonTextBlack">Compare</p>
+                  </div>
+
+                  <div className="new-admin-page-upload-btn cursorPointer" onClick={() => { setIsCreateNewModelOpen(true); setSeriesIndex(0); }}>
+                    <img src={"/assets/icons/CreatePlus.svg"} className={``} />
+                  </div>
+                </div>
+                }
+              </div>
+            }
+            <div className={`tasksTableView flexColumn overflowAuto`}>
+              <Table data={deploymentViewData} clickableHeaderIndex={undefined} clickableHeaderCallback={undefined} />
+            </div>
+          </div>
+        </div></div>}
     </>
   )
 };
