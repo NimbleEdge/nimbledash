@@ -50,19 +50,19 @@ const EventsPage = () => {
     const virginData = [
         {
             name: 'CLICK_EVENT',
-            description: 'This is a sample non m*in event',
+            description: 'This is a sample event',
             createdAt: '24th December, 2024',
             isEnabled: true
         },
         {
             name: 'LIKE_EVENT',
-            description: 'This is a sample non m*in event',
+            description: 'This is a sample event',
             createdAt: '12th June, 2023',
             isEnabled: false
         },
         {
             name: 'SCROLL_EVENT',
-            description: 'This is a sample non m*in event',
+            description: 'This is a sample event',
             createdAt: '30th September, 2022',
             isEnabled: false
         }
