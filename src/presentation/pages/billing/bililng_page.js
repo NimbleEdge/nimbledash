@@ -142,15 +142,24 @@ function BillingPage() {
       ]);
     }
 
-    const ascendingOrder = (a, b) => a - b;
-    const descendingOrder = (a, b) => b - a;
+    const ascendingOrder = (a, b) => a.value - b.value;
+    const descendingOrder = (a, b) => b.value - a.value;
 
-    const sortedAcu = acuIncurred.slice().sort(descendingOrder);
 
+    let indexedArray = acuIncurred.map((value, index) => {
+      return { value: value, index: index };
+    });
+
+    indexedArray.sort(descendingOrder);
+
+    let sortedAcu = indexedArray.map(item => item.value);
     var sortedData = Array(sortedAcu.length).fill([]);
+    let originalIndexes = indexedArray.map(item => item.index);
+
+    console.log(acuIncurred,indexedArray);
 
     for (var i = 0; i < sortedAcu.length; i++) {
-      var oldIndex = acuIncurred.indexOf(sortedAcu[i]);
+      var oldIndex = originalIndexes[i];
       var newIndex = i;
       sortedData[newIndex] = processedData[oldIndex];
     }
@@ -397,18 +406,18 @@ function BillingPage() {
     fetchBillingData();
   }, [interval]);
 
-    return (
-      <div className={`flexColumn adminPage`}>
-        {Object.keys(trendsACU).length != 0 && (
-          <div>
-            <div className={`flexColumn adminPageHeader`}>
-              <div className={`adminPageTitle`}>Billing Information</div>
-              <div className={`adminPageSubtitle`}>
-                Monitor Active Compute Units In Realtime
-              </div>
+  return (
+    <div className={`flexColumn adminPage`}>
+      {Object.keys(trendsACU).length != 0 && (
+        <div>
+          <div className={`flexColumn adminPageHeader`}>
+            <div className={`adminPageTitle`}>Billing Information</div>
+            <div className={`adminPageSubtitle`}>
+              Monitor Active Compute Units In Realtime
             </div>
-            <div className={`adminPageContent`}>
-              <p className="pageHeaders">Usage At A Glance</p>
+          </div>
+          <div className={`adminPageContent`}>
+            <p className="pageHeaders">Usage At A Glance</p>
 
             <GlanceCards
               interval={interval}
@@ -416,20 +425,20 @@ function BillingPage() {
               glanceCardsData={glanceCardsData}
             ></GlanceCards>
 
-              <p className="pageHeaders">Usage Trends</p>
+            <p className="pageHeaders">Usage Trends</p>
 
-              <UsageTrendsGraph
-                trendsACU={trendsACU}
-                selectedMonth={selectedMonth}
-                trendsTimeline={trendsTimeline}
-                handleMonthChange={handleMonthChange}
-              ></UsageTrendsGraph>
+            <UsageTrendsGraph
+              trendsACU={trendsACU}
+              selectedMonth={selectedMonth}
+              trendsTimeline={trendsTimeline}
+              handleMonthChange={handleMonthChange}
+            ></UsageTrendsGraph>
 
-              <p className="pageHeaders">Usage Trends Breakdown</p>
-              <UsageTrendsBreakDownGraph
-                trendsBreakdown={trendsBreakdown}
-                allAssets={allAssets}
-              ></UsageTrendsBreakDownGraph>
+            <p className="pageHeaders">Usage Trends Breakdown</p>
+            <UsageTrendsBreakDownGraph
+              trendsBreakdown={trendsBreakdown}
+              allAssets={allAssets}
+            ></UsageTrendsBreakDownGraph>
 
             <div className={`tasksTableView flexColumn overflowAuto`}>
               <Table
@@ -447,17 +456,17 @@ function BillingPage() {
             </div>
           </div>
 
-            {/* <a
+          {/* <a
             className="externalLink"
             target="_blank"
             href="https://codeclock.in"
           >
             Please click here to perform advance queries.
           </a> */}
-          </div>
-        )}
-      </div>
-    );
-  }
+        </div>
+      )}
+    </div>
+  );
+}
 
-  export default BillingPage;
+export default BillingPage;
