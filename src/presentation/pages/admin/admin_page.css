@@ -187,3 +187,81 @@
 .custom-height{
   height: 380px;
 }
+
+.codeEditorWindow{
+  height: 80vh;
+  width: 80vw;
+  position: absolute;
+  z-index: 10;
+  border-radius: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  padding-top: 32px;
+  background-color: #1E1E1E;
+}
+
+.codeEditorCloseButton{
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  z-index: 15;
+  cursor: pointer;
+  height: 12px;
+}
+
+.updateScriptButton{
+  position: absolute;
+  width: 240px;
+  height: 52px;
+  background-color: #6565FF;
+  border-radius: 8px;
+  padding-left: 16px;
+  cursor: pointer;
+  bottom: 12px;
+  right: 52px;
+  z-index: 25;
+}
+
+.description-update{
+  display: flex;
+  position: absolute;
+  bottom: 12px;
+  right: 52px;
+  z-index: 20;
+  gap: 8px;
+}
+
+.description-input{
+  height: 52px;
+  width: 400px;
+  border-radius: 8px;
+  border: 0;
+  padding-left: 12px;
+}
+
+.accept-button{
+  position: relative;
+  background-color: #6565FF;
+  height: 52px;
+  width: 52px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.reject-button{
+  background-color: #6565FF;
+  height: 52px;
+  width: 52px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.absolute-center{
+  max-width: 100%;
+  max-height: 100%;
+}
