@@ -1,4 +1,4 @@
-import { fetchDeploymentTagDetails, fetchDeploymentTags, fetchModelList, fetchTasksList } from "data/apis";
+import { fetchDeploymentTagDetails, fetchDeploymentTags, fetchModelList, fetchTaskFile, fetchTasksList } from "data/apis";
 import '../../../common.css';
 import './admin_page.css';
 import React, { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import TasksTable from "./TasksSection/tasksTable";
 import Dropdown from "presentation/components/DropdownInternal/dropdown";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
+import { CodeEditor } from "presentation/components/codeEditor/codeEditor";
 
 const AdminPageView = {
     MODELS_TABLE: 'Models',
@@ -47,21 +48,25 @@ const NewAdminPage = () => {
     const [tasksList, udpateTasksList] = useState([]);
     const [tasksDetails, updateTasksDetails] = useState({});
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+    const [isCodeEditorOpen, setIsCodeEditorOpen] = useState(false);
+    const [codeToEdit, setCodeToEdit] = useState("");
 
     useEffect(() => {
         dispatch(loaderActions.toggleLoader(true));
         var count = 0;
-        fetchModelList({ successCallback: (modelsList) => updateModelsList(modelsList) }).then(() => { count++; if(count == 3)  dispatch(loaderActions.toggleLoader(false));});
-        fetchDeploymentTags(updateTagsList).then(() => { count++; if(count == 3)  dispatch(loaderActions.toggleLoader(false));});
-        fetchTasksList(udpateTasksList).then(() => { count++; if(count == 3)  dispatch(loaderActions.toggleLoader(false));});
+        fetchModelList({ successCallback: (modelsList) => updateModelsList(modelsList) }).then(() => { count++; if (count == 3) dispatch(loaderActions.toggleLoader(false)); });
+        fetchDeploymentTags(updateTagsList).then(() => { count++; if (count == 3) dispatch(loaderActions.toggleLoader(false)); });
+        fetchTasksList(udpateTasksList).then(() => { count++; if (count == 3) dispatch(loaderActions.toggleLoader(false)); });
     }, []);
 
     useEffect(() => {
-        fetchDeploymentTags(updateTagsList);
+        dispatch(loaderActions.toggleLoader(true));
+        fetchDeploymentTags(updateTagsList).then(() => { dispatch(loaderActions.toggleLoader(false)); });
     }, [modelsList]);
 
     useEffect(() => {
-        fetchDeploymentTags(updateTagsList);
+        dispatch(loaderActions.toggleLoader(true));
+        fetchDeploymentTags(updateTagsList).then(() => { dispatch(loaderActions.toggleLoader(false)); });
     }, [tasksList]);
 
     useEffect(() => {
@@ -152,6 +157,15 @@ const NewAdminPage = () => {
         setSelectedModelName(null);
     }
 
+    const handleCodeEditorOpen = async (taskVersion) => {
+        dispatch(loaderActions.toggleLoader(true));
+        var res = await fetchTaskFile({ taskVersion: taskVersion });
+        var scriptCode = res.data.taskCode;
+        setCodeToEdit(scriptCode);
+        setIsCodeEditorOpen(true);
+        dispatch(loaderActions.toggleLoader(false));
+    }
+
     return (
         <div className={`flexColumn adminPage`}>
             <div className={`flexColumn adminPageHeader`}>
@@ -159,6 +173,8 @@ const NewAdminPage = () => {
                 <div className={`adminPageSubtitle`}>Perform CRUD Operations</div>
             </div>
             <div className={`adminPageContent`}>
+                {isCodeEditorOpen && <CodeEditor code={codeToEdit} onClose={() => { setIsCodeEditorOpen(false); }} updateTasksList={udpateTasksList} />}
+
                 {
                     currentView == AdminPageView.MODEL_VERSIONS_TABLE ?
                         <div className="modelDetailsBackButton">
@@ -181,7 +197,7 @@ const NewAdminPage = () => {
                         </div>
                 }
                 {currentView == AdminPageView.MODELS_TABLE && <ModelsTable modelsDetails={modelsDetails} onModelClick={onModelClick} allTagsList={tagsList} updateModelsList={updateModelsList} isUploadNewModelModalOpen={isUploadModalOpen} setIsUploadNewModelModalOpen={setIsUploadModalOpen} />}
-                {currentView == AdminPageView.TASKS_TABLE && <TasksTable tasksDetails={tasksDetails} allTagsList={tagsList} updateTasksList={udpateTasksList} isUpdateTaskModalOpen={isUploadModalOpen} setIsUpdateTaskModalOpen={setIsUploadModalOpen} />}
+                {currentView == AdminPageView.TASKS_TABLE && <TasksTable setCodeEditorAsOpen={(scriptVersion)=>{handleCodeEditorOpen(scriptVersion);}} tasksDetails={tasksDetails} allTagsList={tagsList} updateTasksList={udpateTasksList} isUpdateTaskModalOpen={isUploadModalOpen} setIsUpdateTaskModalOpen={setIsUploadModalOpen} />}
                 {currentView == AdminPageView.DEPLOYMENT_TAGS_TABLE && <TagsTable tagsDetails={tagsDetails} modelsDetails={{ ...modelsDetails }} tasksDetails={{ ...tasksDetails }} updateTagsList={updateTagsList} isCreateNewTagModalOpen={isUploadModalOpen} setIsCreateNewTagModalOpen={setIsUploadModalOpen} />}
                 {currentView == AdminPageView.MODEL_VERSIONS_TABLE && <ModelDetailsTable modelDetails={{ ...modelsDetails[selectedModelName] }} modelName={selectedModelName} allTagsList={[...tagsList]} updateTagsList={updateTagsList} />}
             </div>
