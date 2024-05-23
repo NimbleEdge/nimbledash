@@ -141,21 +141,27 @@ function BillingPage() {
       ]);
     }
 
-    // const ascendingOrder = (a, b) => a - b;
-    // const descendingOrder = (a, b) => b - a;
+    const ascendingOrder = (a, b) => a.value - b.value;
+    const descendingOrder = (a, b) => b.value - a.value;
 
-    // const sortedAcu = acuIncurred.slice().sort(descendingOrder);
 
-    // var sortedData = Array(sortedAcu.length).fill([]);
+    let indexedArray = acuIncurred.map((value, index) => {
+      return { value: value, index: index };
+    });
 
-    // for (var i = 0; i < sortedAcu.length; i++) {
-    //   var oldIndex = acuIncurred.indexOf(sortedAcu[i]);
-    //   var newIndex = i;
-    //   sortedData[newIndex] = processedData[oldIndex];
-    // }
+    indexedArray.sort(descendingOrder);
 
-    // const newData = { ...usageTrendsBreakdownData, body: sortedData };
-    const newData = { ...usageTrendsBreakdownData, body: processedData };
+    let sortedAcu = indexedArray.map(item => item.value);
+    var sortedData = Array(sortedAcu.length).fill([]);
+    let originalIndexes = indexedArray.map(item => item.index);
+
+    for (var i = 0; i < sortedAcu.length; i++) {
+      var oldIndex = originalIndexes[i];
+      var newIndex = i;
+      sortedData[newIndex] = processedData[oldIndex];
+    }
+
+    const newData = { ...usageTrendsBreakdownData, body: sortedData };
     setUsageTrendsBreakdownData(newData);
   };
 

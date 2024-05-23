@@ -27,7 +27,7 @@ const DashboardMetrics = ({clientID, selectedModelIndex, selectedVersionIndex, i
                 metricKey={'dau'}
                 cardIconAddress={'/assets/icons/avg_dau.jpg'}
                 cardInfoTitle={'Daily Active Users'}
-                cardInfoSubtitle={'Users with atleast 1 predict call each day'}
+                cardInfoSubtitle={''}
             />
             <MetricDisplay
                 metricType={METRIC_TYPES.PIE_CHART}
