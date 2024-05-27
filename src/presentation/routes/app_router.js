@@ -39,13 +39,15 @@ import DashboardPage from "presentation/pages/dashboard/dashboard";
 import DeploymentPage from "presentation/pages/deployment/deployment_page";
 import BillingPage from "presentation/pages/billing/bililng_page";
 import ApprovalPage from "presentation/pages/approval/approval_page";
-import { getRequest } from "data/remote_datasource";
+import { getRequest, postRequest } from "data/remote_datasource";
 import EventsPage from "presentation/pages/events/events_page";
 
 function AppRouter(props) {
   const dispatch = useDispatch();
   const isAuthenticated = props.isAuthenticated;
   const setIsAuthenticated = props.setIsAuthenticated;
+  // @ts-ignore
+  const globalUserState = useSelector((state) => state.userReducer);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
@@ -151,7 +153,8 @@ function AppRouter(props) {
       email: email,
       accessToken: accessToken,
       clientId: clientId,
-      clientIdList: []
+      org:"",
+      orgData:{},
     }));
 
 
@@ -169,9 +172,8 @@ function AppRouter(props) {
   }
 
   const isAccessTokenValid = async (authMethod, accessToken, tokenId, password) => {
-    localStorage.setItem("GAYLOB2", authMethod + accessToken + tokenId + password);
 
-    var res = await getRequest(APP_BASE_MDS_URL, PING_ENDPOINT, {
+    var res = await postRequest(APP_BASE_MDS_URL, PING_ENDPOINT, { email: tokenId }, {
       authMethod: authMethod,
       Token: accessToken,
       TokenId: tokenId,
@@ -179,6 +181,15 @@ function AppRouter(props) {
     });
 
     if (res != null && res.status <= 200 && res.status < 300) {
+      var orgs = res.organizations;
+      console.log(res);
+
+      dispatch(userActions.setUser({
+        ...globalUserState,
+        orgData: orgs,
+        org: ""
+    }));
+
       return true;
     }
 

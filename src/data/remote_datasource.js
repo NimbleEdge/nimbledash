@@ -3,9 +3,13 @@ import store from "presentation/redux/stores/store";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-export async function postRequest(URI, endpoint, body) {
+export async function postRequest(URI, endpoint, body, headers) {
+
+  if(headers == null){
+    headers = fetchHeaders();
+  }
   try {
-    var response = await axios.post(`${URI}${endpoint}`, body, { headers: fetchHeaders() });
+    var response = await axios.post(`${URI}${endpoint}`, body, { headers: headers });
     return response.data;
   }
   catch (e) {

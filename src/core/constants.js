@@ -104,4 +104,4 @@ export const DEFAULT_ANALYTICS = {
 };
 
 // ENDPONTS
-export const PING_ENDPOINT = "api/v2/admin/ping";
+export const PING_ENDPOINT = "api/v2/admin/sso";

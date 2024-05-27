@@ -68,7 +68,7 @@ const DashboardPage = () => {
     });
     const [isDatePickerVisible, toggleDatePicker] = useState(false);
     const dispatch = useDispatch();
-    
+
     // @ts-ignore
     const globalUserState = useSelector((state) => state.userReducer);
 
@@ -78,7 +78,7 @@ const DashboardPage = () => {
         //@ts-ignore
         dispatch(userActions.setUser({
             ...globalUserState,
-            clientId: input
+            clientId: input,
         }));
 
         setModalVisiblity(false);
@@ -106,29 +106,43 @@ const DashboardPage = () => {
         setModelJson(tempJson);
     }
 
+    const [clientIdsToShow, setClientIdsToShow] = useState([]);
+
     useEffect(() => {
         dispatch(loaderActions.toggleLoader(true));
-        if (globalUserState.clientIdList.length == 0) {
-            getRequest(APP_BASE_MDS_URL, 'api/v2/admin/user/clients').then((res) => {
+        console.log("001");
 
-                // @ts-ignore
-                dispatch(userActions.setUser({
-                    ...globalUserState,
-                    clientIdList: res.data.Clients
-                }));
-                dispatch(loaderActions.toggleLoader(false));
-            });
+        var orgData = globalUserState.orgData;
+        var org = globalUserState.org;
+
+        var clientIds = orgData[org].clientPairs;
+        var temp = [];
+
+        for (var client of clientIds) {
+            if (client.prodClient != null) {
+                temp.push(client.prodClient.id);
+            }
+
+            if (client.testClient != null) {
+                temp.push(client.testClient.id);
+            }
         }
+
+        console.log("002");
+
+
+        setClientIdsToShow(temp);
+        dispatch(loaderActions.toggleLoader(false));
 
         if (globalUserState.clientId != 'null' && globalUserState.clientId != null) {
             setModalVisiblity(false);
-            getRequest(APP_BASE_MDS_URL,"api/v2/admin/models").then((res) => {
+            getRequest(APP_BASE_MDS_URL, "api/v2/admin/models").then((res) => {
                 handleModelListUpdate(res.data.models);
                 dispatch(loaderActions.toggleLoader(false));
             });
         }
 
-        if(globalUserState.clientId == 'null' || globalUserState.clientId == null){
+        if (globalUserState.clientId == 'null' || globalUserState.clientId == null) {
             dispatch(loaderActions.toggleLoader(false));
         }
 
@@ -139,7 +153,8 @@ const DashboardPage = () => {
             {
                 isModalVisible &&
                 <InputModal
-                    clientIDList={globalUserState.clientIdList}
+                    orgs={() => { return Object.keys(globalUserState.orgData); }}
+                    clientIDList={clientIdsToShow}
                     title={"Enter clientID"}
                     subTitle={
                         "Entered clientId will be verified from our backend services"

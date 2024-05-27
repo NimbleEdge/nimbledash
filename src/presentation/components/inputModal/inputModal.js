@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./inputModal.css";
 import { ButtonGroup, Dropdown, DropdownButton, Toast } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ function InputModal(props) {
   var subTitle = props.subTitle;
   var [modalErrorMessage, setModalErrorMessage] = useState("");
   var clientIDList = props.clientIDList;
+  var orgsList = props.orgs;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -41,20 +42,26 @@ function InputModal(props) {
         ></img>
         <p className="heading3">{title}</p>
         <p className="subHeading margin-top-8">{subTitle}</p>
-        {clientIDList == null ? (
-          <form className="inputModal-textfield-flex" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="clientID"
-              className="inputModal-textfield"
-              placeholder={initValue}
-            />
-            <input
-              type="submit"
-              className="inputModal-button buttonText"
-            ></input>
-          </form>
-        ) : (
+
+        <div className="flex">
+          <DropdownButton
+            as={ButtonGroup}
+            key="0"
+            id="000"
+            size="lg"
+            title={initValue != "" ? initValue : "Select client id"}
+            variant=""
+            bsPrefix={"client-id-dropdown" + " " + "buttonText"}
+            onSelect={(selectedIndex) => {
+              getInputCallback(orgsList[selectedIndex]);
+            }}
+            children={orgsList.map((item, idx) => (
+              <Dropdown.Item key={idx} eventKey={idx}>
+                {item}
+              </Dropdown.Item>
+            ))}
+          ></DropdownButton>
+
           <DropdownButton
             as={ButtonGroup}
             key="0"
@@ -72,7 +79,8 @@ function InputModal(props) {
               </Dropdown.Item>
             ))}
           ></DropdownButton>
-        )}
+        </div>
+
 
         {modalErrorMessage != "" && (
           <p className="input-modal-error">{modalErrorMessage}</p>
