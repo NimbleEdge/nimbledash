@@ -20,25 +20,6 @@ import { DropdownButton, ButtonGroup, Dropdown } from "react-bootstrap";
 import DeploymentDiff from "./deployoment_diff";
 
 
-const deploymentActions = () => {
-  return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ marginRight: '24px' }} />
-
-      <HoverText onHoverText={"Promote Deployment To Production"}>
-        <img className={"download-model-icon"} src={"/assets/icons/promote_to_prod.svg"} onClick={() => { }}></img>
-      </HoverText>
-
-      <div style={{ marginRight: '12px' }} />
-
-      <HoverText onHoverText={"Duplicate Selected Deployment"}>
-        <img className={"download-model-icon"} src={"/assets/icons/duplicate.svg"} onClick={() => { }}></img>
-      </HoverText>
-    </div>
-
-  )
-}
-
 const DeploymentPage = () => {
   const [virginDeploymentApiData, setVirginDeploymentApiData] = useState([]);
   const [virginCTList, setVirginCTList] = useState([]);
@@ -183,13 +164,34 @@ const DeploymentPage = () => {
               }, tableTitle: "Linked Models Detail", truncationLimit: 2, expandable: true, highlightOnHover: true
             }
           },
-          { Component: deploymentActions, data: { taskVersion: "xxx" } }
+          { Component: (() => deploymentActions(deployment.deploymentId)), data: { taskVersion: "xxx" } }
         ]
       );
     }
 
     const newData = { ...deploymentViewData, body: processedData };
     updateDeploymentViewData(newData);
+  }
+
+  const deploymentActions = (deploymentId) => {
+    return (
+      <div style={{ display: 'flex' }}>
+        <div style={{ marginRight: '24px' }} />
+
+        <HoverText onHoverText={"Promote Deployment To Production"}>
+          <img className={"download-model-icon"} src={"/assets/icons/promote_to_prod.svg"} onClick={() => {
+            handlePromoteToProd(deploymentId);
+          }}></img>
+        </HoverText>
+
+        <div style={{ marginRight: '12px' }} />
+
+        <HoverText onHoverText={"Duplicate Selected Deployment"}>
+          <img className={"download-model-icon"} src={"/assets/icons/duplicate.svg"} onClick={() => { }}></img>
+        </HoverText>
+      </div>
+
+    )
   }
 
   const getDeploymentData = async () => {
@@ -229,6 +231,20 @@ const DeploymentPage = () => {
     toast.success("Deployment Creation Successful!")
     setReload(!reload);
     setDeploymentSelections(defaultDeploymentSelections);
+  }
+
+  const handlePromoteToProd = async (deploymentId) => {
+    dispatch(loaderActions.toggleLoader(true));
+    const res = await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/deployment/promote', {
+      "deploymentId": deploymentId,
+      "comments": "none"
+    },);
+
+    dispatch(loaderActions.toggleLoader(false));
+
+    if (200 <= res.status && res.status < 300) {
+      toast.success("Deployment Promoted");
+    }
   }
 
 

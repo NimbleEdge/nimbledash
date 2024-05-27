@@ -180,10 +180,10 @@ const DashboardPage = () => {
                     subTitle={
                         "Entered clientId will be verified from our backend services"
                     }
-                    initClientID={globalUserState.clientId == null ? "Select" : globalUserState.clientId}
-                    initOrgName={globalUserState.org == null ? "Select" : globalUserState.orgData[globalUserState.org].name}
-                    orgSelectionCallback = {handleOrgChange}
-                    clientIdSelectionCallback = {handleClientIDChange}
+                    initClientID={(globalUserState.clientId == null || globalUserState.clientId == 'null') ? "Select" : globalUserState.clientId}
+                    initOrgName={(globalUserState.org == null || globalUserState.org == 'null') ? "Select" : globalUserState.orgData[globalUserState.org].name}
+                    orgSelectionCallback={handleOrgChange}
+                    clientIdSelectionCallback={handleClientIDChange}
                     closeModalCallback={closeModalCallback}>
                 </InputModal>
             }

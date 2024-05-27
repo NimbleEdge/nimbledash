@@ -16,6 +16,10 @@ export const COGNITO_LOGIN = "Cognito";
 export const SSO_LOGIN = "GoogleSSO";
 export const FORM_LOGIN = "UserPass";
 
+//MISC
+export const VERDICT_APPROVE = "Approve";
+export const VERDICT_REJECT = "Decline";
+
 // COLORS
 export const ACCENT_COLOR = "#6565FF";
 export const STROKE_COLORS_LIST = [

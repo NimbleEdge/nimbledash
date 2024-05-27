@@ -1,10 +1,37 @@
+import { APP_BASE_MDS_URL, VERDICT_APPROVE, VERDICT_REJECT } from "core/constants";
+import { postRequest } from "data/remote_datasource";
 import Dropdown from "presentation/components/DropdownInternal/dropdown";
 import React from "react";
+import tagDescription from "../admin/tagsTable/TagsDescription/tagDescription";
+import { useDispatch } from "react-redux";
+import { loaderActions } from "presentation/redux/stores/store";
+import { toast } from "react-toastify";
+import { useRef } from "react";
 
 
 export default function ApprovalRequestDetails(props) {
-    const setSelectedRowIndex = props.setSelectedRowIndex;
+    const setSelectedDeploymentData = props.setSelectedDeploymentData;
+    const deploymentData = props.deploymentData;
+    const details = JSON.parse(deploymentData.details);
     const isMyRequest = props.isMyRequest;
+    const comments = deploymentData.reviews;
+    const dispatch = useDispatch();
+    var currentVerdict = VERDICT_REJECT;
+    const inputRef = useRef(null);
+
+    const handleReview = async (verdict, message) => {
+        dispatch(loaderActions.toggleLoader(true));
+        const res = await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/request/review', {
+            "requestId": deploymentData.id,
+            "verdict": verdict,
+            "comments": message
+        });
+        dispatch(loaderActions.toggleLoader(false));
+
+        if (200 <= res.status && res.status < 300) {
+            toast.success("Request Submitted");
+        }
+    }
 
     return (
         <div className={`approvalPageContent`}>
@@ -12,7 +39,7 @@ export default function ApprovalRequestDetails(props) {
                 <div className={`subHeader flexRow`}>
                     <div
                         onClick={() => {
-                            setSelectedRowIndex(-1);
+                            setSelectedDeploymentData({});
                         }}
                         style={{ display: "flex" }}
                     >
@@ -30,30 +57,21 @@ export default function ApprovalRequestDetails(props) {
 
                 <div className="deploymentDetails">
                     <p className="deploymentDetailsLine">
-                        <span className="bold">Name:</span> dep_state1
+                        <span className="bold">Name:</span> {details.name}
                     </p>
                     <p className="deploymentDetailsLine">
-                        <span className="bold">Description:</span> Lorem Ipsum is
-                        simply dummy text of the printing and typesetting industry.
-                        Lorem Ipsum has been the industry's standard dummy text ever
-                        since the 1500s, when an unknown printer took a galley of type
-                        and scrambled it to make a type specimen book. It has survived
-                        not only five centuries, but also the leap into electronic
-                        typesetting, remaining essentially unchanged. It was
-                        popularised in the 1960s with the release of Letraset sheets
-                        containing Lorem Ipsum passages, and more recently with
-                        desktop publishing software like Aldus PageMaker including
-                        versions of Lorem Ipsum.
+                        <span className="bold">Description:</span> {details.description}
                     </p>
                     <p className="deploymentDetailsLine">
-                        <span className="bold">Compatiblity Tag:</span> experience-app
+                        <span className="bold">Compatiblity Tag:</span> {details.compatibilityTag}
                     </p>
                     <p className="deploymentDetailsLine">
-                        <span className="bold">Script:</span> v20.0.0
+                        <span className="bold">Script:</span> {details.tasks.DEFAULT_SCRIPT}
                     </p>
                     <p className="deploymentDetailsLine">
-                        <span className="bold">Models:</span> nudenet(v1.0.0),
-                        efficient-net-lite0(v3.0.0)
+                        <span className="bold">Models: </span>
+                        {Object.entries(details.models).map(([key, value]) => `${key}(v${value})`).join(', ')}
+
                     </p>
 
                     {isMyRequest && <div className="deleteRequestBox">
@@ -71,76 +89,29 @@ export default function ApprovalRequestDetails(props) {
                         </p>
                     </div>
 
-                    <div className="commentBox rejectBox">
-                        <p className="commentTitle">d11-poc-prod</p>
-                        <p className="commentBody">
-                        Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.
-                        </p>
-                        <div className="commentFooter">
-                            <p className="commentTime">
-                                24th December, 2024 | 20:45 IST
-                            </p>
-                            <p className="commentStatus rejectedText">REJECTED</p>
-                        </div>
-                    </div>
-
-                    <div className="commentBox approvedBox">
-                        <p className="commentTitle">d11-poc-prod</p>
-                        <p className="commentBody">
-                            Contrary to popular belief, Lorem Ipsum is not simply random
-                            text. It has roots in a piece of classical Latin literature
-                            from 45 BC, making it over 2000 years old.
-                        </p>
-                        <div className="commentFooter">
-                            <p className="commentTime">
-                                24th December, 2024 | 20:45 IST
-                            </p>
-                            <p className="commentStatus acceptedText">APPROVED</p>
-                        </div>
-                    </div>
+                    {comments.map((comment) => createCommentMessageBox(comment.reviewer, comment.comments, comment.verdict, comment.postedAt))}
                 </div>
 
                 {!isMyRequest && <div className="inputCommentBox">
                     <div className="subHeaderActions">
                         <Dropdown
-                            options={["Approve", "Reject"]}
-                            handleSelection={(_view) => { }}
-                            defaultSelectedOption={"Raised Requests"}
+                            options={[VERDICT_APPROVE, VERDICT_REJECT]}
+                            handleSelection={(_view) => {
+                                currentVerdict = _view;
+                            }}
+                            defaultSelectedOption={currentVerdict}
                         />
                     </div>
                     <input
                         type="text"
-                        name="clientID"
+                        name="reviewMessage"
                         className="inputModal-textfield commentInput"
                         placeholder={"Write comment to support your verdict"}
+                        ref={inputRef}
                     />
-                    <div className="submitCommentButton">
+                    <div className="submitCommentButton" onClick={() => {
+                        handleReview(currentVerdict, inputRef.current.value);
+                    }}>
                         <img
                             src="/assets/icons/minimal_submit.svg"
                             style={{ height: "16px" }}
@@ -152,4 +123,33 @@ export default function ApprovalRequestDetails(props) {
 
         </div>
     );
+}
+
+const createCommentMessageBox = (author, message, verdict, creationTimestamp) => {
+    const parsedDate = new Date(creationTimestamp);
+    let createdAt = parsedDate.toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+    });
+
+    return (<div>
+        <div className={"commentBox " + (verdict == VERDICT_APPROVE ? 'approvedBox' : 'rejectBox')}>
+            <p className="commentTitle">{author}</p>
+            <p className="commentBody">
+                {message}
+            </p>
+            <div className="commentFooter">
+                <p className="commentTime">
+                    {createdAt}
+                </p>
+                <p className={"commentStatus " + (verdict == VERDICT_APPROVE ? 'acceptedText' : 'rejectedText')}>{verdict}</p>
+            </div>
+        </div>
+    </div>);
 }

@@ -19,7 +19,7 @@ function InputModal(props) {
   const orgIds = Object.keys(orgDetails);
 
   useEffect(() => {
-    if (orgIds.length == 0) {
+    if (orgIds.length == 1) {
       handleOrgChange(orgIds[0]);
       return;
     }
