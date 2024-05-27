@@ -10,8 +10,10 @@ import { useRef } from "react";
 
 
 export default function ApprovalRequestDetails(props) {
+    console.log("YOU",props);
     const setSelectedDeploymentData = props.setSelectedDeploymentData;
     const deploymentData = props.deploymentData;
+    const forceUpdateData = props.forceUpdateData;
     const details = JSON.parse(deploymentData.details);
     const isMyRequest = props.isMyRequest;
     const comments = deploymentData.reviews;
@@ -30,6 +32,7 @@ export default function ApprovalRequestDetails(props) {
 
         if (200 <= res.status && res.status < 300) {
             toast.success("Request Submitted");
+            forceUpdateData();
         }
     }
 
@@ -39,7 +42,7 @@ export default function ApprovalRequestDetails(props) {
                 <div className={`subHeader flexRow`}>
                     <div
                         onClick={() => {
-                            setSelectedDeploymentData({});
+                            setSelectedDeploymentData(-1);
                         }}
                         style={{ display: "flex" }}
                     >

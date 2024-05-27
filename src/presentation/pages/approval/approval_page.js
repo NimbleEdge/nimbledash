@@ -28,7 +28,8 @@ import { getRequest } from "data/remote_datasource";
 
 const ApprovalPage = () => {
     // const [selectedRowIndex, setSelectedRowIndex] = useState(-1);
-    const [selectedDeploymentData, setSelectedDeploymentData] = useState({});
+    // const [selectedDeploymentData, setSelectedDeploymentData] = useState({});
+    const [selectedDeploymentDataIndex, setSelectedDeploymentDataIndex] = useState(-1);
     const [reload, setReload] = useState(true);
     // @ts-ignore
     const globalUserState = useSelector((state) => state.userReducer);
@@ -41,6 +42,7 @@ const ApprovalPage = () => {
     };
     const dispatch = useDispatch();
     const tabTitles = ["Raised Requests", "My Requests"];
+    const [virginData, setVirginData] = useState([]);
 
     const [raisedReqTableData, setRaisedReqTableData] = useState({
         headers: [
@@ -72,23 +74,24 @@ const ApprovalPage = () => {
     const preprocessApprovalPageData = async (approvalData) => {
         var processedData = [];
         var processedData2 = [];
-
+        let masterIndex = 0;
 
         for (var approvalRequest in approvalData) {
+            let index = masterIndex;
             let request = approvalData[approvalRequest];
             let details = JSON.parse(request.details);
             let stateName = details.name;
             let description = request.comments;
             const parsedDate = new Date(request.createdAt);
             let createdAt = parsedDate.toLocaleString('en-US', {
-                weekday: 'long', 
+                weekday: 'long',
                 year: 'numeric',
-                month: 'long', 
+                month: 'long',
                 day: 'numeric',
-                hour: '2-digit', 
+                hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
-                hour12: true, 
+                hour12: true,
             });
             let status = request.status;
             let reviewsRequired = 'null';
@@ -105,7 +108,7 @@ const ApprovalPage = () => {
                             data: {
                                 text: stateName,
                                 onClick: () => {
-                                    setSelectedDeploymentData(request);
+                                    setSelectedDeploymentDataIndex(index);
                                 },
                                 customStyle: {
                                     fontWeight: 500,
@@ -121,7 +124,7 @@ const ApprovalPage = () => {
                             data: {
                                 text: description,
                                 onClick: () => {
-                                    setSelectedDeploymentData(request);
+                                    setSelectedDeploymentDataIndex(index);
                                 },
                                 customStyle: {
                                     color: "#74828F",
@@ -137,7 +140,7 @@ const ApprovalPage = () => {
                             data: {
                                 text: createdAt,
                                 onClick: () => {
-                                    setSelectedDeploymentData(request);
+                                    setSelectedDeploymentDataIndex(index);
                                 },
                                 customStyle: {
                                     color: "#74828F",
@@ -153,7 +156,7 @@ const ApprovalPage = () => {
                             data: {
                                 text: reviewCount,
                                 onClick: () => {
-                                    setSelectedDeploymentData(request);
+                                    setSelectedDeploymentDataIndex(index);
                                 },
                                 customStyle: {
                                     color: "#74828F",
@@ -169,7 +172,7 @@ const ApprovalPage = () => {
                             data: {
                                 text: 'null',
                                 onClick: () => {
-                                    setSelectedDeploymentData(request);
+                                    setSelectedDeploymentDataIndex(index);
                                 },
                                 customStyle: {
                                     color: "#74828F",
@@ -185,7 +188,7 @@ const ApprovalPage = () => {
                             data: {
                                 text: status,
                                 onClick: () => {
-                                    setSelectedDeploymentData(request);
+                                    setSelectedDeploymentDataIndex(index);
                                 },
                                 customStyle: {
                                     color: "#74828F",
@@ -207,7 +210,7 @@ const ApprovalPage = () => {
                         data: {
                             text: stateName,
                             onClick: () => {
-                                setSelectedDeploymentData(request);
+                                setSelectedDeploymentDataIndex(index);
                             },
                             customStyle: {
                                 fontWeight: 500,
@@ -223,7 +226,7 @@ const ApprovalPage = () => {
                         data: {
                             text: description,
                             onClick: () => {
-                                setSelectedDeploymentData(request);
+                                setSelectedDeploymentDataIndex(index);
                             },
                             customStyle: {
                                 color: "#74828F",
@@ -239,7 +242,7 @@ const ApprovalPage = () => {
                         data: {
                             text: owner,
                             onClick: () => {
-                                setSelectedDeploymentData(request);
+                                setSelectedDeploymentDataIndex(index);
                             },
                             customStyle: {
                                 color: "#74828F",
@@ -255,7 +258,7 @@ const ApprovalPage = () => {
                         data: {
                             text: createdAt,
                             onClick: () => {
-                                setSelectedDeploymentData(request);
+                                setSelectedDeploymentDataIndex(index);
                             },
                             customStyle: {
                                 color: "#74828F",
@@ -271,7 +274,7 @@ const ApprovalPage = () => {
                         data: {
                             text: reviewCount,
                             onClick: () => {
-                                setSelectedDeploymentData(request);
+                                setSelectedDeploymentDataIndex(index);
                             },
                             customStyle: {
                                 color: "#74828F",
@@ -287,7 +290,7 @@ const ApprovalPage = () => {
                         data: {
                             text: 'null',
                             onClick: () => {
-                                setSelectedDeploymentData(request);
+                                setSelectedDeploymentDataIndex(index);
                             },
                             customStyle: {
                                 color: "#74828F",
@@ -303,7 +306,7 @@ const ApprovalPage = () => {
                         data: {
                             text: status,
                             onClick: () => {
-                                setSelectedDeploymentData(request);
+                                setSelectedDeploymentDataIndex(index);
                             },
                             customStyle: {
                                 color: "#74828F",
@@ -316,6 +319,8 @@ const ApprovalPage = () => {
                     },
                 ]);
             }
+
+            masterIndex++;
         }
 
 
@@ -334,7 +339,9 @@ const ApprovalPage = () => {
     }
 
     useEffect(() => {
+        dispatch(loaderActions.toggleLoader(true));
         fetchApprovalData().then((approvalData) => {
+            setVirginData(approvalData);
             preprocessApprovalPageData(approvalData);
         });
     }, [reload]);
@@ -346,8 +353,8 @@ const ApprovalPage = () => {
                     <div className={`adminPageTitle`}>Edge Deployment Management</div>
                     <div className={`adminPageSubtitle`}>Manage Deployments</div>
                 </div>
-                {Object.keys(selectedDeploymentData).length != 0 && <div className="lineDivider"></div>}
-                {Object.keys(selectedDeploymentData).length == 0 && (
+                {selectedDeploymentDataIndex != -1 && <div className="lineDivider"></div>}
+                {selectedDeploymentDataIndex == -1 && (
                     <div>
                         <div className={`subHeader flexRow`}>
                             <div className={`subHeaderText`}>Correlations</div>
@@ -372,7 +379,9 @@ const ApprovalPage = () => {
                         </div>}
                     </div>
                 )}
-                {Object.keys(selectedDeploymentData).length != 0 && <ApprovalRequestDetails isMyRequest={selectedTab === 1} deploymentData={selectedDeploymentData} setSelectedDeploymentData={setSelectedDeploymentData} />}
+                {selectedDeploymentDataIndex != -1 && <ApprovalRequestDetails forceUpdateData={() => {
+                    setReload(!reload);
+                }} isMyRequest={selectedTab === 1} deploymentData={virginData[selectedDeploymentDataIndex]} setSelectedDeploymentData={setSelectedDeploymentDataIndex} />}
             </div>
         </>
     );
