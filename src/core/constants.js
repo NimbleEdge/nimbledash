@@ -9,6 +9,7 @@ export const COGNITO_USERNAME = "cognito_username";
 export const AUTH_METHOD = "auth_method";
 export const FORM_USERNAME = "form_username";
 export const FORM_PASSWORD = "form_password";
+export const ORGANIZATION = "user_org"
 
 //LOCAL STORAGE VALUE
 export const COGNITO_LOGIN = "Cognito";

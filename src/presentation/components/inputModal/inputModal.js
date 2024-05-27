@@ -4,26 +4,45 @@ import { ButtonGroup, Dropdown, DropdownButton, Toast } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 function InputModal(props) {
-  var initValue = props.initValue;
-  var getInputCallback = props.getInputCallback;
+  var initClientID = props.initClientID;
+  var initOrgName = props.initOrgName;
+  var handleOrgChange = props.orgSelectionCallback;
+  var handleClientIDChange = props.clientIdSelectionCallback;
   var closeModalCallback = props.closeModalCallback;
+
   var title = props.title;
   var subTitle = props.subTitle;
   var [modalErrorMessage, setModalErrorMessage] = useState("");
   var clientIDList = props.clientIDList;
-  var orgsList = props.orgs;
+  var orgDetails = props.orgs;
+  const [orgNames, setOrgNames] = useState([]);
+  const orgIds = Object.keys(orgDetails);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    var userInput = event.target.clientID.value;
-    if (userInput == "") {
-      toast.error("Input can't be null", {
-        toastId: "errorToast",
-      });
-    } else {
-      getInputCallback(userInput);
+  useEffect(() => {
+    if (orgIds.length == 0) {
+      handleOrgChange(orgIds[0]);
+      return;
     }
-  };
+
+    var temp = [];
+    for (var org in orgDetails) {
+      temp.push(orgDetails[org].name);
+    }
+
+    setOrgNames(temp);
+
+  }, [orgDetails]);
+
+  const getOrgId = (name) => {
+    for (var orgId in orgDetails) {
+      if (orgDetails[orgId].name == name) {
+        return orgId;
+      }
+    }
+
+    console.log("Can't find org");
+    return -1;
+  }
 
   return (
     <div>
@@ -33,7 +52,7 @@ function InputModal(props) {
           className="input-modal-close"
           src="assets/icons/close.svg"
           onClick={() => {
-            if (initValue == "" && title.includes("clientID")) {
+            if (initClientID == "" && title.includes("clientID")) {
               setModalErrorMessage("Please enter a Client ID to proceed");
             } else {
               closeModalCallback();
@@ -44,34 +63,34 @@ function InputModal(props) {
         <p className="subHeading margin-top-8">{subTitle}</p>
 
         <div className="flex">
-          <DropdownButton
+          {orgIds.length!=1 && <DropdownButton
             as={ButtonGroup}
             key="0"
             id="000"
             size="lg"
-            title={initValue != "" ? initValue : "Select client id"}
+            title={initOrgName != "" ? initOrgName : "Select org name"}
             variant=""
             bsPrefix={"client-id-dropdown" + " " + "buttonText"}
             onSelect={(selectedIndex) => {
-              getInputCallback(orgsList[selectedIndex]);
+              handleOrgChange(getOrgId(orgNames[selectedIndex]))
             }}
-            children={orgsList.map((item, idx) => (
+            children={orgNames.map((item, idx) => (
               <Dropdown.Item key={idx} eventKey={idx}>
                 {item}
               </Dropdown.Item>
             ))}
-          ></DropdownButton>
+          ></DropdownButton>}
 
           <DropdownButton
             as={ButtonGroup}
             key="0"
             id="000"
             size="lg"
-            title={initValue != "" ? initValue : "Select client id"}
+            title={initClientID != "" ? initClientID : "Select client id"}
             variant=""
             bsPrefix={"client-id-dropdown" + " " + "buttonText"}
             onSelect={(selectedIndex) => {
-              getInputCallback(clientIDList[selectedIndex]);
+              handleClientIDChange(clientIDList[selectedIndex]);
             }}
             children={clientIDList.map((item, idx) => (
               <Dropdown.Item key={idx} eventKey={idx}>

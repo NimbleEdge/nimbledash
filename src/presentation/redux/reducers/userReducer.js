@@ -6,7 +6,7 @@ export var userReducer = {
         state.email = payload.payload.email;
         state.accessToken = payload.payload.accessToken;
         state.clientId = payload.payload.clientId;
-        state.org = payload.playload.org;
+        state.org = payload.payload.org;
         state.orgData = payload.payload.orgData;
     },
   };

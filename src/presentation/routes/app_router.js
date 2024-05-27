@@ -22,6 +22,7 @@ import {
   FORM_LOGIN,
   FORM_PASSWORD,
   FORM_USERNAME,
+  ORGANIZATION,
   PING_ENDPOINT,
   SSO_LOGIN,
   USER_EMAIL,
@@ -81,8 +82,10 @@ function AppRouter(props) {
       var decodedIdToken = jwt_decode(idToken);
       var email = decodedIdToken["email"]
 
-      if (await isAccessTokenValid(COGNITO_LOGIN, accessToken, email, null)) {
-        handleSuccessfulLogin(COGNITO_LOGIN, decodedIdToken["cognito:username"], null, null, email, accessToken, null);
+      var isValid = await isAccessTokenValid(COGNITO_LOGIN, accessToken, email, null)
+
+      if (isValid[0]) {
+        handleSuccessfulLogin(COGNITO_LOGIN, decodedIdToken["cognito:username"], null, null, email, accessToken, null, null, isValid[1]);
       }
       else {
         handleFailedLogin();
@@ -93,11 +96,13 @@ function AppRouter(props) {
       var cachedEmail = localStorage.getItem(USER_EMAIL);
       var cachedClientId = localStorage.getItem(CLIENT_ID);
       var cognitoUsername = localStorage.getItem(COGNITO_USERNAME);
+      var cachedUserOrg = localStorage.getItem(ORGANIZATION);
 
       if (cachedAccessToken == 'undefined' || cachedAccessToken == 'null') { handleFailedLogin(); }
 
-      if (await isAccessTokenValid(COGNITO_LOGIN, cachedAccessToken, cachedEmail, null)) {
-        handleSuccessfulLogin(COGNITO_LOGIN, cognitoUsername, null, null, cachedEmail, cachedAccessToken, cachedClientId);
+      var isValid = await isAccessTokenValid(COGNITO_LOGIN, cachedAccessToken, cachedEmail, null)
+      if (isValid[0]) {
+        handleSuccessfulLogin(COGNITO_LOGIN, cognitoUsername, null, null, cachedEmail, cachedAccessToken, cachedClientId, cachedUserOrg, isValid[1]);
       }
       else {
         handleFailedLogin();
@@ -109,11 +114,12 @@ function AppRouter(props) {
     var cachedAccessToken = localStorage.getItem(ACCESS_TOKEN);
     var cachedEmail = localStorage.getItem(USER_EMAIL);
     var cachedClientId = localStorage.getItem(CLIENT_ID);
+    var cachedUserOrg = localStorage.getItem(ORGANIZATION);
 
     if (cachedAccessToken == 'undefined' || cachedAccessToken == 'null') { handleFailedLogin() }
-
-    if (await isAccessTokenValid(SSO_LOGIN, cachedAccessToken, cachedEmail, null)) {
-      handleSuccessfulLogin(SSO_LOGIN, null, null, null, cachedEmail, cachedAccessToken, cachedClientId);
+    var isValid = await isAccessTokenValid(SSO_LOGIN, cachedAccessToken, cachedEmail, null);
+    if (isValid[0]) {
+      handleSuccessfulLogin(SSO_LOGIN, null, null, null, cachedEmail, cachedAccessToken, cachedClientId, cachedUserOrg, isValid[1]);
     }
     else {
       handleFailedLogin();
@@ -124,16 +130,19 @@ function AppRouter(props) {
     var username = localStorage.getItem(FORM_USERNAME);
     var password = localStorage.getItem(FORM_PASSWORD);
     var cachedClientId = localStorage.getItem(CLIENT_ID);
+    var cachedUserOrg = localStorage.getItem(ORGANIZATION);
 
-    if (await isAccessTokenValid(FORM_LOGIN, null, username, password)) {
-      handleSuccessfulLogin(FORM_LOGIN, null, username, password, null, null, cachedClientId);
+    var isValid = await isAccessTokenValid(FORM_LOGIN, null, username, password);
+
+    if (isValid[0]) {
+      handleSuccessfulLogin(FORM_LOGIN, null, username, password, null, null, cachedClientId, cachedUserOrg, isValid[1]);
     }
     else {
       handleFailedLogin();
     }
   }
 
-  const handleSuccessfulLogin = (authMethod, cognitoUsername, username, password, email, accessToken, clientId) => {
+  const handleSuccessfulLogin = (authMethod, cognitoUsername, username, password, email, accessToken, clientId, userOrg, orgDetails) => {
     var currentBrowserUrl = window.location.href;
 
     localStorage.setItem(AUTH_METHOD, authMethod);
@@ -143,6 +152,9 @@ function AppRouter(props) {
     localStorage.setItem(USER_EMAIL, email);
     localStorage.setItem(ACCESS_TOKEN, accessToken);
     localStorage.setItem(CLIENT_ID, clientId);
+    localStorage.setItem(ORGANIZATION, userOrg);
+
+    console.log('U4',orgDetails);
 
     // @ts-ignore
     dispatch(userActions.setUser({
@@ -153,8 +165,8 @@ function AppRouter(props) {
       email: email,
       accessToken: accessToken,
       clientId: clientId,
-      org:"",
-      orgData:{},
+      org: userOrg,
+      orgData: orgDetails
     }));
 
 
@@ -182,18 +194,11 @@ function AppRouter(props) {
 
     if (res != null && res.status <= 200 && res.status < 300) {
       var orgs = res.organizations;
-      console.log(res);
 
-      dispatch(userActions.setUser({
-        ...globalUserState,
-        orgData: orgs,
-        org: ""
-    }));
-
-      return true;
+      return [true,orgs];
     }
 
-    return false;
+    return [false,null];
   };
 
   return (

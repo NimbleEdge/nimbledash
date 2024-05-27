@@ -11,6 +11,7 @@ import {
     CLIENT_ID,
     FORM_PASSWORD,
     FORM_USERNAME,
+    ORGANIZATION,
 } from "core/constants";
 import { useDispatch, useSelector } from "react-redux";
 import store, {
@@ -84,6 +85,17 @@ const DashboardPage = () => {
         setModalVisiblity(false);
     };
 
+    const handleOrgChange = (input) => {
+        localStorage.setItem(ORGANIZATION, input);
+
+        //@ts-ignore
+        dispatch(userActions.setUser({
+            ...globalUserState,
+            org: input,
+        }));
+
+    };
+
     const closeModalCallback = () => {
         setModalVisiblity(false);
     };
@@ -110,28 +122,32 @@ const DashboardPage = () => {
 
     useEffect(() => {
         dispatch(loaderActions.toggleLoader(true));
-        console.log("001");
+
+        console.log('U3', globalUserState);
 
         var orgData = globalUserState.orgData;
         var org = globalUserState.org;
 
-        var clientIds = orgData[org].clientPairs;
-        var temp = [];
+        if (org == null || org == 'null') {
 
-        for (var client of clientIds) {
-            if (client.prodClient != null) {
-                temp.push(client.prodClient.id);
-            }
+        }
+        else {
+            var temp = [];
+            var clientIds = orgData[org].clientPairs;
 
-            if (client.testClient != null) {
-                temp.push(client.testClient.id);
+            for (var client of clientIds) {
+                if (client.prodClient != null) {
+                    temp.push(client.prodClient.id);
+                }
+
+                if (client.testClient != null) {
+                    temp.push(client.testClient.id);
+                }
             }
+            setClientIdsToShow(temp);
         }
 
-        console.log("002");
 
-
-        setClientIdsToShow(temp);
         dispatch(loaderActions.toggleLoader(false));
 
         if (globalUserState.clientId != 'null' && globalUserState.clientId != null) {
@@ -148,19 +164,26 @@ const DashboardPage = () => {
 
     }, [globalUserState]);
 
+    const returnObjectKeys = () => {
+        if (globalUserState.orgData == null) return [];
+        return Object.keys(globalUserState.orgData);
+    }
+
     return (
         <div className="dashboardPage">
             {
                 isModalVisible &&
                 <InputModal
-                    orgs={() => { return Object.keys(globalUserState.orgData); }}
+                    orgs={globalUserState.orgData}
                     clientIDList={clientIdsToShow}
                     title={"Enter clientID"}
                     subTitle={
                         "Entered clientId will be verified from our backend services"
                     }
-                    initValue={globalUserState.clientId == null ? "Select" : globalUserState.clientId}
-                    getInputCallback={handleClientIDChange}
+                    initClientID={globalUserState.clientId == null ? "Select" : globalUserState.clientId}
+                    initOrgName={globalUserState.org == null ? "Select" : globalUserState.orgData[globalUserState.org].name}
+                    orgSelectionCallback = {handleOrgChange}
+                    clientIdSelectionCallback = {handleClientIDChange}
                     closeModalCallback={closeModalCallback}>
                 </InputModal>
             }
