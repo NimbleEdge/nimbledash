@@ -44,14 +44,6 @@
   overflow-y: auto;
 }
 
-.commentSection::-webkit-scrollbar {
-  display: none; /* for Chrome, Safari, and Opera */
-}
-.commentSection{
-  -ms-overflow-style: none;  /* for Internet Explorer and Edge */
-  scrollbar-width: none;  /* for Firefox */
-}
-
 .leftPane {
   flex-grow: 1;
   max-width: 50%;
@@ -63,8 +55,8 @@
 .commentBox {
   padding-right: 20px;
   padding-left: 20px;
-  padding-top: 16px;
-  padding-bottom: 8px;
+  padding-top: 12px;
+  border-radius: 4px;
   margin-bottom: 8px;
 }
 
@@ -95,14 +87,12 @@
 }
 
 .rejectBox {
-  background-color: #ffc4c4;
-  border-radius: 8px;
+  background-color: #FFE6E6;
   border: 2px solid #df8989;
 }
 
 .approvedBox {
-  background-color: #b3e4b8;
-  border-radius: 8px;
+  background-color: #E6FFED;
   border: 2px solid #4e7452;
 }
 
@@ -118,6 +108,7 @@
   margin-top: 40px;
   display: flex;
   height: 48px;
+  margin-bottom: 40px;
 }
 
 .submitCommentButton {
@@ -147,6 +138,19 @@
   border-radius: 8px;
   background-color: #FFCDCD;
   color: #E60000;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 500;
+  position: relative;
+  cursor: pointer;
+}
+
+.processRequestBox{
+  margin-top: 52px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #6565FF;
+  color: #fff;
   font-size: 14px;
   text-align: center;
   font-weight: 500;

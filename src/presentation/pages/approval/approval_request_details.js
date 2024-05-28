@@ -1,5 +1,5 @@
 import { APP_BASE_MDS_URL, VERDICT_APPROVE, VERDICT_REJECT } from "core/constants";
-import { postRequest } from "data/remote_datasource";
+import { deleteRequest, postRequest } from "data/remote_datasource";
 import Dropdown from "presentation/components/DropdownInternal/dropdown";
 import React from "react";
 import tagDescription from "../admin/tagsTable/TagsDescription/tagDescription";
@@ -10,7 +10,7 @@ import { useRef } from "react";
 
 
 export default function ApprovalRequestDetails(props) {
-    console.log("YOU",props);
+    console.log("YOU", props);
     const setSelectedDeploymentData = props.setSelectedDeploymentData;
     const deploymentData = props.deploymentData;
     const forceUpdateData = props.forceUpdateData;
@@ -36,6 +36,33 @@ export default function ApprovalRequestDetails(props) {
         }
     }
 
+    const handleDeleteRequest = async () => {
+        dispatch(loaderActions.toggleLoader(true));
+        const res = await deleteRequest(APP_BASE_MDS_URL, 'api/v2/admin/request', {
+            "requestId": deploymentData.id,
+        });
+        dispatch(loaderActions.toggleLoader(false));
+
+        if (200 <= res.status && res.status < 300) {
+            toast.success("Request Deleted");
+            forceUpdateData();
+            setSelectedDeploymentData(-1);
+        }
+    }
+
+    const handleProcessRequest = async () => {
+        dispatch(loaderActions.toggleLoader(true));
+        const res = await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/request/process', {
+            "requestId": deploymentData.id,
+        });
+        dispatch(loaderActions.toggleLoader(false));
+
+        if (200 <= res.status && res.status < 300) {
+            toast.success("Request Processed");
+            forceUpdateData();
+        }
+    }
+
     return (
         <div className={`approvalPageContent`}>
             <div className="leftPane">
@@ -54,31 +81,37 @@ export default function ApprovalRequestDetails(props) {
                                 cursor: "pointer",
                             }}
                         />
-                        <div className={`subHeaderText`}>Correlations</div>
+                        <div className={`subHeaderText`}>Details</div>
                     </div>
                 </div>
 
                 <div className="deploymentDetails">
-                    <p className="deploymentDetailsLine">
-                        <span className="bold">Name:</span> {details.name}
-                    </p>
-                    <p className="deploymentDetailsLine">
-                        <span className="bold">Description:</span> {details.description}
-                    </p>
-                    <p className="deploymentDetailsLine">
-                        <span className="bold">Compatiblity Tag:</span> {details.compatibilityTag}
-                    </p>
-                    <p className="deploymentDetailsLine">
-                        <span className="bold">Script:</span> {details.tasks.DEFAULT_SCRIPT}
-                    </p>
-                    <p className="deploymentDetailsLine">
-                        <span className="bold">Models: </span>
-                        {Object.entries(details.models).map(([key, value]) => `${key}(v${value})`).join(', ')}
+                    <div>
+                        <p className="deploymentDetailsLine">
+                            <span className="bold">Name:</span> {details.name}
+                        </p>
+                        <p className="deploymentDetailsLine">
+                            <span className="bold">Description:</span> {details.description}
+                        </p>
+                        <p className="deploymentDetailsLine">
+                            <span className="bold">Compatiblity Tag:</span> {details.compatibilityTag}
+                        </p>
+                        <p className="deploymentDetailsLine">
+                            <span className="bold">Script:</span> {details.tasks.DEFAULT_SCRIPT}
+                        </p>
+                        <p className="deploymentDetailsLine">
+                            <span className="bold">Models: </span>
+                            {Object.entries(details.models).map(([key, value]) => `${key}(v${value})`).join(', ')}
 
-                    </p>
+                        </p>
+                    </div>
 
-                    {isMyRequest && <div className="deleteRequestBox">
+                    {isMyRequest && <div className="deleteRequestBox" onClick={handleDeleteRequest}>
                         <p className="warningText">DELETE THIS REQUEST</p>
+                    </div>}
+
+                    {!isMyRequest && <div className="processRequestBox" onClick={handleProcessRequest}>
+                        <p className="warningText">PROCESS THIS REQUEST</p>
                     </div>}
                 </div>
             </div>
@@ -88,7 +121,7 @@ export default function ApprovalRequestDetails(props) {
                     <div className={`subHeader`}>
                         <div className={`subHeaderText`}>Review History</div>
                         <p className="reviewHistorySubtitile">
-                            2 more approvals required for the promotion.
+                            null more approvals required for the promotion.
                         </p>
                     </div>
 

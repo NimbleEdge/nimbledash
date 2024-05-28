@@ -350,14 +350,14 @@ const ApprovalPage = () => {
         <>
             <div className={`flexColumn adminPage relative`}>
                 <div className={`flexColumn adminPageHeader`}>
-                    <div className={`adminPageTitle`}>Edge Deployment Management</div>
-                    <div className={`adminPageSubtitle`}>Manage Deployments</div>
+                    <div className={`adminPageTitle`}>Deployment Promotion</div>
+                    <div className={`adminPageSubtitle`}>Manage Requests</div>
                 </div>
                 {selectedDeploymentDataIndex != -1 && <div className="lineDivider"></div>}
                 {selectedDeploymentDataIndex == -1 && (
                     <div>
                         <div className={`subHeader flexRow`}>
-                            <div className={`subHeaderText`}>Correlations</div>
+                            <div className={`subHeaderText`}>Details</div>
                             {
                                 <div className="subHeaderActions">
                                     <Dropdown
