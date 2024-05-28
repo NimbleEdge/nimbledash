@@ -2,9 +2,24 @@ import React, { useEffect, useRef } from "react";
 import "./login_page.css";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router";
-import { ADMIN_PAGE_ROUTE, DASHBOARD_PAGE_ROUTE, LOGIN_PAGE_ROUTE, RBAC_PAGE_ROUTE } from "presentation/routes/route-paths";
+import {
+  ADMIN_PAGE_ROUTE,
+  DASHBOARD_PAGE_ROUTE,
+  LOGIN_PAGE_ROUTE,
+  RBAC_PAGE_ROUTE,
+} from "presentation/routes/route-paths";
 import axios from "axios";
-import { ACCESS_TOKEN, APP_BASE_MDS_URL, AUTH_METHOD, COGNITO_LOGIN, FORM_LOGIN, FORM_PASSWORD, FORM_USERNAME, SSO_LOGIN, USER_EMAIL } from "core/constants";
+import {
+  ACCESS_TOKEN,
+  APP_BASE_MDS_URL,
+  AUTH_METHOD,
+  COGNITO_LOGIN,
+  FORM_LOGIN,
+  FORM_PASSWORD,
+  FORM_USERNAME,
+  SSO_LOGIN,
+  USER_EMAIL,
+} from "core/constants";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
 import { toast } from "react-toastify";
@@ -41,7 +56,7 @@ function LoginPage() {
     },
   });
 
-  const handleFormLogin = async(event) => {
+  const handleFormLogin = async (event) => {
     event.preventDefault();
     dispatch(loaderActions.toggleLoader(true));
 
@@ -51,7 +66,7 @@ function LoginPage() {
     window.location.reload();
 
     // dispatch(loaderActions.toggleLoader(false));
-  }
+  };
 
   return (
     <div className="loginPage">
@@ -70,14 +85,22 @@ function LoginPage() {
           </p>
 
           <form className="login-flex-horizontal">
-            <input ref={usernameRef}
-              placeholder="Username" className="login-input-box margin-bottom-small" type="text"></input>
-            <input ref={passwordRef}
-              placeholder="Password" className="login-input-box" type="password"></input>
+            <input
+              ref={usernameRef}
+              placeholder="Username"
+              className="login-input-box margin-bottom-small"
+              type="text"
+            ></input>
+            <input
+              ref={passwordRef}
+              placeholder="Password"
+              className="login-input-box"
+              type="password"
+            ></input>
           </form>
 
           <div className="login-button" onClick={handleFormLogin}>
-            Sign In
+            <p className="center-item-absolute">Sign In</p>
           </div>
 
           <div className="login-flex">
