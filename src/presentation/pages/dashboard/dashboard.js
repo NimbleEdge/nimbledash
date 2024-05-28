@@ -11,6 +11,7 @@ import {
     CLIENT_ID,
     FORM_PASSWORD,
     FORM_USERNAME,
+    ORGANIZATION,
 } from "core/constants";
 import { useDispatch, useSelector } from "react-redux";
 import store, {
@@ -68,7 +69,7 @@ const DashboardPage = () => {
     });
     const [isDatePickerVisible, toggleDatePicker] = useState(false);
     const dispatch = useDispatch();
-    
+
     // @ts-ignore
     const globalUserState = useSelector((state) => state.userReducer);
 
@@ -78,10 +79,21 @@ const DashboardPage = () => {
         //@ts-ignore
         dispatch(userActions.setUser({
             ...globalUserState,
-            clientId: input
+            clientId: input,
         }));
 
         setModalVisiblity(false);
+    };
+
+    const handleOrgChange = (input) => {
+        localStorage.setItem(ORGANIZATION, input);
+
+        //@ts-ignore
+        dispatch(userActions.setUser({
+            ...globalUserState,
+            org: input,
+        }));
+
     };
 
     const closeModalCallback = () => {
@@ -106,46 +118,72 @@ const DashboardPage = () => {
         setModelJson(tempJson);
     }
 
+    const [clientIdsToShow, setClientIdsToShow] = useState([]);
+
     useEffect(() => {
         dispatch(loaderActions.toggleLoader(true));
-        if (globalUserState.clientIdList.length == 0) {
-            getRequest(APP_BASE_MDS_URL, 'api/v2/admin/user/clients').then((res) => {
 
-                // @ts-ignore
-                dispatch(userActions.setUser({
-                    ...globalUserState,
-                    clientIdList: res.data.Clients
-                }));
-                dispatch(loaderActions.toggleLoader(false));
-            });
+        console.log('U3', globalUserState);
+
+        var orgData = globalUserState.orgData;
+        var org = globalUserState.org;
+
+        if (org == null || org == 'null') {
+
         }
+        else {
+            var temp = [];
+            var clientIds = orgData[org].clientPairs;
+
+            for (var client of clientIds) {
+                if (client.prodClient != null) {
+                    temp.push(client.prodClient.id);
+                }
+
+                if (client.testClient != null) {
+                    temp.push(client.testClient.id);
+                }
+            }
+            setClientIdsToShow(temp);
+        }
+
+
+        dispatch(loaderActions.toggleLoader(false));
 
         if (globalUserState.clientId != 'null' && globalUserState.clientId != null) {
             setModalVisiblity(false);
-            getRequest(APP_BASE_MDS_URL,"api/v2/admin/models").then((res) => {
+            getRequest(APP_BASE_MDS_URL, "api/v2/admin/models").then((res) => {
                 handleModelListUpdate(res.data.models);
                 dispatch(loaderActions.toggleLoader(false));
             });
         }
 
-        if(globalUserState.clientId == 'null' || globalUserState.clientId == null){
+        if (globalUserState.clientId == 'null' || globalUserState.clientId == null) {
             dispatch(loaderActions.toggleLoader(false));
         }
 
     }, [globalUserState]);
+
+    const returnObjectKeys = () => {
+        if (globalUserState.orgData == null) return [];
+        return Object.keys(globalUserState.orgData);
+    }
 
     return (
         <div className="dashboardPage">
             {
                 isModalVisible &&
                 <InputModal
-                    clientIDList={globalUserState.clientIdList}
+                    orgs={globalUserState.orgData}
+                    clientIDList={clientIdsToShow}
                     title={"Enter clientID"}
                     subTitle={
                         "Entered clientId will be verified from our backend services"
                     }
-                    initValue={globalUserState.clientId == null ? "Select" : globalUserState.clientId}
-                    getInputCallback={handleClientIDChange}
+                    initClientID={(globalUserState.clientId == null || globalUserState.clientId == 'null') ? "Select" : globalUserState.clientId}
+                    initOrgName={(globalUserState.org == null || globalUserState.org == 'null') ? "Select" : globalUserState.orgData[globalUserState.org].name}
+                    orgSelectionCallback={handleOrgChange}
+                    clientIdSelectionCallback={handleClientIDChange}
                     closeModalCallback={closeModalCallback}>
                 </InputModal>
             }

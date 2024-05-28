@@ -9,11 +9,16 @@ export const COGNITO_USERNAME = "cognito_username";
 export const AUTH_METHOD = "auth_method";
 export const FORM_USERNAME = "form_username";
 export const FORM_PASSWORD = "form_password";
+export const ORGANIZATION = "user_org"
 
 //LOCAL STORAGE VALUE
 export const COGNITO_LOGIN = "Cognito";
 export const SSO_LOGIN = "GoogleSSO";
 export const FORM_LOGIN = "UserPass";
+
+//MISC
+export const VERDICT_APPROVE = "Approve";
+export const VERDICT_REJECT = "Decline";
 
 // COLORS
 export const ACCENT_COLOR = "#6565FF";
@@ -104,4 +109,4 @@ export const DEFAULT_ANALYTICS = {
 };
 
 // ENDPONTS
-export const PING_ENDPOINT = "api/v2/admin/ping";
+export const PING_ENDPOINT = "api/v2/admin/sso";

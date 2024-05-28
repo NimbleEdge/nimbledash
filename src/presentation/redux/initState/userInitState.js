@@ -6,5 +6,6 @@ export const userInitState = {
   cognitoUsername: null,
   accessToken:null,
   clientId:null,
-  clientIdList:[]
+  org:null,
+  orgData:null,
 };

@@ -3,9 +3,39 @@ import store from "presentation/redux/stores/store";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-export async function postRequest(URI, endpoint, body) {
+export async function postRequest(URI, endpoint, body, headers) {
+
+  if (headers == null) {
+    headers = fetchHeaders();
+  }
   try {
-    var response = await axios.post(`${URI}${endpoint}`, body, { headers: fetchHeaders() });
+    var response = await axios.post(`${URI}${endpoint}`, body, { headers: headers });
+    return response.data;
+  }
+  catch (e) {
+    var errorDescription = e.response?.data?.error?.description;
+    if (errorDescription != null) {
+      toast.error(errorDescription, {
+        toastId: "errorToast",
+      });
+    } else {
+      toast.error("Something Went Wrong.", {
+        toastId: "errorToast",
+      });
+    }
+
+    console.log("remote_datasource", e);
+    return null;
+  }
+}
+
+export async function deleteRequest(URI, endpoint, body, headers) {
+
+  if (headers == null) {
+    headers = fetchHeaders();
+  }
+  try {
+    var response = await axios.delete(`${URI}${endpoint}`, { headers: headers, data: body });
     return response.data;
   }
   catch (e) {
