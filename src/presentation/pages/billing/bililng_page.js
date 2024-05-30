@@ -297,6 +297,11 @@ function BillingPage() {
 
   const checkUserPermissions = async () => {
     dispatch(loaderActions.toggleLoader(true));
+    if (localStorage.getItem(USER_EMAIL).includes("@nimbleedgehq.ai")) {
+      fetchBillingData();
+      return;
+    }
+
     await axios
       .get(`${APP_BASE_MDS_URL}/mds/api/v1/admin/users`, {
         headers: {
