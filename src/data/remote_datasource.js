@@ -135,7 +135,8 @@ export function fetchHeaders() {
     TokenId: currentState.email || currentState.username,
     password: currentState.password,
     ClientId: currentState.clientId,
-    AuthMethod: currentState.authMethod
+    AuthMethod: currentState.authMethod,
+    organizationId: currentState.org
   }
 }
 
