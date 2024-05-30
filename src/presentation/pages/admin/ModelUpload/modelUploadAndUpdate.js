@@ -39,7 +39,7 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
   const updateType = ["Build", "Update", "Fix"];
   const [selectedUpdateTypeIndex, setSelectedUpdateTypeIndex] = useState(0);
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
-    accept: [".ort", ".tar"],
+    accept: [".onnx"],
     readAs: "ArrayBuffer",
     multiple: true,
     limitFilesConfig: { max: 1, min: 1 },
@@ -49,14 +49,10 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
   const [newModelName, setNewModelName] = useState(null);
 
   filesContent.map((file) => {
-    if (file["name"].includes(".ort")) {
+    if (file["name"].includes(".onnx")) {
       const binary8 = new Uint8Array(file.content);
       modelContentBase64 = Buffer.from(binary8).toString("base64");
-      modelType = "ort";
-    } else if (file["name"].includes(".tar")) {
-      const binary8 = new Uint8Array(file.content);
-      modelContentBase64 = Buffer.from(binary8).toString("base64");
-      modelType = "tar";
+      modelType = "onnx";
     }
   });
 
