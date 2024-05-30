@@ -13,7 +13,7 @@ import axios from "axios";
 import { AUTH_METHOD, ACCESS_TOKEN, CLIENT_ID, USER_EMAIL, COGNITO_USERNAME, APP_BASE_MDS_URL, FORM_PASSWORD, FORM_USERNAME } from "core/constants";
 import { useDispatch } from "react-redux";
 import { loaderActions } from "presentation/redux/stores/store";
-import { SelectionModal, MultiSelectionModal, SelectionModal2 } from "./selection_modal";
+import { SelectionModal, MultiSelectionModal } from "./selection_modal";
 import { toast } from "react-toastify";
 import { getRequest, postRequest } from "data/remote_datasource";
 import { DropdownButton, ButtonGroup, Dropdown } from "react-bootstrap";

@@ -82,51 +82,6 @@ export function SelectionModal(data, preselectedIndex, onSelectionChange) {
     );
 }
 
-export function SelectionModal2(data, preselectedIndex, onSelectionChange) {
-    const [selectedIndex, setSelectedIndex] = useState(preselectedIndex);
-    const [searchKeyword, setSearchKeyword] = useState("");
-
-    console.log(preselectedIndex);
-
-    useEffect(() => {
-        setSelectedIndex(preselectedIndex);
-    }, [preselectedIndex]);
-
-    return (
-        <form className="expanded">
-            <p className="modalSubHeading">Select To Proceed</p>
-            <input
-                id="searchScript"
-                type="text"
-                name="search"
-                className="model-upload-custom-dropdown itemsPaddingVerySmall"
-                placeholder="Search Items"
-                value={searchKeyword}
-                onChange={(res) => {
-                    setSearchKeyword(res.target.value);
-                }}
-            />
-            <div className="selectableCardsRow itemsPadding">
-
-                {selectedIndex != -1 && <ClickableCard onSelect={() => {
-
-                }} title={data[selectedIndex] != null && (data[selectedIndex].version || data[selectedIndex].name)} subtitle={`N/A users`} isModelSelection={false} isAlreadySelected={true} />
-                }
-
-                {data.map((obj, index) => {
-                    let title = obj.version || obj.name;
-                    if (index != selectedIndex && title.includes(searchKeyword)) {
-                        return <ClickableCard onSelect={() => {
-                            setSelectedIndex(index);
-                            onSelectionChange(index);
-                        }} key={index} title={title} subtitle={`N/A users`} isModelSelection={false} isAlreadySelected={false} />;
-                    }
-                })}
-            </div>
-        </form>
-    );
-}
-
 const checkIfModelIsAlreadySelected = (data, selectedIndexes, currentModelName) => {
     for (let index of selectedIndexes) {
         if (data[index].modelName == currentModelName) {
