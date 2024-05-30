@@ -7,7 +7,6 @@ import axios from "axios";
 import {
   ACCESS_TOKEN,
   APP_BASE_MDS_URL,
-  APP_BASE_URL,
   AUTH_METHOD,
   CLIENT_ID,
   FORM_PASSWORD,
@@ -21,7 +20,6 @@ import store, { loaderActions } from "presentation/redux/stores/store";
 import { useNavigate } from "react-router-dom";
 import { DASHBOARD_PAGE_ROUTE } from "presentation/routes/route-paths";
 import DropdownComponent from "presentation/components/dropdownMenu/dropdown";
-import { getAuthMethod } from "core/utils";
 import { fetchHeaders, getRequest, postRequest } from "data/remote_datasource";
 
 function RBACPage() {
@@ -41,12 +39,7 @@ function RBACPage() {
 
   const listUsers = async () => {
     dispatch(loaderActions.toggleLoader(true));
-    var res = await getRequest(APP_BASE_MDS_URL, 'api/v2/admin/users');
-
-    if (res == null) {
-      navigateTo(DASHBOARD_PAGE_ROUTE);
-      return;
-    }
+    var res = await getRequest(APP_BASE_MDS_URL, 'api/v2/admin/organization/users');
 
     var listOfObjects = res.data.users;
     listOfObjects.sort(function (a, b) {
@@ -60,7 +53,7 @@ function RBACPage() {
   const addUser = async (inputEmail) => {
     dispatch(loaderActions.toggleLoader(true));
 
-    await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/user', {
+    await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/organization/user', {
       email: inputEmail,
       permission: PermissionEnum.READ,
     });
@@ -71,7 +64,7 @@ function RBACPage() {
 
   const updateUserPermission = async (inputEmail, permission) => {
     dispatch(loaderActions.toggleLoader(true));
-    var res = await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/user', {
+    var res = await postRequest(APP_BASE_MDS_URL, 'api/v2/admin/organization/user', {
       email: inputEmail,
       permission: permission,
     });
@@ -110,11 +103,20 @@ function RBACPage() {
   };
 
   useEffect(() => {
+    var currentState = store.getState().userReducer;
+    var orgPermission = currentState.orgData[currentState.org].permission;
+
+    if (orgPermission != 'admin') {
+      toast.error("You don't have permissions")
+      navigateTo(DASHBOARD_PAGE_ROUTE);
+      return;
+    }
+
     var email = store.getState().userReducer.email;
 
     if (email == null || email == 'null') {
       email = store.getState().userReducer.username;
-    } 
+    }
     setUserEmailLocal(email);
     listUsers();
   }, []);

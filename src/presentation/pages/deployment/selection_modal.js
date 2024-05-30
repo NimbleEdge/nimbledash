@@ -1,5 +1,5 @@
 import { element } from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const ClickableCard = ({ title, subtitle, isModelSelection, isAlreadySelected, onSelect }) => {
     return (
@@ -42,6 +42,10 @@ const SelectedCard = ({ title, subtitle, renderCloseButton = true }) => {
 export function SelectionModal(data, preselectedIndex, onSelectionChange) {
     const [selectedIndex, setSelectedIndex] = useState(preselectedIndex);
     const [searchKeyword, setSearchKeyword] = useState("");
+
+    useEffect(() => {
+        setSelectedIndex(preselectedIndex);
+    }, [preselectedIndex]);
 
     return (
         <form className="expanded">
@@ -93,6 +97,10 @@ export function MultiSelectionModal(data, preselected, onSelectionChange) {
     const [currentClickIndex, setCurrentClickIndex] = useState(-1);
     const [searchKeyword, setSearchKeyword] = useState("");
     var modelsRendered = [];
+
+    useEffect(() => {
+        setSelected(preselected);
+    }, [preselected]);
 
 
     return (

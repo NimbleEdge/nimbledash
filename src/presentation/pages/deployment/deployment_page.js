@@ -164,7 +164,7 @@ const DeploymentPage = () => {
               }, tableTitle: "Linked Models Detail", truncationLimit: 2, expandable: true, highlightOnHover: true
             }
           },
-          { Component: (() => deploymentActions(deployment.deploymentId)), data: { taskVersion: "xxx" } }
+          { Component: (() => deploymentActions(deployment)), data: { taskVersion: "xxx" } }
         ]
       );
     }
@@ -173,21 +173,66 @@ const DeploymentPage = () => {
     updateDeploymentViewData(newData);
   }
 
-  const deploymentActions = (deploymentId) => {
+  const deploymentActions = (deployment) => {
     return (
       <div style={{ display: 'flex' }}>
         <div style={{ marginRight: '24px' }} />
 
         <HoverText onHoverText={"Promote Deployment To Production"}>
           <img className={"download-model-icon"} src={"/assets/icons/promote_to_prod.svg"} onClick={() => {
-            handlePromoteToProd(deploymentId);
+            handlePromoteToProd(deployment.deploymentId);
           }}></img>
         </HoverText>
 
         <div style={{ marginRight: '12px' }} />
 
         <HoverText onHoverText={"Duplicate Selected Deployment"}>
-          <img className={"download-model-icon"} src={"/assets/icons/duplicate.svg"} onClick={() => { }}></img>
+          <img className={"download-model-icon"} src={"/assets/icons/duplicate.svg"} onClick={() => {
+            var scriptVersion = deployment.tasks.DEFAULT_SCRIPT;
+            var models = deployment.models;
+            var compatibilityTag = deployment.compatibilityTag;
+
+            var modelIndexes = [];
+            var scriptIndex = -1;
+            var ctIndex = -1;
+
+
+            for (let modelName in models) {
+              let index = 0;
+              for (let obj of virginModelList) {
+                if (obj.modelName === modelName && obj.modelVersion === models[modelName]) {
+                  modelIndexes.push(index);
+                }
+
+                index++;
+              }
+            }
+
+            for (let i = 0; i < virginScriptList.length; i++) {
+              if (virginScriptList[i].version === scriptVersion) {
+                scriptIndex = i;
+                break;
+              }
+            }
+
+            for (let i = 0; i < virginCTList.length; i++) {
+              if (virginCTList[i].name === compatibilityTag) {
+                ctIndex = i;
+                break;
+              }
+            }
+
+            setDeploymentSelections({
+              name: deployment.name,
+              description: deployment.description,
+              scriptIndex: scriptIndex,
+              modelIndexes: modelIndexes,
+              ctIndex: ctIndex
+            });
+
+            setIsCreateNewModelOpen(true);
+
+          }}></img>
         </HoverText>
       </div>
 
@@ -282,13 +327,19 @@ const DeploymentPage = () => {
   }
 
   useEffect(() => {
-    var count = 0;
     dispatch(loaderActions.toggleLoader(true));
-    getDeploymentData().then(() => { count++; if (count == 4) dispatch(loaderActions.toggleLoader(false)); });;
-    getModelsData().then(() => { count++; if (count == 4) dispatch(loaderActions.toggleLoader(false)); });;
-    getCTData().then(() => { count++; if (count == 4) dispatch(loaderActions.toggleLoader(false)); });;
-    getScriptData().then(() => { count++; if (count == 4) dispatch(loaderActions.toggleLoader(false)); });;
+    getModelsData();
+    getCTData();
+    getScriptData();
   }, [reload]);
+
+  useEffect(() => {
+    if (virginCTList.length != 0 && virginScriptList.length != 0 && virginModelList.length != 0) {
+      getDeploymentData().then(() => {
+        dispatch(loaderActions.toggleLoader(false));
+      });;
+    }
+  }, [virginCTList, virginScriptList, virginModelList]);
 
   return (
     <>
