@@ -123,8 +123,6 @@ const DashboardPage = () => {
     useEffect(() => {
         dispatch(loaderActions.toggleLoader(true));
 
-        console.log('U3', globalUserState);
-
         var orgData = globalUserState.orgData;
         var org = globalUserState.org;
 

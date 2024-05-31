@@ -46,7 +46,7 @@ const ApprovalPage = () => {
 
     const [raisedReqTableData, setRaisedReqTableData] = useState({
         headers: [
-            { text: "Name" },
+            { text: "Deployment Id" },
             { text: "Description" },
             { text: "Raised By" },
             { text: "Raised On" },
@@ -79,8 +79,8 @@ const ApprovalPage = () => {
         for (var approvalRequest in approvalData) {
             let index = masterIndex;
             let request = approvalData[approvalRequest];
-            let details = JSON.parse(request.details);
-            let stateName = details.name;
+            // let details = request.details;
+            let stateName = request.deploymentId;
             let description = request.comments;
             const parsedDate = new Date(request.createdAt);
             let createdAt = parsedDate.toLocaleString('en-US', {
@@ -94,9 +94,7 @@ const ApprovalPage = () => {
                 hour12: true,
             });
             let status = request.status;
-            let reviewsRequired = 'null';
             let reviewCount = request.reviews.length;
-            let sourceClientId = details.sourceClientId;
             let owner = request.owner;
 
 
