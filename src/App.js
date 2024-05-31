@@ -21,7 +21,7 @@ function App() {
     }
   }, []);
   return (
-    <GoogleOAuthProvider clientId="405865671851-44bn30c6pc9ltep4ikkquabb1o9ajah3.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="312508863011-7rlp6sb0gfqt7f822b79ooh3uuhpec72.apps.googleusercontent.com">
       <div className="App">
         <ToastContainer
           position="bottom-center"
