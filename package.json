@@ -39,12 +39,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "start:prod": "env-cmd -f prod.env npm run start",
-    "build:prod": "env-cmd -f prod.env npm run build",
-    "start:dev": "env-cmd -f dev.env npm start",
-    "build:dev": "env-cmd -f dev.env npm build",
-    "start:beta": "env-cmd -f stag.env npm run start",
-    "build:beta": "env-cmd -f stag.env npm run build"
+    "dashboard-prod": "env-cmd -f environments/dashboard-prod.env npm run start",
+    "dashboard-staging": "env-cmd -f environments/dashboard-staging.env npm run start",
+    "portal-prod": "env-cmd -f environments/portal-prod.env npm run start",
+    "portal-staging": "env-cmd -f environments/portal-staging.env npm run start"
   },
   "eslintConfig": {
     "extends": [
