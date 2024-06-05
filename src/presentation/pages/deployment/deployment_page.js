@@ -418,7 +418,6 @@ const DeploymentPage = () => {
             onNext: () => {
               if ((seriesIndex == 0 && (deploymentSelections.name == "" || deploymentSelections.description == "")) ||
                 (seriesIndex == 1 && deploymentSelections.scriptIndex == -1) ||
-                (seriesIndex == 2 && deploymentSelections.modelIndexes.length == 0) ||
                 (seriesIndex == 3 && deploymentSelections.ctIndex == -1)
               ) {
                 toast.error("Invalid values");
