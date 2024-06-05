@@ -154,8 +154,6 @@ function AppRouter(props) {
     localStorage.setItem(CLIENT_ID, clientId);
     localStorage.setItem(ORGANIZATION, userOrg);
 
-    console.log('U4',orgDetails);
-
     // @ts-ignore
     dispatch(userActions.setUser({
       authMethod: authMethod,

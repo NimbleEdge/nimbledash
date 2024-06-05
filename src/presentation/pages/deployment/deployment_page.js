@@ -50,6 +50,7 @@ const DeploymentPage = () => {
   ]
   const [deploymentViewData, updateDeploymentViewData] = useState({
     headers: [
+      { text: 'Id' },
       { text: 'Name' },
       { text: 'Description' },
       { text: 'Compatability Tag' },
@@ -152,6 +153,7 @@ const DeploymentPage = () => {
     for (let deployment of data) {
       processedData.push(
         [
+          { Component: TextOnlyComponent, data: { text: deployment.deploymentId, customStyle: { fontWeight: 500, color: '#494949', fontSize: '14px' }, highlightOnHover: true } },
           { Component: TextOnlyComponent, data: { text: deployment.name, customStyle: { fontWeight: 500, color: '#494949', fontSize: '14px' }, highlightOnHover: true } },
           { Component: TextOnlyComponent, data: { text: deployment.description, customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },
           { Component: TextOnlyComponent, data: { text: deployment.compatibilityTag, customStyle: { color: '#74828F', fontWeight: 400, fontSize: '14px' }, highlightOnHover: true } },

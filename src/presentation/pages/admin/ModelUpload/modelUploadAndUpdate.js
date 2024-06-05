@@ -47,6 +47,7 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
   const [currentView, setCurrentView] = useState(uploadModelView.UPLOAD_MODEL_VIEW);
   const [selectedTags, setSelectedTags] = useState([]);
   const [newModelName, setNewModelName] = useState(null);
+  const [shouldCopyEpConfig, setShouldCopyEpConfig] = useState(false);
 
   filesContent.map((file) => {
     if (file["name"].includes(".onnx")) {
@@ -79,7 +80,7 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
           },
           );
 
-          if(res == null){
+          if (res == null) {
             closeModal();
             dispatch(loaderActions.toggleLoader(false));
             return;
@@ -105,6 +106,7 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
           updateType: selectedUpdateTypeIndex + 1,
           fileType: modelType,
           deploymentTags: selectedTags,
+          copyEpConfig: shouldCopyEpConfig
         });
 
         fetchModelList({
@@ -169,6 +171,17 @@ const ModelUploadAndUpdate = ({ isNewModel, allTagsList, existingModelName = "",
               />
             )}
           </div>
+          {!isNewModel && <div className="epConfigCheckBox">
+            <input
+              className="ep-config-checkbox"
+              type="checkbox"
+              checked={shouldCopyEpConfig}
+              onChange={() => {
+                setShouldCopyEpConfig(!shouldCopyEpConfig);
+              }}
+            />
+            <p className="subHeading ep-checkbox-text">Copy Model Configurations From The Previous Version</p>
+          </div>}
           <button className={`uploadButton`} onClick={uploadModel}>{isNewModel ? 'Upload' : 'Update'}</button>
         </div>}
       {
