@@ -336,7 +336,8 @@ const DeploymentPage = () => {
   }, [reload]);
 
   useEffect(() => {
-    if (virginCTList.length != 0 && virginScriptList.length != 0 && virginModelList.length != 0) {
+    //TODO: come up with a better solution to this
+    if (true) {
       getDeploymentData().then(() => {
         dispatch(loaderActions.toggleLoader(false));
       });;
