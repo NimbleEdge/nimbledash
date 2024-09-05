@@ -39,19 +39,13 @@ const EventsPage = () => {
         body: [],
     });
 
-    const preprocessDeploymentData = async (temp) => {
+    const preprocessDeploymentData = async () => {
         var processedData = [];
 
-        var res = await getRequest(APP_BASE_MDS_URL, `api/v2/admin/edgeevents`);
-        var data = null;
-        
-        if(temp != null){
-            data = temp;
-        }
-        else{
+            var res = await getRequest(APP_BASE_MDS_URL, `api/v2/admin/edgeevents`);
             setVirginData(res.data.edgeEvents);
-            data = res.data.edgeEvents;
-        }
+            var data = res.data.edgeEvents;
+        
 
         for (let event of data) {
             processedData.push(
@@ -78,33 +72,6 @@ const EventsPage = () => {
         dispatch(loaderActions.toggleLoader(false));
     }
 
-    const searchFilter = (keyword) => {
-        const keywords = keyword.split(" ");
-        var temp = []
-
-        for (let event of virginData) {
-            var isValid = true;
-            var candidateString = event.name;
-
-            for (let singleKeyword of keywords) {
-                if (!candidateString.toLowerCase().includes(singleKeyword.toLowerCase())) {
-                    isValid = false;
-                    break;
-                }
-            }
-
-            if (isValid) {
-                temp.push(event);
-            }
-        }
-
-        if (keyword == "") {
-            temp = virginData;
-        }
-        console.log(temp);
-        preprocessDeploymentData(temp);
-    }
-
     useEffect(() => {
         dispatch(loaderActions.toggleLoader(true));
         preprocessDeploymentData();
@@ -121,21 +88,6 @@ const EventsPage = () => {
                     {
                         <div className={`subHeader flexRow`}>
                             <div className={`subHeaderText`}>Correlations</div>
-                            {<div className="subHeaderActions">
-                                <form className="expanded">
-                                    <input
-                                        id="searchSelectedModel"
-                                        type="text"
-                                        name="searchSelectedModel"
-                                        className="model-upload-custom-dropdown itemsPaddingVerySmall"
-                                        placeholder={"Search"}
-                                        onChange={(res) => {
-                                            searchFilter(res.target.value);
-                                        }}
-                                    />
-                                </form>
-                            </div>
-                            }
                         </div>
                     }
                     <div className={`tasksTableView flexColumn overflowAuto`}>
