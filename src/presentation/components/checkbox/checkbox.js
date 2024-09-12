@@ -12,9 +12,9 @@ function CheckBox(props) {
                 style={{cursor:"pointer"}}
                 type="checkbox"
                 checked={isEnabled}
-                onChange={() => {
+                onChange={(state) => {
+                    props.onChange(!isEnabled);
                     setIsEnabled(!isEnabled);
-                    props.onChange();
                 }}
             />
         </div>

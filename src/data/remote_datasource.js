@@ -106,9 +106,10 @@ export async function getRequestParams(URI, endpoint, params) {
 }
 
 export async function putRequest(URI, endpoint, body) {
+  var headers = fetchHeaders();
 
   try {
-    const response = await axios.put(`${URI}${endpoint}`, { headers: fetchHeaders(), body: body });
+    const response = await axios.put(`${URI}${endpoint}`, body ,{ headers: headers});
     return response;
   }
   catch (e) {
